@@ -17,35 +17,36 @@
   :root {
     --df-black: #0a0c10;
     --df-ink: #0a0c10;
-    --df-orange: #38e1ff;
+    /* Sole accent/highlight: amber-red. (token name kept as df-orange) */
+    --df-orange: #ff5b3a;
     --df-amber: #ff5b3a;
-    --df-white: #f6efe7;
-    --df-gray: #8f95a3;
-    --df-dim: #72808f;
-    --df-line: rgba(246, 239, 231, 0.14);
-    --df-line-soft: rgba(246, 239, 231, 0.07);
-    --theme-contrast: #f6efe7;
+    --df-white: #e8e4d8;
+    --df-gray: #7c7a76;
+    --df-dim: #5c5a56;
+    --df-line: rgba(232, 228, 216, 0.14);
+    --df-line-soft: rgba(232, 228, 216, 0.07);
+    --theme-contrast: #e8e4d8;
 
     /* shadcn compatibility (dark, Brink based) */
-    --background: 215 25% 7%;
-    --foreground: 35 28% 92%;
-    --card: 215 25% 8%;
-    --card-foreground: 35 28% 92%;
-    --popover: 215 25% 8%;
-    --popover-foreground: 35 28% 92%;
-    --primary: 188 100% 64%;
-    --primary-foreground: 215 25% 7%;
-    --secondary: 215 20% 12%;
-    --secondary-foreground: 35 28% 92%;
-    --muted: 215 20% 12%;
-    --muted-foreground: 220 10% 62%;
-    --accent: 188 100% 64%;
-    --accent-foreground: 215 25% 7%;
-    --destructive: 10 100% 63%;
-    --destructive-foreground: 35 28% 92%;
-    --border: 215 18% 16%;
-    --input: 215 18% 16%;
-    --ring: 188 100% 64%;
+    --background: 216 23% 6%;
+    --foreground: 45 25% 88%;
+    --card: 216 23% 8%;
+    --card-foreground: 45 25% 88%;
+    --popover: 216 23% 8%;
+    --popover-foreground: 45 25% 88%;
+    --primary: 11 100% 61%;
+    --primary-foreground: 216 23% 6%;
+    --secondary: 216 12% 12%;
+    --secondary-foreground: 45 25% 88%;
+    --muted: 216 12% 12%;
+    --muted-foreground: 40 3% 47%;
+    --accent: 11 100% 61%;
+    --accent-foreground: 216 23% 6%;
+    --destructive: 11 100% 61%;
+    --destructive-foreground: 45 25% 88%;
+    --border: 40 4% 18%;
+    --input: 40 4% 18%;
+    --ring: 11 100% 61%;
     --radius: 0rem;
   }
 }

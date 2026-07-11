@@ -17,11 +17,11 @@ export default {
       colors: {
         df: {
           black: "#0a0c10",
-          orange: "#38e1ff",
+          orange: "#ff5b3a",
           amber: "#ff5b3a",
-          white: "#f6efe7",
-          gray: "#8f95a3",
-          dim: "#72808f",
+          white: "#e8e4d8",
+          gray: "#7c7a76",
+          dim: "#5c5a56",
         },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

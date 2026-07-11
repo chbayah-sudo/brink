@@ -228,8 +228,18 @@ export function Hero() {
           const reveal = Math.min(1, Math.max(0, (assembly - h2 * 0.55) / 0.45));
           if (reveal <= 0) continue;
 
+          // Monochrome brain: off-white filaments -> grey on black. The sole
+          // accent, amber-red, sparks only on the very brightest peaks, and
+          // only on a sparse subset of them (h1 gate) so it reads as scattered
+          // highlights rather than flooding the outline.
           const color =
-            adjusted > 0.66 ? "#eafcff" : adjusted > 0.4 ? "#6fe4ff" : "#3aa9c8";
+            adjusted > 0.9 && h1 > 0.62
+              ? "#ff5b3a"
+              : adjusted > 0.5
+                ? "#e8e4d8"
+                : adjusted > 0.33
+                  ? "#a8a5a0"
+                  : "#7c7a76";
           ctx.fillStyle = color;
           ctx.globalAlpha = (0.4 + t * 0.6) * reveal;
           ctx.fillText(getAsciiChar(t), drawX, drawY);
@@ -267,7 +277,7 @@ export function Hero() {
       />
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(56,225,255,0.08),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(232,228,216,0.05),transparent_55%)]" />
 
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,12,16,0.25),rgba(10,12,16,0.55)_60%,rgba(10,12,16,0.9))]" />
 
