@@ -252,17 +252,22 @@ export function Hero() {
         gctx.setTransform(1, 0, 0, 1, 0, 0);
         gctx.globalAlpha = 1;
         gctx.globalCompositeOperation = "source-over";
-        // Desaturated, warm, gently aged base.
-        gctx.filter = "saturate(0.72) contrast(1.04) brightness(1.05) sepia(0.14)";
+        // Faded film base: desaturated, softer contrast, exposure pulled down
+        // a touch so bright frames (sky/sun) don't clip to white.
+        gctx.filter = "saturate(0.68) contrast(0.9) brightness(0.92) sepia(0.16)";
         gctx.drawImage(fire, sx, sy, sw, sh, 0, 0, GW, GH);
         gctx.filter = "none";
+        // Tame the very brightest highlights (warm rolloff) to keep detail.
+        gctx.globalCompositeOperation = "multiply";
+        gctx.fillStyle = "rgba(236,224,210,1)";
+        gctx.fillRect(0, 0, GW, GH);
         // Lift blacks with a faint cool cast (cool shadows).
         gctx.globalCompositeOperation = "lighten";
-        gctx.fillStyle = "rgba(16,20,30,1)";
+        gctx.fillStyle = "rgba(14,17,26,1)";
         gctx.fillRect(0, 0, GW, GH);
         // Warm amber into the highlights/mids.
         gctx.globalCompositeOperation = "soft-light";
-        gctx.fillStyle = "rgba(255,168,86,0.34)";
+        gctx.fillStyle = "rgba(255,168,86,0.26)";
         gctx.fillRect(0, 0, GW, GH);
 
         // Very slight chromatic aberration: shift red +, blue - at the edges.
@@ -298,7 +303,9 @@ export function Hero() {
         bctx.setTransform(1, 0, 0, 1, 0, 0);
         bctx.globalAlpha = 1;
         bctx.globalCompositeOperation = "source-over";
-        bctx.filter = "brightness(1.5) contrast(2.6) saturate(1.15)";
+        // Isolate only the strongest highlights (the flame) so the glow reads
+        // as halation around the fire, not a wash over bright frames.
+        bctx.filter = "brightness(0.85) contrast(3.6) saturate(1.2)";
         bctx.clearRect(0, 0, BW, BH);
         bctx.drawImage(grade, 0, 0, BW, BH);
         bctx.filter = "none";
@@ -361,12 +368,12 @@ export function Hero() {
           ctx.globalAlpha = 1;
         }
 
-        // Soft firelight glow over the coherent core.
-        const glow = (1 - centerFade) * (0.35 + 0.45 * (1 - edgeShred));
+        // Soft firelight halation over the coherent core (kept subtle).
+        const glow = (1 - centerFade) * (0.16 + 0.16 * (1 - edgeShred));
         if (glow > 0.01) {
           ctx.save();
           ctx.globalCompositeOperation = "screen";
-          ctx.filter = "blur(16px)";
+          ctx.filter = "blur(22px)";
           ctx.globalAlpha = clamp(glow, 0, 1);
           ctx.drawImage(bloom, rectX, rectY, rectW, rectH);
           ctx.restore();
