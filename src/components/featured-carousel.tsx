@@ -104,7 +104,7 @@ export function FeaturedCarousel() {
               aria-label={`Go to slide ${i + 1}`}
               className={cn(
                 "h-2 w-2 transition-colors",
-                i === active ? "bg-df-orange" : "bg-df-white/25 hover:bg-df-white/50"
+                i === active ? "bg-df-white" : "bg-df-white/25 hover:bg-df-white/50"
               )}
             />
           ))}

@@ -102,8 +102,8 @@ export function Portfolio() {
                 className={cn(
                   "mono-label px-3 py-2 border transition-colors",
                   active === f
-                    ? "bg-df-orange !text-black border-df-orange"
-                    : "hairline !text-df-gray hover:!text-df-white"
+                    ? "bg-df-white !text-black border-df-white"
+                    : "hairline !text-df-gray hover:!text-df-orange"
                 )}
               >
                 {f}

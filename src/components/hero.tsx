@@ -228,18 +228,10 @@ export function Hero() {
           const reveal = Math.min(1, Math.max(0, (assembly - h2 * 0.55) / 0.45));
           if (reveal <= 0) continue;
 
-          // Monochrome brain: off-white filaments -> grey on black. The sole
-          // accent, amber-red, sparks only on the very brightest peaks, and
-          // only on a sparse subset of them (h1 gate) so it reads as scattered
-          // highlights rather than flooding the outline.
+          // Purely monochrome brain: off-white filaments -> grey on black.
+          // No color at rest — the amber accent lives only on hover elsewhere.
           const color =
-            adjusted > 0.9 && h1 > 0.62
-              ? "#ff5b3a"
-              : adjusted > 0.5
-                ? "#e8e4d8"
-                : adjusted > 0.33
-                  ? "#a8a5a0"
-                  : "#7c7a76";
+            adjusted > 0.6 ? "#e8e4d8" : adjusted > 0.38 ? "#a8a5a0" : "#7c7a76";
           ctx.fillStyle = color;
           ctx.globalAlpha = (0.4 + t * 0.6) * reveal;
           ctx.fillText(getAsciiChar(t), drawX, drawY);
@@ -287,7 +279,7 @@ export function Hero() {
       </div>
 
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-6">
-        <h1 className="hero-word font-grotesque text-df-orange text-center leading-[0.8] tracking-[-0.03em] whitespace-nowrap text-[clamp(54px,15.5vw,280px)] [text-shadow:0_0_40px_rgba(10,12,16,0.55)]">
+        <h1 className="hero-word font-grotesque text-df-white text-center leading-[0.8] tracking-[-0.03em] whitespace-nowrap text-[clamp(54px,15.5vw,280px)] [text-shadow:0_0_40px_rgba(10,12,16,0.55)]">
           BRINK
         </h1>
       </div>
@@ -296,7 +288,7 @@ export function Hero() {
         <CornerLetter letter="L" side="left" />
 
         <div className="flex flex-col items-center gap-3">
-          <div className="flex items-center gap-[3px] text-df-orange">
+          <div className="flex items-center gap-[3px] text-df-white/60">
             <span className="h-[3px] w-[3px] bg-current" />
             <span className="h-[3px] w-[3px] bg-current opacity-60" />
             <span className="h-[3px] w-[3px] bg-current" />
@@ -305,7 +297,7 @@ export function Hero() {
             <span className="px-3 flex items-center mono-label border-r hairline">
               GUI
             </span>
-            <span className="px-4 flex items-center border-r hairline text-df-orange">
+            <span className="px-4 flex items-center border-r hairline text-df-white/70">
               <GridDots />
             </span>
             <a

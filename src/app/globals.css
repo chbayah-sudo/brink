@@ -99,6 +99,18 @@
 }
 
 /* ------------------------------------------------------------------ */
+/*  HOVER HIGHLIGHT TIMING                                             */
+/*  Site is monochrome at rest; the amber accent only appears on       */
+/*  hover/interaction. Settle every color transition at ~0.25s ease    */
+/*  so the whole site behaves consistently. (Placed after @tailwind    */
+/*  utilities so it wins over the default 150ms.)                      */
+/* ------------------------------------------------------------------ */
+.transition-colors {
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+}
+
+/* ------------------------------------------------------------------ */
 /*  GRAIN / SCANLINE OVERLAY                                           */
 /* ------------------------------------------------------------------ */
 .grain-overlay {
