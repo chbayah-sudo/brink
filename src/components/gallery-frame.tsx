@@ -133,11 +133,23 @@ export default function GalleryFrame() {
         >
           {isReduced ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={RING_POSTER} alt="Brink ring" className="h-full w-full object-contain" />
+            <img
+              src={RING_POSTER}
+              alt="Brink ring"
+              className="h-full w-full object-contain"
+              style={{ filter: "blur(0.4px)" }}
+            />
           ) : (
-            // Animated webp plays on its own; not driven by scroll.
+            // Animated webp plays on its own; not driven by scroll. The tiny
+            // blur is a background-agnostic safety net that softens any residual
+            // hard matte edge so it can't read as a jagged line.
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={RING_SRC} alt="Brink ring" className="h-full w-full object-contain" />
+            <img
+              src={RING_SRC}
+              alt="Brink ring"
+              className="h-full w-full object-contain"
+              style={{ filter: "blur(0.4px)" }}
+            />
           )}
         </div>
       </div>
