@@ -6,17 +6,17 @@ import { useEffect, useRef, useState } from "react";
 /**
  * Scroll-driven "ring into the lab" section.
  *
- * The ring (public/ro22-cutout.webp — an alpha-matted spin, its original gray
- * studio floor removed) floats centered the whole way through. Behind it, a
- * gray studio gradient (echoing ro22's original backdrop) cross-fades away as
+ * The ring (public/rro-cutout.webp — an alpha-matted spin, its original dark
+ * studio background removed) floats centered the whole way through. Behind it,
+ * a dark studio glow (echoing the ring render's backdrop) cross-fades away as
  * you scroll, revealing the lab photo (public/fifi.png) — so the ring appears
  * to lift out of the studio and settle into the lab.
  *
  * Transform-only (scale) for perf. Reduced motion shows the end state static
  * (ring in the lab, no studio) and swaps the animated ring for a still frame.
  */
-const RING_SRC = "/ro22-cutout.webp"; // animated, transparent-background ring
-const RING_POSTER = "/ro22-poster.png"; // single still frame (reduced motion)
+const RING_SRC = "/rro-cutout.webp"; // animated, transparent-background ring
+const RING_POSTER = "/rro-poster.png"; // single still frame (reduced motion)
 const LAB_SRC = "/fifi.png";
 
 function clamp(v: number, a: number, b: number) {
@@ -119,11 +119,11 @@ export default function GalleryFrame() {
           <Image src={LAB_SRC} alt="" fill sizes="100vw" className="object-cover" unoptimized />
         </div>
 
-        {/* studio backdrop echoing ro22's gray floor; fades out on scroll */}
+        {/* studio backdrop echoing the ring render's dark glow; fades out on scroll */}
         <div
           ref={studioRef}
           className="absolute inset-0"
-          style={{ background: "linear-gradient(180deg,#2b3137 0%,#565d65 46%,#c7cbd0 100%)" }}
+          style={{ background: "radial-gradient(120% 95% at 50% 42%, #1b2634 0%, #0c1017 48%, #06080d 100%)" }}
         />
 
         {/* floating ring (alpha-matted) — visible throughout */}
