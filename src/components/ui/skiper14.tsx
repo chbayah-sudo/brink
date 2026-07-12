@@ -17,21 +17,20 @@ const INFO_ROWS: { value: string; href?: string }[] = [
 export default function Skiper14() {
   return (
     <footer id="footer" className="relative overflow-hidden bg-df-black text-df-white">
-      <div className="mx-auto w-full max-w-[1440px] px-4 pt-16 md:px-8 md:pt-24">
-        {/* brain animation — the ASCII/dot signal loop, on ink so its black
-            plate blends into the footer. Animated webp: no motion-reduce hook,
-            but it's ambient (no essential info), so that's acceptable. */}
-        <div className="mb-12 flex justify-center md:mb-16">
-          <img
-            src="/footer-brain.webp"
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            decoding="async"
-            className="pointer-events-none w-full max-w-[520px] select-none opacity-90 mix-blend-screen"
-          />
-        </div>
+      {/* brain animation — the ASCII/dot signal loop, full-bleed edge to edge
+          across the top of the footer. On ink so its black plate blends via
+          mix-blend-screen. Animated webp: no motion-reduce hook, but it's
+          ambient (no essential info), so that's acceptable. */}
+      <img
+        src="/footer-brain.webp"
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        className="pointer-events-none block w-full select-none opacity-90 mix-blend-screen"
+      />
 
+      <div className="mx-auto w-full max-w-[1440px] px-4 pt-8 md:px-8 md:pt-12">
         {/* small info rows */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-t border-df-white/10 pt-8 sm:grid-cols-3 md:grid-cols-5">
           {INFO_ROWS.map((row, i) => (
