@@ -31,6 +31,7 @@ import Image from "next/image";
 import { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import LineSidebar from "@/components/ui/line-sidebar";
 
 const MEDIA = "/media";
 
@@ -396,48 +397,43 @@ export default function BrinkSystemExplorer() {
                 <span className="text-[0.95rem] font-medium text-df-white">{live.label}</span>
               </button>
 
-              {ITEMS.map((item, i) => {
-                const open = i === activeIndex;
-                return open ? (
-                  /* expanded card: bold title runs inline into the description */
-                  <div
-                    key={item.id}
-                    id={`bse-panel-${item.id}`}
-                    role="region"
-                    aria-label={item.title}
-                    className="w-full rounded-[1.3rem] bg-df-white/[0.07] px-5 py-4 shadow-[0_8px_40px_rgba(0,0,0,0.3)] ring-1 ring-df-white/10 backdrop-blur-2xl"
-                  >
-                    <button
-                      data-bse-trigger
-                      aria-expanded="true"
-                      aria-controls={`bse-panel-${item.id}`}
-                      onClick={() => go(i)}
-                      className="text-left"
-                    >
-                      <p className="text-[0.9rem] leading-relaxed text-df-white/60">
-                        <strong className="font-semibold text-df-white">{item.title}</strong>{" "}
-                        {item.description}
-                      </p>
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    key={item.id}
-                    data-bse-trigger
-                    aria-expanded="false"
-                    aria-controls={`bse-panel-${item.id}`}
-                    onClick={() => go(i)}
-                    className="flex min-h-11 items-center gap-3 rounded-full bg-df-white/[0.06] py-2 pl-2.5 pr-5 backdrop-blur-2xl ring-1 ring-df-white/10 transition-colors hover:bg-df-white/[0.14]"
-                  >
-                    <span aria-hidden="true" className="grid h-[22px] w-[22px] place-items-center rounded-full bg-df-white/[0.12]">
-                      <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                        <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                      </svg>
-                    </span>
-                    <span className="text-[0.95rem] font-medium text-df-white">{item.label}</span>
-                  </button>
-                );
-              })}
+              {/* description box: shows the active item's title + copy, above
+                  the animated line list (selecting an item updates it). */}
+              <div
+                id={`bse-panel-${ITEMS[activeIndex].id}`}
+                role="region"
+                aria-label={ITEMS[activeIndex].title}
+                className="w-full max-w-[20.5rem] rounded-[1.3rem] bg-df-white/[0.07] px-5 py-4 shadow-[0_8px_40px_rgba(0,0,0,0.3)] ring-1 ring-df-white/10 backdrop-blur-2xl"
+              >
+                <p className="text-[0.9rem] leading-relaxed text-df-white/60">
+                  <strong className="font-semibold text-df-white">{ITEMS[activeIndex].title}</strong>{" "}
+                  {ITEMS[activeIndex].description}
+                </p>
+              </div>
+
+              {/* animated numbered line list (React Bits LineSidebar, recolored
+                  to the Brink palette; controlled so the chevrons stay in sync) */}
+              <LineSidebar
+                items={ITEMS.map((it) => it.label)}
+                activeIndex={activeIndex}
+                onItemClick={(i) => go(i)}
+                accentColor="#ff5b3a"
+                textColor="#6b6b6b"
+                markerColor="#6b6b6b"
+                showIndex
+                showMarker
+                proximityRadius={90}
+                maxShift={22}
+                falloff="smooth"
+                markerLength={46}
+                markerGap={0}
+                tickScale={0.5}
+                scaleTick
+                itemGap={16}
+                fontSize={0.98}
+                smoothing={120}
+                className="mt-1"
+              />
 
               {/* mobile prev/next */}
               <div className="mt-1 flex gap-3 lg:hidden">
