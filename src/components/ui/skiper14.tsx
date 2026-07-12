@@ -30,7 +30,7 @@ export default function Skiper14() {
       {/* TOP — brain visual in its own dark band. The ASCII/dot signal loop,
           object-cover across a tall block. On ink so its black plate blends via
           mix-blend-screen. Animated webp: no motion-reduce hook, but ambient. */}
-      <div className="h-[70vh] min-h-[520px] w-full overflow-hidden">
+      <div className="h-[44vh] min-h-[340px] w-full overflow-hidden">
         <img
           src="/footer-brain.webp"
           alt=""
