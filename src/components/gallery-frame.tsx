@@ -82,17 +82,18 @@ export default function GalleryFrame() {
       const p = isReduced ? 1 : pRef.current;
       const pe = easeInOutCubic(p);
 
-      // Studio gray fades out over the first ~60% → lab (always behind) shows.
+      // Studio gray fades out as you scroll → lab (always behind) shows.
       if (studioRef.current) {
-        studioRef.current.style.opacity = String(isReduced ? 0 : 1 - smoothstep(0, 0.6, p));
+        studioRef.current.style.opacity = String(isReduced ? 0 : 1 - smoothstep(0.05, 0.65, p));
       }
       // Lab settles from a slight zoom to 1 as it's revealed.
       if (labRef.current) {
-        labRef.current.style.transform = `scale(${1.06 + (1 - 1.06) * pe})`;
+        labRef.current.style.transform = `scale(${1.08 + (1 - 1.08) * pe})`;
       }
-      // Ring floats the whole way, easing to its resting size.
+      // Ring starts LARGE (fills most of the viewport) and SHRINKS to a small
+      // resting size in the lab as progress goes 0 → 1.
       if (ringRef.current) {
-        ringRef.current.style.transform = `scale(${1.06 + (0.98 - 1.06) * pe})`;
+        ringRef.current.style.transform = `scale(${1.9 + (0.5 - 1.9) * pe})`;
       }
     };
 
