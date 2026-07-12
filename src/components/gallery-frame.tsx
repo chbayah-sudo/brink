@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
  */
 const RING_SRC = "/rro-cutout.webp"; // animated, transparent-background ring
 const RING_POSTER = "/rro-poster.png"; // single still frame (reduced motion)
-const LAB_SRC = "/fifi.png";
+const LAB_SRC = "/fifi.jpg";
 
 function clamp(v: number, a: number, b: number) {
   return v < a ? a : v > b ? b : v;
