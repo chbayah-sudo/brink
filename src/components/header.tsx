@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useMenu } from "@/components/menu-context";
 import { PixelMark, Transport, VuDashes } from "@/components/glyphs";
+import { HyperText } from "@/components/ui/hyper-text";
 
 export function Header() {
   const { setOpen } = useMenu();
@@ -33,9 +34,12 @@ export function Header() {
           )}
         >
           <PixelMark className="text-df-white group-hover:text-df-orange transition-colors" />
-          <span className="font-mono text-[11px] tracking-[0.22em] hidden sm:block">
-            DRAGONFLY
-          </span>
+          <HyperText
+            as="span"
+            className="font-mono text-[11px] tracking-[0.22em] hidden sm:block"
+          >
+            BRINK
+          </HyperText>
         </a>
 
         {/* center transport bar */}
