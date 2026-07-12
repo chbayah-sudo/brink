@@ -32,6 +32,7 @@ import { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import LineSidebar from "@/components/ui/line-sidebar";
+import GradualBlur from "@/components/ui/gradual-blur";
 
 const MEDIA = "/media";
 
@@ -459,6 +460,18 @@ export default function BrinkSystemExplorer() {
             </div>
           </div>
         </div>
+
+        {/* soft blur fade at the bottom edge of the product canvas — the
+            content gently blurs into the ink base as it reaches the bottom */}
+        <GradualBlur
+          target="parent"
+          position="bottom"
+          height="5.5rem"
+          strength={2}
+          divCount={6}
+          curve="bezier"
+          opacity={1}
+        />
       </div>
     </section>
   );
