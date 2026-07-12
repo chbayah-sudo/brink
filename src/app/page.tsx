@@ -10,7 +10,7 @@ import GalleryFrame from "@/components/gallery-frame";
 import { Team } from "@/components/team";
 import { Portfolio } from "@/components/portfolio";
 import { Careers } from "@/components/careers";
-import { Footer } from "@/components/footer";
+import Skiper14 from "@/components/ui/skiper14";
 
 export default function Home() {
   return (
@@ -28,7 +28,7 @@ export default function Home() {
           <Team />
           <Portfolio />
           <Careers />
-          <Footer />
+          <Skiper14 />
         </main>
       </MenuProvider>
     </LenisProvider>
