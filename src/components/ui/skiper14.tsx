@@ -17,18 +17,20 @@ const INFO_ROWS: { value: string; href?: string }[] = [
 export default function Skiper14() {
   return (
     <footer id="footer" className="relative overflow-hidden bg-df-black text-df-white">
-      {/* brain animation — the ASCII/dot signal loop, full-bleed edge to edge
-          across the top of the footer. On ink so its black plate blends via
-          mix-blend-screen. Animated webp: no motion-reduce hook, but it's
-          ambient (no essential info), so that's acceptable. */}
-      <img
-        src="/footer-brain.webp"
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        decoding="async"
-        className="pointer-events-none block w-full select-none opacity-90 mix-blend-screen"
-      />
+      {/* brain animation — the ASCII/dot signal loop, filling the whole empty
+          band at the top of the footer (object-cover across a tall block). On
+          ink so its black plate blends via mix-blend-screen. Animated webp: no
+          motion-reduce hook, but it's ambient (no essential info). */}
+      <div className="h-[70vh] min-h-[520px] w-full overflow-hidden">
+        <img
+          src="/footer-brain.webp"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+          className="pointer-events-none h-full w-full select-none object-cover opacity-90 mix-blend-screen"
+        />
+      </div>
 
       <div className="mx-auto w-full max-w-[1440px] px-4 pt-8 md:px-8 md:pt-12">
         {/* small info rows */}
