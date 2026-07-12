@@ -2,8 +2,8 @@ import { MenuProvider } from "@/components/menu-context";
 import { Header } from "@/components/header";
 import { MenuOverlay } from "@/components/menu-overlay";
 import { Hero } from "@/components/hero";
+import { AsciiBrain } from "@/components/ascii-brain";
 import { LenisProvider } from "@/components/lenis-provider";
-import { About } from "@/components/about";
 import { Writing } from "@/components/writing";
 import { Team } from "@/components/team";
 import { Portfolio } from "@/components/portfolio";
@@ -19,7 +19,7 @@ export default function Home() {
         <MenuOverlay />
         <main className="relative">
           <Hero />
-          <About />
+          <AsciiBrain />
           <Writing />
           <Team />
           <Portfolio />

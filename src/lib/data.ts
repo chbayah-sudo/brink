@@ -319,7 +319,7 @@ export const portfolio: PortfolioCompany[] = [
 
 export const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "Thesis", href: "#about" },
+  { label: "Thesis", href: "#brain" },
   { label: "Science", href: "#writing" },
   { label: "Product", href: "#team" },
   { label: "Who It's For", href: "#portfolio" },
