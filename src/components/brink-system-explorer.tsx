@@ -30,6 +30,8 @@
 import Image from "next/image";
 import { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+
 const MEDIA = "/media";
 
 /* ----------------------------- typed content ----------------------------- */
@@ -297,9 +299,14 @@ export default function BrinkSystemExplorer() {
       {/* header: remove if the surrounding page already tells this story */}
       <header className="mb-7 max-w-2xl lg:mb-9">
         <p className="mb-3 font-mono-df text-[0.58rem] tracking-[0.28em] text-df-white/40">HOW BRINK WORKS</p>
-        <h2 id="bse-heading" className="font-grotesque text-3xl leading-[1.05] tracking-tight text-df-white sm:text-4xl lg:text-5xl">
-          One system. Every moment between resistance and your real limit.
-        </h2>
+        <TextGenerateEffect
+          as="h2"
+          id="bse-heading"
+          words="One system. Every moment between resistance and your real limit."
+          filter={true}
+          duration={0.8}
+          className="font-grotesque text-3xl leading-[1.05] tracking-tight text-df-white sm:text-4xl lg:text-5xl"
+        />
         <p className="mt-3.5 max-w-lg text-[0.95rem] leading-relaxed text-df-white/50">
           BRINK reads you, learns you, and steps in at the right moment. It gets
           sharper with every session.
