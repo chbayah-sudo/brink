@@ -69,8 +69,8 @@ export default function Skiper14() {
       {/* BOTTOM — giant wordmark on its OWN clean panel, separated from the
           brain so it stays sharp and fully readable. Panel look is controlled
           by WORDMARK_PANEL (default: light cream panel, ink text). */}
-      <div className={`select-none px-2 pb-4 pt-5 md:px-4 md:pb-6 md:pt-7 ${PANEL_CLASS}`}>
-        <h2 className="font-grotesque leading-[0.74] tracking-[-0.03em] text-center whitespace-nowrap text-[clamp(3rem,15vw,14rem)]">
+      <div className={`select-none px-2 pb-3 pt-3 md:px-4 md:pb-4 md:pt-4 ${PANEL_CLASS}`}>
+        <h2 className="font-grotesque leading-[0.74] tracking-[-0.03em] text-center whitespace-nowrap text-[clamp(2rem,9vw,8rem)]">
           BRINK
         </h2>
       </div>
