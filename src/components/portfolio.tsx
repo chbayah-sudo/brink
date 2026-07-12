@@ -44,26 +44,24 @@ export function Portfolio() {
   return (
     <section id="portfolio" className="relative py-24 md:py-36">
       <div className="max-w-[1440px] mx-auto px-4 md:px-8">
-        <SectionHeader number="04" title="TEAM" sec="SEC-04" />
+        <SectionHeader number="04" title="WHO IT'S FOR" sec="SEC-04" />
 
         {/* intro */}
         <div className="mt-20 md:mt-32 space-y-16 md:space-y-20">
           <Reveal>
             <p className="font-serif-df text-[#a3a19c] text-2xl md:text-4xl leading-[1.15] max-w-3xl">
-              From protocols to exchanges to apps and beyond, we back teams
-              building generational companies and products in crypto across
-              sectors and stages.
+              For the last ten percent.
             </p>
           </Reveal>
           <Reveal className="md:pl-[38%]" delay={120}>
             <div className="relative max-w-xl">
               <span className="mono-label absolute -top-6 left-0 md:top-1.5 md:-left-24">
-                Tenet
+                Use
               </span>
               <p className="font-serif-df text-df-gray text-lg md:text-xl leading-[1.4]">
-                We support teams tackling big, wicked problems and pushing the
-                boundaries of the industry. Working on something weird? We love
-                the weird stuff.
+                Recreational athletes chasing one more rep. Deep workers pushing
+                through the wall. Anyone whose limit is mental before it&apos;s
+                physical.
               </p>
             </div>
           </Reveal>

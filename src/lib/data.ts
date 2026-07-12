@@ -322,7 +322,7 @@ export const navLinks = [
   { label: "Thesis", href: "#about" },
   { label: "Science", href: "#writing" },
   { label: "Product", href: "#team" },
-  { label: "Team", href: "#portfolio" },
+  { label: "Who It's For", href: "#portfolio" },
   { label: "Contact", href: "#footer" },
 ];
 

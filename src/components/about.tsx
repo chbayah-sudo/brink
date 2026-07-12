@@ -10,21 +10,19 @@ export function About() {
         <div className="mt-20 md:mt-32 space-y-16 md:space-y-24">
           <Reveal>
             <p className="font-serif-df text-[#a3a19c] text-2xl md:text-4xl lg:text-[52px] leading-[1.12] max-w-4xl">
-              Eight years in crypto, Dragonfly brings access and influence to
-              crypto teams with global aspirations to find adoption anywhere.
+              Your brain quits first.
             </p>
           </Reveal>
 
           <Reveal className="md:pl-[38%]" delay={120}>
             <div className="relative max-w-xl">
               <span className="mono-label absolute -top-6 left-0 md:top-1.5 md:-left-24">
-                Ethos
+                Thesis
               </span>
               <p className="font-serif-df text-df-gray text-xl md:text-2xl leading-[1.4]">
-                We are a team of deeply technical crypto-natives. We invest
-                across stages, from seed to Series B and beyond. Our checks go
-                anywhere from $3M to $30M+, and we invest globally, with offices
-                in New York City and Singapore.
+                Fatigue is a decision, not a limit. Your prefrontal cortex calls
+                it before your body is actually done. Brink reads that signal —
+                and hands the reserve back.
               </p>
             </div>
           </Reveal>
