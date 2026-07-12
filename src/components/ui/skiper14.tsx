@@ -37,7 +37,7 @@ export default function Skiper14() {
           aria-hidden="true"
           loading="lazy"
           decoding="async"
-          className="pointer-events-none h-full w-full select-none object-cover opacity-90 mix-blend-screen"
+          className="pointer-events-none h-full w-full select-none object-contain opacity-90 mix-blend-screen"
         />
       </div>
 
