@@ -10,30 +10,27 @@ const INFO_ROWS: { value: string; href?: string }[] = [
   { value: "AND ONLINE" },
   { value: "NEUROTECH" },
   { value: "PRE-FATIGUE DETECTION" },
-  { value: "CONTACT", href: "#footer" },
+  // TODO: replace with the real contact address once provided.
+  { value: "CONTACT", href: "mailto:YOUR_EMAIL_HERE" },
 ];
-
-// ASCII-art element above the wordmark (kept from the skiper14 layout), drawn
-// with the site's ASCII ramp so it reads as a fading signal band.
-const ASCII_ART = [
-  ".:-=+*#%@@@%#*+=-:.",
-  ":-=+*#%@@@@@@@@@%#*+=-:",
-  "-=+*#%@@@@@@@@@@@@@#*+=-",
-  ":-=+*#%@@@@@@@@@%#*+=-:",
-  ".:-=+*#%@@@%#*+=-:.",
-].join("\n");
 
 export default function Skiper14() {
   return (
     <footer id="footer" className="relative overflow-hidden bg-df-black text-df-white">
       <div className="mx-auto w-full max-w-[1440px] px-4 pt-16 md:px-8 md:pt-24">
-        {/* ASCII-art element */}
-        <pre
-          aria-hidden="true"
-          className="mb-12 select-none text-center font-mono-df text-[9px] leading-[1.2] text-df-white/25 md:mb-16 md:text-[11px]"
-        >
-          {ASCII_ART}
-        </pre>
+        {/* brain animation — the ASCII/dot signal loop, on ink so its black
+            plate blends into the footer. Animated webp: no motion-reduce hook,
+            but it's ambient (no essential info), so that's acceptable. */}
+        <div className="mb-12 flex justify-center md:mb-16">
+          <img
+            src="/footer-brain.webp"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+            className="pointer-events-none w-full max-w-[520px] select-none opacity-90 mix-blend-screen"
+          />
+        </div>
 
         {/* small info rows */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-t border-df-white/10 pt-8 sm:grid-cols-3 md:grid-cols-5">

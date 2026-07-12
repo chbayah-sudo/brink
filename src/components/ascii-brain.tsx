@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+
 // --- ASCII brain tuning (restored from the original hero renderer) ----------
 const ASCII_RAMP = " .:-=+*#%@";
 const CELL_PX = 9;
@@ -99,6 +101,9 @@ export function AsciiBrain() {
   const pRef = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isReduced, setIsReduced] = useState(false);
+  // Fires the headline's text-generate reveal once the brain scene is
+  // actually surfacing (scroll progress), not merely in the DOM viewport.
+  const [headlineIn, setHeadlineIn] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -146,6 +151,9 @@ export function AsciiBrain() {
       const total = section.offsetHeight - window.innerHeight;
       const scrolled = clamp(-rect.top, 0, total || 1);
       pRef.current = total > 0 ? scrolled / total : 0;
+      // Reveal the headline as the brain assembles (idempotent; React bails
+      // after the first true).
+      if (pRef.current > 0.6) setHeadlineIn(true);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -396,11 +404,14 @@ export function AsciiBrain() {
         <div ref={textRef} className="absolute inset-0 flex items-end" style={{ opacity: 0 }}>
           <div className="mx-auto w-full max-w-[1440px] px-4 md:px-8 pb-14 md:pb-20">
             <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between md:gap-16">
-              <h2 className="font-mono-df uppercase leading-[1.05] tracking-[0.02em] text-df-white text-3xl md:text-5xl lg:text-6xl">
-                Your brain
-                <br />
-                quits first
-              </h2>
+              <TextGenerateEffect
+                as="h2"
+                words={"Your brain\nquits first"}
+                filter={true}
+                duration={0.8}
+                start={headlineIn}
+                className="font-mono-df uppercase leading-[1.05] tracking-[0.02em] text-df-white text-3xl md:text-5xl lg:text-6xl"
+              />
               <div className="max-w-[22rem] md:pb-1.5">
                 <p className="font-mono-df text-df-gray text-sm md:text-[15px] leading-[1.5]">
                   <span className="text-df-orange">&bull;</span> Fatigue is a
