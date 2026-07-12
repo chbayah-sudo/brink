@@ -4,31 +4,20 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Scroll-driven "video into gallery frame" section.
+ * Scroll-driven "ring into the lab" section.
  *
- * At scroll 0 the video (public/ro.mp4) is full-screen. As you scroll through
- * the pinned section it shrinks — via a single uniform scale + translate, so
- * the video never distorts — while the room photo (public/fifi.png) fades and
- * settles in behind it. At scroll 1 the video sits exactly inside the wall
- * screen in the photo.
+ * The ring (public/ro22-cutout.webp — an alpha-matted spin, its original gray
+ * studio floor removed) floats centered the whole way through. Behind it, a
+ * gray studio gradient (echoing ro22's original backdrop) cross-fades away as
+ * you scroll, revealing the lab photo (public/fifi.png) — so the ring appears
+ * to lift out of the studio and settle into the lab.
  *
- * ─────────────────────────────────────────────────────────────────────────
- * TUNE ME: the wall-frame rectangle, as PERCENTAGES OF THE VIEWPORT.
- *   left/top   = the frame's top-left corner (% of viewport width / height)
- *   width/height = the frame's size (% of viewport width / height)
- * The video's END position/size == this rectangle. Nudge these until the
- * video lines up with the screen on the wall in fifi.png, then reload.
- * ─────────────────────────────────────────────────────────────────────────
+ * Transform-only (scale) for perf. Reduced motion shows the end state static
+ * (ring in the lab, no studio) and swaps the animated ring for a still frame.
  */
-const FRAME = {
-  left: 43.2, // %
-  top: 41.4, // %
-  width: 12.2, // %
-  height: 10.6, // %
-};
-
-// Background photo starts slightly zoomed-in and eases back to 1.
-const BG_START_SCALE = 1.08;
+const RING_SRC = "/ro22-cutout.webp"; // animated, transparent-background ring
+const RING_POSTER = "/ro22-poster.png"; // single still frame (reduced motion)
+const LAB_SRC = "/fifi.png";
 
 function clamp(v: number, a: number, b: number) {
   return v < a ? a : v > b ? b : v;
@@ -43,9 +32,9 @@ function smoothstep(e0: number, e1: number, x: number) {
 
 export default function GalleryFrame() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const videoWrapRef = useRef<HTMLDivElement | null>(null);
-  const bgRef = useRef<HTMLDivElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const labRef = useRef<HTMLDivElement | null>(null);
+  const studioRef = useRef<HTMLDivElement | null>(null);
+  const ringRef = useRef<HTMLDivElement | null>(null);
   const pRef = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isReduced, setIsReduced] = useState(false);
@@ -58,7 +47,6 @@ export default function GalleryFrame() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  // On-screen tracking: pause the video + skip the rAF loop when off-screen.
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -69,17 +57,6 @@ export default function GalleryFrame() {
     observer.observe(section);
     return () => observer.disconnect();
   }, []);
-
-  // Play only while visible; honor reduced motion by staying paused (static).
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (isVisible && !isReduced) {
-      video.play().catch(() => undefined);
-    } else {
-      video.pause();
-    }
-  }, [isVisible, isReduced]);
 
   // Eased scroll progress 0..1 for the pinned section (window scroll = Lenis).
   useEffect(() => {
@@ -99,29 +76,23 @@ export default function GalleryFrame() {
     };
   }, []);
 
-  // Apply the transforms. Reduced motion pins the end state once; otherwise a
-  // rAF loop maps eased scroll progress onto transform-only scale/translate.
+  // Apply transforms/opacity. Reduced motion pins the end state once.
   useEffect(() => {
     const apply = () => {
-      const p = isReduced ? 1 : easeInOutCubic(pRef.current);
+      const p = isReduced ? 1 : pRef.current;
+      const pe = easeInOutCubic(p);
 
-      // Video: rest layout == FRAME rect. At p=0 scale it up (uniformly) and
-      // recenter so it covers the viewport; at p=1 it's identity (in-frame).
-      const cx = FRAME.left + FRAME.width / 2;
-      const cy = FRAME.top + FRAME.height / 2;
-      const coverScale = Math.max(100 / FRAME.width, 100 / FRAME.height);
-      const scale = coverScale + (1 - coverScale) * p;
-      const tx = (50 - cx) * (1 - p);
-      const ty = (50 - cy) * (1 - p);
-      if (videoWrapRef.current) {
-        videoWrapRef.current.style.transform = `translate(${tx}vw, ${ty}vh) scale(${scale})`;
+      // Studio gray fades out over the first ~60% → lab (always behind) shows.
+      if (studioRef.current) {
+        studioRef.current.style.opacity = String(isReduced ? 0 : 1 - smoothstep(0, 0.6, p));
       }
-
-      // Background: fade in over the first half, ease from slightly-zoomed to 1.
-      if (bgRef.current) {
-        const bgScale = BG_START_SCALE + (1 - BG_START_SCALE) * p;
-        bgRef.current.style.transform = `scale(${bgScale})`;
-        bgRef.current.style.opacity = String(isReduced ? 1 : smoothstep(0, 0.5, pRef.current));
+      // Lab settles from a slight zoom to 1 as it's revealed.
+      if (labRef.current) {
+        labRef.current.style.transform = `scale(${1.06 + (1 - 1.06) * pe})`;
+      }
+      // Ring floats the whole way, easing to its resting size.
+      if (ringRef.current) {
+        ringRef.current.style.transform = `scale(${1.06 + (0.98 - 1.06) * pe})`;
       }
     };
 
@@ -142,38 +113,31 @@ export default function GalleryFrame() {
   return (
     <section ref={sectionRef} id="gallery-frame" className="relative h-[250vh] bg-df-black">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* room photo — hidden + slightly zoomed at 0, resolves in by mid-scroll */}
-        <div
-          ref={bgRef}
-          className="absolute inset-0 will-change-transform"
-          style={{ opacity: 0, transform: `scale(${BG_START_SCALE})`, transformOrigin: "center center" }}
-        >
-          <Image src="/fifi.png" alt="" fill sizes="100vw" className="object-cover" unoptimized />
+        {/* lab photo — always present behind, revealed as the studio fades */}
+        <div ref={labRef} className="absolute inset-0 will-change-transform">
+          <Image src={LAB_SRC} alt="" fill sizes="100vw" className="object-cover" unoptimized />
         </div>
 
-        {/* foreground video — rest layout is the FRAME rect; transform scales it
-            up to full-screen at scroll 0 and back into the frame at scroll 1 */}
+        {/* studio backdrop echoing ro22's gray floor; fades out on scroll */}
         <div
-          ref={videoWrapRef}
-          className="absolute overflow-hidden will-change-transform"
-          style={{
-            left: `${FRAME.left}%`,
-            top: `${FRAME.top}%`,
-            width: `${FRAME.width}%`,
-            height: `${FRAME.height}%`,
-            transformOrigin: "center center",
-          }}
+          ref={studioRef}
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(180deg,#2b3137 0%,#565d65 46%,#c7cbd0 100%)" }}
+        />
+
+        {/* floating ring (alpha-matted) — visible throughout */}
+        <div
+          ref={ringRef}
+          className="absolute inset-0 flex items-center justify-center will-change-transform [transform-origin:center_center]"
         >
-          <video
-            ref={videoRef}
-            src="/ro.mp4"
-            className="h-full w-full object-cover"
-            muted
-            loop
-            playsInline
-            autoPlay={!isReduced}
-            preload="auto"
-          />
+          {isReduced ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={RING_POSTER} alt="Brink ring" className="h-full w-full object-contain" />
+          ) : (
+            // Animated webp plays on its own; not driven by scroll.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={RING_SRC} alt="Brink ring" className="h-full w-full object-contain" />
+          )}
         </div>
       </div>
     </section>
