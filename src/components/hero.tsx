@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Cross, GridDots } from "@/components/glyphs";
+import { TypingAnimation } from "@/components/ui/typing-animation";
 
 function CornerLetter({
   letter,
@@ -71,11 +72,28 @@ export function Hero() {
     }
   }, [isVisible, isReduced]);
 
+  // The clip is authored to run at 2x. playbackRate survives loops but resets
+  // on load, so set it on mount and re-assert on the events that can clear it.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const setRate = () => {
+      video.playbackRate = 2;
+    };
+    setRate();
+    video.addEventListener("loadedmetadata", setRate);
+    video.addEventListener("play", setRate);
+    return () => {
+      video.removeEventListener("loadedmetadata", setRate);
+      video.removeEventListener("play", setRate);
+    };
+  }, []);
+
   return (
     <section id="home" className="relative h-[100svh] overflow-hidden">
       <video
         ref={videoRef}
-        src="/ascii-magic-6.mp4"
+        src="/hero-final.mp4"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
         muted
         loop
@@ -95,6 +113,24 @@ export function Hero() {
           <h1 className="hero-word font-grotesque text-df-white text-center leading-[0.8] tracking-[-0.03em] whitespace-nowrap text-[clamp(54px,15.5vw,280px)] [text-shadow:0_0_40px_rgba(10,12,16,0.55)]">
             BRINK
           </h1>
+
+          {/* Typing tagline beneath the wordmark. Loops the three phrases;
+              static first phrase under prefers-reduced-motion. */}
+          <TypingAnimation
+            as="h1"
+            phrases={[
+              "YOUR BRAIN QUITS FIRST",
+              "THE SIGNAL BEFORE THE STOP",
+              "FIND YOUR RESERVE",
+            ]}
+            typeSpeed={70}
+            deleteSpeed={40}
+            pauseDelay={1800}
+            loop
+            startOnView
+            cursorStyle="block"
+            className="font-mono-df text-df-white uppercase tracking-[0.14em] text-[clamp(14px,2.4vw,26px)] [text-shadow:0_0_24px_rgba(10,12,16,0.6)]"
+          />
         </div>
 
         <div className="flex items-center justify-between">

@@ -12,13 +12,37 @@ const SCATTER = 0.4;
 
 const INK: [number, number, number] = [10, 12, 16]; // #0a0c10
 
-// --- scroll-linked handoff windows (progress 0..1 across #brain) ------------
-// Wrapper opacity crossfades the whole scene in over the hero video.
-const FADE_IN = 0.02;
-const FADE_FULL = 0.44;
-// Glyph assembly (scatter -> resolved) runs slightly wider than the fade.
-const ASSEMBLE_IN = 0.0;
-const ASSEMBLE_FULL = 0.52;
+// The hero clip the canvas re-draws during the zoom-out. MUST match whatever
+// <Hero> is actually playing, otherwise the handoff at scroll 0 would jump.
+const HERO_SRC = "/hero-final.mp4";
+
+// --- one continuous scroll-driven motion (progress 0..1 across #brain) ------
+// The whole hero->brain transition is ONE eased zoom-out. These windows carve
+// that single progress axis into overlapping, cross-blended phases so every
+// scroll position looks intentional:
+//   p 0.00 -> full-bleed hero video (real <Hero> shows through the canvas)
+//   p ~.06 -> canvas has taken over the hero frame (fast, seamless handoff)
+//   p 0->.62 -> video zooms out to a centered rect + edges shred into strips
+//   p .32->1 -> ASCII brain assembles from scatter as the strips dissolve
+//   p 1.00 -> ASCII brain, fully resolved (final resting state)
+const WRAP_IN = 0.0; // canvas crossfades over the real hero this quickly...
+const WRAP_FULL = 0.06;
+const ZOOM_IN = 0.0; // ...so the zoom-out reads as continuous with the hero
+const ZOOM_FULL = 0.62;
+const STRIP_FADE_IN = 0.5; // strips start dissolving here...
+const STRIP_FADE_FULL = 0.92;
+const BRAIN_IN = 0.32; // ASCII assembly starts while strips are still scattering
+const BRAIN_FULL = 1.0;
+
+// Zoom-out target: the video shrinks to this fraction of the viewport before it
+// fully dissolves into the brain.
+const ZOOM_END_SCALE = 0.3;
+// Vertical strips the shredding edges break into. Lower this first if heavy.
+const STRIPS = 56;
+// How far edge strips fly outward (fraction of viewport width) at full zoom.
+const EDGE_SCATTER = 0.55;
+// Extra outward push per strip brightness (fraction of viewport width).
+const BRIGHT_SCATTER = 0.1;
 
 function clamp(v: number, a: number, b: number) {
   return v < a ? a : v > b ? b : v;
@@ -64,8 +88,11 @@ function coverRect(vw: number, vh: number, dw: number, dh: number) {
 
 export function AsciiBrain() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
+  const textRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const heroRef = useRef<HTMLVideoElement | null>(null); // copy of the hero clip
   const brainRef = useRef<HTMLVideoElement | null>(null); // /brain-hero.mp4
+  const heroBufRef = useRef<HTMLCanvasElement | null>(null);
   const brainBufRef = useRef<HTMLCanvasElement | null>(null);
   const frameRef = useRef<number | null>(null);
   // Eased scroll progress 0..1 for this section, read in the render loop.
@@ -81,7 +108,7 @@ export function AsciiBrain() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  // Track whether the brain scene is on screen (pause the loop + video off it).
+  // Track whether the brain scene is on screen (pause the loop + videos off it).
   useEffect(() => {
     const section = document.getElementById("brain");
     if (!section) return;
@@ -93,19 +120,24 @@ export function AsciiBrain() {
     return () => observer.disconnect();
   }, []);
 
-  // Pause the brain video while the scene is off-screen (perf).
+  // Pause both source videos while the scene is off-screen (perf). The hero
+  // copy runs at 2x to match the real hero, so the zoom-out handoff stays in
+  // sync.
   useEffect(() => {
+    const hero = heroRef.current;
     const brain = brainRef.current;
-    if (!brain) return;
     if (isVisible) {
-      brain.play().catch(() => undefined);
+      if (hero) hero.playbackRate = 2;
+      hero?.play().catch(() => undefined);
+      brain?.play().catch(() => undefined);
     } else {
-      brain.pause();
+      hero?.pause();
+      brain?.pause();
     }
   }, [isVisible]);
 
   // Scroll progress for the pinned section: 0 at top, 1 once fully scrolled.
-  // Driven by the existing Lenis scroll (window scroll on the root scroller).
+  // Driven by the existing Lenis smooth scroll (window scroll on the root).
   useEffect(() => {
     const onScroll = () => {
       const section = document.getElementById("brain");
@@ -126,11 +158,12 @@ export function AsciiBrain() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const brain = brainRef.current;
-    if (!canvas || !brain) return;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const hbuf = (heroBufRef.current ??= document.createElement("canvas"));
+    const hbctx = hbuf.getContext("2d", { willReadFrequently: true })!;
     const bbuf = (brainBufRef.current ??= document.createElement("canvas"));
     const bbctx = bbuf.getContext("2d", { willReadFrequently: true })!;
 
@@ -148,23 +181,111 @@ export function AsciiBrain() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const p = pRef.current;
+      const hero = heroRef.current;
+      const brain = brainRef.current;
 
-      // --- scroll-linked crossfade: transparent (hero shows through) -> ink ---
-      // Reduced motion keeps the same opacity crossfade but skips the scatter.
-      const fade = smoothstep(FADE_IN, FADE_FULL, p);
-      if (wrapRef.current) wrapRef.current.style.opacity = String(fade);
+      // --- wrapper crossfade: real hero shows through -> canvas owns the frame
+      // Reduced motion uses a gentle plain crossfade instead of the fast handoff.
+      const wrapFade = isReduced
+        ? smoothstep(0.05, 0.5, p)
+        : smoothstep(WRAP_IN, WRAP_FULL, p);
+      if (wrapRef.current) wrapRef.current.style.opacity = String(wrapFade);
 
-      const brainIn = smoothstep(ASSEMBLE_IN, ASSEMBLE_FULL, p);
+      // Thesis labels resolve in with the brain, not during the shred.
+      const brainIn = isReduced
+        ? smoothstep(0.1, 0.5, p)
+        : smoothstep(BRAIN_IN, BRAIN_FULL, p);
+      if (textRef.current) textRef.current.style.opacity = String(brainIn);
 
-      // Ink background fills the whole canvas; the wrapper opacity does the
-      // crossfade over the still-playing hero video underneath.
+      // --- ink background -------------------------------------------------
+      // Non-reduced: solid ink behind everything (hero strips cover it while
+      // full-bleed, then reveal it as they scatter). Reduced: ink itself
+      // crossfades in over the real hero as the plain fallback.
+      const inkAlpha = isReduced ? smoothstep(0.1, 0.5, p) : 1;
       ctx.globalCompositeOperation = "source-over";
-      ctx.globalAlpha = 1;
+      ctx.globalAlpha = inkAlpha;
       ctx.fillStyle = `rgb(${INK[0]},${INK[1]},${INK[2]})`;
       ctx.fillRect(0, 0, cssW, cssH);
+      ctx.globalAlpha = 1;
+
+      // ---------------- hero video: zoom-out + edge shred -----------------
+      // Skipped entirely under reduced motion (that path is a pure crossfade).
+      const heroReady = !!hero && hero.readyState >= 2 && hero.videoWidth > 0;
+      const stripFade = 1 - smoothstep(STRIP_FADE_IN, STRIP_FADE_FULL, p);
+      if (!isReduced && heroReady && stripFade > 0.001) {
+        // 0 = full-bleed hero, 1 = tiny centered rect (fully dissolved).
+        const zoom = easeInOutCubic(smoothstep(ZOOM_IN, ZOOM_FULL, p));
+
+        // Sample per-strip brightness from a tiny STRIPS x HB_H buffer so the
+        // displacement can be brightness-weighted without per-pixel work.
+        const HB_H = 6;
+        if (hbuf.width !== STRIPS || hbuf.height !== HB_H) {
+          hbuf.width = STRIPS;
+          hbuf.height = HB_H;
+        }
+        const cover = coverRect(hero!.videoWidth, hero!.videoHeight, cssW, cssH);
+        hbctx.setTransform(1, 0, 0, 1, 0, 0);
+        hbctx.imageSmoothingEnabled = true;
+        hbctx.clearRect(0, 0, STRIPS, HB_H);
+        hbctx.drawImage(hero!, cover.sx, cover.sy, cover.sw, cover.sh, 0, 0, STRIPS, HB_H);
+        const hd = hbctx.getImageData(0, 0, STRIPS, HB_H).data;
+
+        // Centered destination rectangle the whole frame shrinks toward.
+        const s = 1 - (1 - ZOOM_END_SCALE) * zoom;
+        const destW = cssW * s;
+        const destH = cssH * s;
+        const destLeft = (cssW - destW) / 2;
+        const destTop = (cssH - destH) / 2;
+        const stripDW = destW / STRIPS;
+        const stripSW = cover.sw / STRIPS;
+        const centerX = cssW / 2;
+
+        ctx.globalCompositeOperation = "source-over";
+        for (let i = 0; i < STRIPS; i += 1) {
+          // average luminance down this strip column
+          let lum = 0;
+          for (let yy = 0; yy < HB_H; yy += 1) {
+            const idx = (yy * STRIPS + i) * 4;
+            lum += (0.2126 * hd[idx] + 0.7152 * hd[idx + 1] + 0.0722 * hd[idx + 2]) / 255;
+          }
+          lum /= HB_H;
+
+          const baseX = destLeft + i * stripDW;
+          const stripCX = baseX + stripDW / 2;
+          const distNorm = (stripCX - centerX) / (cssW / 2); // -1..1, edges = +-1
+
+          // Edges fly outward most; brighter strips fly a touch further. All
+          // scaled by the same eased zoom so it's one coherent motion.
+          const disp =
+            distNorm * (EDGE_SCATTER * cssW * 0.5) * zoom +
+            Math.sign(distNorm) * lum * (BRIGHT_SCATTER * cssW) * zoom;
+          const jitterY = (hash(i, 3.1) - 0.5) * 0.08 * cssH * zoom;
+
+          // Edge strips dissolve a hair sooner than the surviving center.
+          const a = stripFade * (1 - 0.45 * Math.abs(distNorm) * zoom);
+          if (a <= 0.001) continue;
+
+          const srcX = cover.sx + i * stripSW;
+          const drawX = baseX + disp;
+          ctx.globalAlpha = a;
+          // +0.6 overlaps neighbours so contiguous strips show no seams at p~0.
+          ctx.drawImage(
+            hero!,
+            srcX,
+            cover.sy,
+            stripSW,
+            cover.sh,
+            drawX,
+            destTop + jitterY,
+            stripDW + 0.6,
+            destH
+          );
+        }
+        ctx.globalAlpha = 1;
+      }
 
       // ---------------- ASCII brain (scatter -> assembled) ----------------
-      const brainReady = brain.readyState >= 2 && brain.videoWidth > 0;
+      const brainReady = !!brain && brain.readyState >= 2 && brain.videoWidth > 0;
       if (brainIn > 0.001 && brainReady) {
         const cols = Math.floor(cssW / CELL_PX);
         const rows = Math.floor(cssH / CELL_PX);
@@ -174,11 +295,11 @@ export function AsciiBrain() {
           bbuf.width = BBW;
           bbuf.height = BBH;
         }
-        const { sx, sy, sw, sh } = coverRect(brain.videoWidth, brain.videoHeight, BBW, BBH);
+        const { sx, sy, sw, sh } = coverRect(brain!.videoWidth, brain!.videoHeight, BBW, BBH);
         bbctx.setTransform(1, 0, 0, 1, 0, 0);
         bbctx.imageSmoothingEnabled = true;
         bbctx.clearRect(0, 0, BBW, BBH);
-        bbctx.drawImage(brain, sx, sy, sw, sh, 0, 0, BBW, BBH);
+        bbctx.drawImage(brain!, sx, sy, sw, sh, 0, 0, BBW, BBH);
         const bd = bbctx.getImageData(0, 0, BBW, BBH).data;
 
         const cellW = cssW / cols;
@@ -240,7 +361,7 @@ export function AsciiBrain() {
   }, [isVisible, isReduced]);
 
   return (
-    // -mt-[100svh] overlaps the hero so the crossfade plays over the still-
+    // -mt-[100svh] overlaps the hero so the zoom-out plays over the still-
     // playing hero video; the sticky child pins while the scene resolves.
     <section id="brain" className="relative h-[200svh] -mt-[100svh]">
       <div
@@ -248,6 +369,17 @@ export function AsciiBrain() {
         className="pointer-events-none sticky top-0 h-[100svh] overflow-hidden"
         style={{ opacity: 0 }}
       >
+        {/* Off-screen copies the canvas samples. Kept in sync by playing the
+            same clips as <Hero> / the brain — never shown directly. */}
+        <video
+          ref={heroRef}
+          src={HERO_SRC}
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
         <video
           ref={brainRef}
           src="/brain-hero.mp4"
@@ -260,8 +392,8 @@ export function AsciiBrain() {
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
         {/* Thesis labels overlaid on the brain: big headline bottom-left,
-            small labeled paragraph bottom-right (fades in with the scene). */}
-        <div className="absolute inset-0 flex items-end">
+            small labeled paragraph bottom-right (resolve in with the scene). */}
+        <div ref={textRef} className="absolute inset-0 flex items-end" style={{ opacity: 0 }}>
           <div className="mx-auto w-full max-w-[1440px] px-4 md:px-8 pb-14 md:pb-20">
             <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between md:gap-16">
               <h2 className="font-mono-df uppercase leading-[1.05] tracking-[0.02em] text-df-white text-3xl md:text-5xl lg:text-6xl">
