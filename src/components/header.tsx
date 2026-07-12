@@ -36,6 +36,7 @@ export function Header() {
           <PixelMark className="text-df-white group-hover:text-df-orange transition-colors" />
           <HyperText
             as="span"
+            active={scrolled}
             className="font-mono text-[11px] tracking-[0.22em] hidden sm:block"
           >
             BRINK

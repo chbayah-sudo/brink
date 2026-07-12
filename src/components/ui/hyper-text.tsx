@@ -23,6 +23,9 @@ interface HyperTextProps {
   startOnView?: boolean;
   animateOnHover?: boolean;
   characterSet?: string[];
+  /** Controlled trigger: scramble each time this flips false → true (e.g. when
+      a parent fades the element in). Overrides the mount / startOnView trigger. */
+  active?: boolean;
 }
 
 const prefersReducedMotion = () =>
@@ -38,6 +41,7 @@ export function HyperText({
   startOnView = false,
   animateOnHover = true,
   characterSet = DEFAULT_CHARACTER_SET,
+  active,
 }: HyperTextProps) {
   const text = children;
   // Deterministic initial render (avoids SSR/hydration mismatch); the client
@@ -52,8 +56,20 @@ export function HyperText({
     setAnimating(true);
   };
 
-  // Kick off once on mount (or when scrolled into view).
+  // Controlled trigger: scramble each time `active` flips false → true (e.g. the
+  // header fading the wordmark in on scroll).
+  const prevActive = useRef(false);
   useEffect(() => {
+    if (active === undefined) return;
+    if (active && !prevActive.current && !prefersReducedMotion()) {
+      setAnimating(true);
+    }
+    prevActive.current = !!active;
+  }, [active]);
+
+  // Otherwise, kick off once on mount (or when scrolled into view).
+  useEffect(() => {
+    if (active !== undefined) return; // driven by the controlled trigger above
     if (prefersReducedMotion()) return;
     if (!startOnView) {
       const t = setTimeout(() => setAnimating(true), delay);
@@ -72,7 +88,7 @@ export function HyperText({
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [delay, startOnView]);
+  }, [delay, startOnView, active]);
 
   // Scramble unresolved letters, revealing left → right, then settle.
   useEffect(() => {
