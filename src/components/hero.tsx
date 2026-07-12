@@ -75,7 +75,7 @@ export function Hero() {
     <section id="home" className="relative h-[100svh] overflow-hidden">
       <video
         ref={videoRef}
-        src="/hero-final.mp4"
+        src="/ascii-magic-6.mp4"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
         muted
         loop
@@ -87,8 +87,8 @@ export function Hero() {
       {/* chrome: BRINK wordmark + corner letters over the video */}
       <div className="absolute inset-0 z-10 flex flex-col justify-between px-3 md:px-6 pt-16 md:pt-20 pb-6">
         <div className="flex items-start justify-between">
-          <CornerLetter letter="D" side="left" />
-          <CornerLetter letter="F" side="right" />
+          <CornerLetter letter="B" side="left" />
+          <CornerLetter letter="R" side="right" />
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-6">
@@ -98,7 +98,7 @@ export function Hero() {
         </div>
 
         <div className="flex items-center justify-between">
-          <CornerLetter letter="L" side="left" />
+          <CornerLetter letter="K" side="left" />
 
           <div className="flex flex-col items-center gap-3">
             <div className="flex items-center gap-[3px] text-df-white/60">
@@ -122,7 +122,7 @@ export function Hero() {
             </div>
           </div>
 
-          <CornerLetter letter="Y" side="right" />
+          <CornerLetter letter="∙" side="right" />
         </div>
       </div>
     </section>

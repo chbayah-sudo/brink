@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import ClientBody from "./ClientBody";
+import "@/lib/safe-storage";
 
 const newsreader = Newsreader({
   subsets: ["latin"],
@@ -17,9 +18,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dragonfly",
+  title: "Brink",
   description:
-    "Dragonfly is a leading crypto investment fund. We back the best researchers and builders who will push the entire crypto ecosystem forward.",
+    "Brink is a neurotech company building a calmer, more intuitive interface for the mind.",
   icons: {
     icon: "/favicon.ico",
   },
