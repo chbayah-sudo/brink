@@ -6,6 +6,7 @@ import { AsciiBrain } from "@/components/ascii-brain";
 import BrinkSystemExplorer from "@/components/brink-system-explorer";
 import { LenisProvider } from "@/components/lenis-provider";
 import { Writing } from "@/components/writing";
+import GalleryFrame from "@/components/gallery-frame";
 import { Team } from "@/components/team";
 import { Portfolio } from "@/components/portfolio";
 import { Careers } from "@/components/careers";
@@ -23,6 +24,7 @@ export default function Home() {
           <AsciiBrain />
           <BrinkSystemExplorer />
           <Writing />
+          <GalleryFrame />
           <Team />
           <Portfolio />
           <Careers />
