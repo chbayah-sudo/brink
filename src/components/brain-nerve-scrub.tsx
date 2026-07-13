@@ -13,16 +13,21 @@ import { useEffect, useRef, useState } from "react";
 // NERVE POSITION / SIZE — edit these to align the nerve to the brain stem.
 // (Brain size/position is tuned by BRAIN_REST_* in components/ascii-brain.tsx.)
 // ---------------------------------------------------------------------------
+// NERVE_START_VH  : the nerve's START Y — where its top begins, in vh from the
+//                   top of the viewport. It should sit at the BOTTOM TIP of the
+//                   brain stem (~measured stem tip ≈ 96vh; body ends ≈ 74vh, the
+//                   narrow stem runs ~82→96vh). The nerve extends DOWNWARD from
+//                   here, so it starts at the stem tip — not the middle. Nudge
+//                   this to land exactly on the tip.
 // NERVE_X_PCT     : horizontal offset of the nerve's centre from the viewport
-//                   centre, in % of viewport width (+ = right, - = left).
-// NERVE_TOP_VH    : nerve column top edge, in vh from the top of the viewport.
+//                   centre, in % of viewport width (+ = right, - = left). The
+//                   stem sits slightly right of centre (~+5).
 // NERVE_HEIGHT_VH : nerve column height in vh (width follows the 340/420 aspect).
 // NERVE_DRAW_END  : nerve-phase progress (0..1) by which the nerve has fully
-//                   drawn/extended downward (it reveals top->bottom as you
-//                   scroll, so it draws in as the brain fades out).
-export const NERVE_X_PCT = 0;
-export const NERVE_TOP_VH = 10;
-export const NERVE_HEIGHT_VH = 86;
+//                   drawn/extended downward.
+export const NERVE_START_VH = 78;
+export const NERVE_X_PCT = 4;
+export const NERVE_HEIGHT_VH = 60;
 export const NERVE_DRAW_END = 0.92;
 // ===========================================================================
 
@@ -255,7 +260,7 @@ export function BrainNerveScrub() {
       className="pointer-events-none absolute aspect-[340/420]"
       style={{
         left: `calc(50% + ${NERVE_X_PCT}vw)`,
-        top: `${NERVE_TOP_VH}svh`,
+        top: `${NERVE_START_VH}svh`,
         height: `${NERVE_HEIGHT_VH}svh`,
         transform: "translateX(-50%)",
       }}
