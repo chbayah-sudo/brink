@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { BrainNerveScrub } from "@/components/brain-nerve-scrub";
 
 // --- ASCII brain tuning (restored from the original hero renderer) ----------
 const ASCII_RAMP = " .:-=+*#%@";
@@ -13,6 +14,25 @@ const THRESHOLD = 0.2;
 const SCATTER = 0.4;
 
 const INK: [number, number, number] = [10, 12, 16]; // #0a0c10
+
+// ===========================================================================
+// BRAIN <-> NERVE CONNECTION — edit these to align the two.
+// ---------------------------------------------------------------------------
+// The rotating brain and the nerve share ONE pinned viewport. The brain
+// assembles first (unchanged). Then, as you keep scrolling into the "nerve
+// phase", the assembled brain settles UP and shrinks a little to free room
+// below its stem, and the nerve (components/brain-nerve-scrub.tsx) draws from
+// there. Tune the brain here; tune the nerve with the NERVE_* constants at the
+// top of brain-nerve-scrub.tsx.
+//
+// BRAIN_REST_SCALE   : brain size once settled (1 = full-size, 0.6 = 60%).
+// BRAIN_REST_SHIFT_VH: brain vertical shift once settled, in vh (negative = up).
+// NERVE_SCROLL_SVH   : extra scroll length (svh) devoted to the nerve draw,
+//                      appended after the 200svh brain section.
+export const BRAIN_REST_SCALE = 0.58;
+export const BRAIN_REST_SHIFT_VH = -20;
+export const NERVE_SCROLL_SVH = 180;
+// ===========================================================================
 
 // The hero clip the canvas re-draws during the zoom-out. MUST match whatever
 // <Hero> is actually playing, otherwise the handoff at scroll 0 would jump.
@@ -99,6 +119,8 @@ export function AsciiBrain() {
   const frameRef = useRef<number | null>(null);
   // Eased scroll progress 0..1 for this section, read in the render loop.
   const pRef = useRef(0);
+  // Progress 0..1 through the extra "nerve phase" that follows brain assembly.
+  const nervePRef = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isReduced, setIsReduced] = useState(false);
   // Fires the headline's text-generate reveal once the brain scene is
@@ -150,7 +172,13 @@ export function AsciiBrain() {
       const rect = section.getBoundingClientRect();
       const total = section.offsetHeight - window.innerHeight;
       const scrolled = clamp(-rect.top, 0, total || 1);
-      pRef.current = total > 0 ? scrolled / total : 0;
+      // Brain assembles over the FIRST viewport of scroll — identical pacing to
+      // the original 200svh section (where total was exactly one viewport). The
+      // section is now taller only to add scroll room for the nerve phase.
+      const assembly = window.innerHeight;
+      pRef.current = clamp(scrolled / (assembly || 1), 0, 1);
+      // Nerve phase: everything scrolled beyond assembly, normalised 0..1.
+      nervePRef.current = clamp((scrolled - assembly) / (total - assembly || 1), 0, 1);
       // Reveal the headline as the brain assembles (idempotent; React bails
       // after the first true).
       if (pRef.current > 0.6) setHeadlineIn(true);
@@ -189,8 +217,18 @@ export function AsciiBrain() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const p = pRef.current;
+      const nerveP = nervePRef.current;
       const hero = heroRef.current;
       const brain = brainRef.current;
+
+      // Brain settle: once assembled, ease the brain UP + smaller as the nerve
+      // phase begins, freeing room below its stem for the nerve. Identity while
+      // p < 1 (hero + assembly untouched); only engages once nerveP > 0.
+      const settle = smoothstep(0, 0.16, nerveP);
+      const brainScale = 1 - (1 - BRAIN_REST_SCALE) * settle;
+      const brainShift = (BRAIN_REST_SHIFT_VH / 100) * cssH * settle;
+      canvas.style.transformOrigin = "50% 42%";
+      canvas.style.transform = `translateY(${brainShift}px) scale(${brainScale})`;
 
       // --- wrapper crossfade: real hero shows through -> canvas owns the frame
       // Reduced motion uses a gentle plain crossfade instead of the fast handoff.
@@ -371,7 +409,13 @@ export function AsciiBrain() {
   return (
     // -mt-[100svh] overlaps the hero so the zoom-out plays over the still-
     // playing hero video; the sticky child pins while the scene resolves.
-    <section id="brain" className="relative h-[200svh] -mt-[100svh]">
+    <section
+      id="brain"
+      className="relative -mt-[100svh]"
+      // 200svh brain (100svh overlap + 100svh assembly) + NERVE_SCROLL_SVH for
+      // the nerve draw. Driven by the constant so the two stay in sync.
+      style={{ height: `${200 + NERVE_SCROLL_SVH}svh` }}
+    >
       <div
         ref={wrapRef}
         className="pointer-events-none sticky top-0 h-[100svh] overflow-hidden"
@@ -398,6 +442,10 @@ export function AsciiBrain() {
           preload="auto"
         />
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+
+        {/* Nerve drawn in the SAME pinned viewport, below the brain stem, so
+            brain + nerve read as one organism. Scrubs over the nerve phase. */}
+        <BrainNerveScrub />
 
         {/* Thesis labels overlaid on the brain: big headline bottom-left,
             small labeled paragraph bottom-right (resolve in with the scene). */}

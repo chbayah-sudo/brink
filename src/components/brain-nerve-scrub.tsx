@@ -3,11 +3,28 @@
 import { useEffect, useRef, useState } from "react";
 
 // The nerve/stem cut out of the brain-scan clip (the brain was cropped away —
-// only the spinal nerve remains). It hangs from the top, directly under the
-// rotating ASCII brain above, so brain + nerve read as one continuous organism.
-// As you scroll this pinned section the nerve scrubs frame-by-frame (scroll
-// moves it, stop holds it); it is rendered in the SAME ASCII treatment as the
-// brain (same ramp, cell size, off-white-on-ink palette).
+// only the spinal nerve remains). It is drawn as a transparent overlay INSIDE
+// the brain's pinned viewport (mounted by components/ascii-brain.tsx), directly
+// under the rotating brain, so brain + nerve read as one continuous organism.
+// It scrubs frame-by-frame over the brain's "nerve phase" scroll (scroll moves
+// it, stop holds it), in the SAME ASCII treatment as the brain.
+
+// ===========================================================================
+// NERVE POSITION / SIZE — edit these to align the nerve to the brain stem.
+// (Brain size/position is tuned by BRAIN_REST_* in components/ascii-brain.tsx.)
+// ---------------------------------------------------------------------------
+// NERVE_X_PCT     : horizontal offset of the nerve's centre from the viewport
+//                   centre, in % of viewport width (+ = right, - = left).
+// NERVE_TOP_VH    : nerve top edge, in vh from the top of the pinned viewport
+//                   (set to where the settled brain's stem ends).
+// NERVE_HEIGHT_VH : nerve height in vh (width follows the 340/420 frame aspect).
+// NERVE_OVERLAP_PX: pull the nerve UP by this many px so its top overlaps the
+//                   brain stem (no gap — they merge).
+export const NERVE_X_PCT = 0.5;
+export const NERVE_TOP_VH = 43;
+export const NERVE_HEIGHT_VH = 62;
+export const NERVE_OVERLAP_PX = 16;
+// ===========================================================================
 
 // --- ASCII treatment: identical tuning to components/ascii-brain.tsx ---------
 const ASCII_RAMP = " .:-=+*#%@";
@@ -15,7 +32,6 @@ const CELL_PX = 9;
 const CONTRAST = 1.5;
 const BRIGHTNESS = 1.3;
 const THRESHOLD = 0.2;
-const INK: [number, number, number] = [10, 12, 16]; // #0a0c10
 
 // Cropped nerve frame sequence. Keep in sync with /public/nerve-frames.
 const FRAME_COUNT = 75;
@@ -32,8 +48,6 @@ function getAsciiChar(t: number) {
   );
   return ASCII_RAMP[index];
 }
-// Fit source into the destination as object-cover (the canvas box already
-// matches the frame aspect, so this is a clean 1:1 with no crop).
 function coverRect(vw: number, vh: number, dw: number, dh: number) {
   const arD = dw / dh;
   const arV = vw / vh;
@@ -81,8 +95,9 @@ export function BrainNerveScrub() {
     framesRef.current = imgs;
   }, []);
 
+  // Pause while the brain scene is off-screen.
   useEffect(() => {
-    const section = document.getElementById("brain-nerve-scrub");
+    const section = document.getElementById("brain");
     if (!section) return;
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
@@ -92,16 +107,19 @@ export function BrainNerveScrub() {
     return () => observer.disconnect();
   }, []);
 
-  // Scroll -> target frame. Driven by the existing Lenis window scroll.
+  // Scroll -> target nerve frame, driven by the brain section's "nerve phase"
+  // (everything scrolled beyond the first viewport of assembly). This matches
+  // the same math AsciiBrain uses to settle the brain, so they stay in sync.
   useEffect(() => {
     const onScroll = () => {
-      const section = document.getElementById("brain-nerve-scrub");
+      const section = document.getElementById("brain");
       if (!section) return;
       const rect = section.getBoundingClientRect();
       const total = section.offsetHeight - window.innerHeight;
       const scrolled = clamp(-rect.top, 0, total || 1);
-      const p = total > 0 ? scrolled / total : 0;
-      targetRef.current = p * (FRAME_COUNT - 1);
+      const assembly = window.innerHeight;
+      const nerveP = clamp((scrolled - assembly) / (total - assembly || 1), 0, 1);
+      targetRef.current = nerveP * (FRAME_COUNT - 1);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -133,6 +151,7 @@ export function BrainNerveScrub() {
       if (canvas.height !== Math.round(cssH * dpr)) canvas.height = Math.round(cssH * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+      // Transparent overlay — the brain shows through around the nerve.
       ctx.globalCompositeOperation = "source-over";
       ctx.globalAlpha = 1;
       ctx.clearRect(0, 0, cssW, cssH);
@@ -220,17 +239,16 @@ export function BrainNerveScrub() {
   }, [isVisible, isReduced]);
 
   return (
-    // Tall section so the nerve pins and scrubs on scroll. The canvas box is a
-    // narrow, top-anchored column matching the nerve frame aspect (340/420), so
-    // the nerve hangs straight down from where the brain sits above it.
-    <section id="brain-nerve-scrub" className="relative h-[300vh] bg-df-black">
-      <div className="sticky top-0 h-[100svh] w-full overflow-hidden bg-df-black">
-        <canvas
-          ref={canvasRef}
-          className="absolute left-1/2 top-0 h-[100svh] aspect-[340/420] -translate-x-1/2"
-        />
-      </div>
-    </section>
+    <canvas
+      ref={canvasRef}
+      className="pointer-events-none absolute aspect-[340/420]"
+      style={{
+        left: `calc(50% + ${NERVE_X_PCT}vw)`,
+        top: `calc(${NERVE_TOP_VH}svh - ${NERVE_OVERLAP_PX}px)`,
+        height: `${NERVE_HEIGHT_VH}svh`,
+        transform: "translateX(-50%)",
+      }}
+    />
   );
 }
 
