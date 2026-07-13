@@ -15,15 +15,15 @@ import { useEffect, useRef, useState } from "react";
 // ---------------------------------------------------------------------------
 // NERVE_X_PCT     : horizontal offset of the nerve's centre from the viewport
 //                   centre, in % of viewport width (+ = right, - = left).
-// NERVE_TOP_VH    : nerve top edge, in vh from the top of the pinned viewport
-//                   (set to where the settled brain's stem ends).
-// NERVE_HEIGHT_VH : nerve height in vh (width follows the 340/420 frame aspect).
-// NERVE_OVERLAP_PX: pull the nerve UP by this many px so its top overlaps the
-//                   brain stem (no gap — they merge).
-export const NERVE_X_PCT = 0.5;
-export const NERVE_TOP_VH = 43;
-export const NERVE_HEIGHT_VH = 62;
-export const NERVE_OVERLAP_PX = 16;
+// NERVE_TOP_VH    : nerve column top edge, in vh from the top of the viewport.
+// NERVE_HEIGHT_VH : nerve column height in vh (width follows the 340/420 aspect).
+// NERVE_DRAW_END  : nerve-phase progress (0..1) by which the nerve has fully
+//                   drawn/extended downward (it reveals top->bottom as you
+//                   scroll, so it draws in as the brain fades out).
+export const NERVE_X_PCT = 0;
+export const NERVE_TOP_VH = 10;
+export const NERVE_HEIGHT_VH = 86;
+export const NERVE_DRAW_END = 0.92;
 // ===========================================================================
 
 // --- ASCII treatment: identical tuning to components/ascii-brain.tsx ---------
@@ -73,6 +73,7 @@ export function BrainNerveScrub() {
   const targetRef = useRef(0);
   const shownRef = useRef(-1);
   const lastPaintedRef = useRef(-1);
+  const nervePRef = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isReduced, setIsReduced] = useState(false);
 
@@ -119,6 +120,7 @@ export function BrainNerveScrub() {
       const scrolled = clamp(-rect.top, 0, total || 1);
       const assembly = window.innerHeight;
       const nerveP = clamp((scrolled - assembly) / (total - assembly || 1), 0, 1);
+      nervePRef.current = nerveP;
       targetRef.current = nerveP * (FRAME_COUNT - 1);
     };
     onScroll();
@@ -206,9 +208,11 @@ export function BrainNerveScrub() {
     };
 
     if (isReduced) {
+      // Static: show a representative, fully-drawn nerve, no scrubbing/reveal.
+      canvas.style.clipPath = "none";
       let tries = 0;
       const drawStill = () => {
-        if (paint(0) || tries > 120) return;
+        if (paint(Math.round((FRAME_COUNT - 1) * 0.6)) || tries > 120) return;
         tries += 1;
         loopRef.current = window.requestAnimationFrame(drawStill);
       };
@@ -227,6 +231,13 @@ export function BrainNerveScrub() {
       shown += (target - shown) * 0.18;
       if (Math.abs(target - shown) < 0.01) shown = target;
       shownRef.current = shown;
+
+      // Top-anchored reveal so the nerve DRAWS downward as you scroll (eased via
+      // `shown`, so it holds when scrolling stops).
+      const shownP = FRAME_COUNT > 1 ? shown / (FRAME_COUNT - 1) : 0;
+      const reveal = clamp(shownP / NERVE_DRAW_END, 0, 1);
+      canvas.style.clipPath = `inset(0 0 ${(1 - reveal) * 100}% 0)`;
+
       const idx = clamp(Math.round(shown), 0, FRAME_COUNT - 1);
       if (idx !== lastPaintedRef.current) {
         if (paint(idx)) lastPaintedRef.current = idx;
@@ -244,7 +255,7 @@ export function BrainNerveScrub() {
       className="pointer-events-none absolute aspect-[340/420]"
       style={{
         left: `calc(50% + ${NERVE_X_PCT}vw)`,
-        top: `calc(${NERVE_TOP_VH}svh - ${NERVE_OVERLAP_PX}px)`,
+        top: `${NERVE_TOP_VH}svh`,
         height: `${NERVE_HEIGHT_VH}svh`,
         transform: "translateX(-50%)",
       }}

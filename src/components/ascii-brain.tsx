@@ -25,13 +25,17 @@ const INK: [number, number, number] = [10, 12, 16]; // #0a0c10
 // there. Tune the brain here; tune the nerve with the NERVE_* constants at the
 // top of brain-nerve-scrub.tsx.
 //
-// BRAIN_REST_SCALE   : brain size once settled (1 = full-size, 0.6 = 60%).
-// BRAIN_REST_SHIFT_VH: brain vertical shift once settled, in vh (negative = up).
-// NERVE_SCROLL_SVH   : extra scroll length (svh) devoted to the nerve draw,
-//                      appended after the 200svh brain section.
-export const BRAIN_REST_SCALE = 0.58;
-export const BRAIN_REST_SHIFT_VH = -20;
-export const NERVE_SCROLL_SVH = 180;
+// The brain is NEVER resized or moved — at scroll 0 it is its original clean
+// self. As you scroll into the nerve phase it simply FADES OUT while the nerve
+// draws in on the same progress (one continuous brain -> nerve handoff).
+//
+// BRAIN_FADE_START : nerve-phase progress (0..1) at which the brain starts fading.
+// BRAIN_FADE_END   : progress at which the brain has fully faded away.
+// NERVE_SCROLL_SVH : extra scroll length (svh) devoted to the transition,
+//                    appended after the 200svh brain section (bigger = slower).
+export const BRAIN_FADE_START = 0.0;
+export const BRAIN_FADE_END = 0.6;
+export const NERVE_SCROLL_SVH = 200;
 // ===========================================================================
 
 // The hero clip the canvas re-draws during the zoom-out. MUST match whatever
@@ -221,14 +225,11 @@ export function AsciiBrain() {
       const hero = heroRef.current;
       const brain = brainRef.current;
 
-      // Brain settle: once assembled, ease the brain UP + smaller as the nerve
-      // phase begins, freeing room below its stem for the nerve. Identity while
-      // p < 1 (hero + assembly untouched); only engages once nerveP > 0.
-      const settle = smoothstep(0, 0.16, nerveP);
-      const brainScale = 1 - (1 - BRAIN_REST_SCALE) * settle;
-      const brainShift = (BRAIN_REST_SHIFT_VH / 100) * cssH * settle;
-      canvas.style.transformOrigin = "50% 42%";
-      canvas.style.transform = `translateY(${brainShift}px) scale(${brainScale})`;
+      // Brain fade: the assembled brain FADES OUT (never resized/moved) as the
+      // nerve draws in, tied to the same nerve-phase progress. Identity while
+      // nerveP is 0 (hero + assembly untouched, brain stays clean and full).
+      const brainFade = smoothstep(BRAIN_FADE_START, BRAIN_FADE_END, nerveP);
+      canvas.style.opacity = String(1 - brainFade);
 
       // --- wrapper crossfade: real hero shows through -> canvas owns the frame
       // Reduced motion uses a gentle plain crossfade instead of the fast handoff.
