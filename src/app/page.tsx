@@ -3,7 +3,6 @@ import { Header } from "@/components/header";
 import { MenuOverlay } from "@/components/menu-overlay";
 import { Hero } from "@/components/hero";
 import { AsciiBrain } from "@/components/ascii-brain";
-import { BrainNerve } from "@/components/brain-nerve";
 import BrinkSystemExplorer from "@/components/brink-system-explorer";
 import { LenisProvider } from "@/components/lenis-provider";
 import { Writing } from "@/components/writing";
@@ -23,7 +22,6 @@ export default function Home() {
         <main className="relative">
           <Hero />
           <AsciiBrain />
-          <BrainNerve />
           <BrinkSystemExplorer />
           <Writing />
           <GalleryFrame />
