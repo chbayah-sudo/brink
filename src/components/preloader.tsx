@@ -194,11 +194,21 @@ export function Preloader() {
       >
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
-        {/* scramble corners */}
-        <span className={`${corner} left-6 top-5`}>{scramble(LABEL_TL, progress)}</span>
-        <span className={`${corner} right-6 top-5`}>{scramble(LABEL_TR, progress)}</span>
-        <span className={`${corner} bottom-5 left-6`}>{scramble(LABEL_BL, progress)}</span>
-        <span className={`${corner} bottom-5 right-6`}>{scramble(LABEL_BR, progress)}</span>
+        {/* scramble corners — text is intentionally randomised (Math.random),
+            so the SSR pass won't match the client; the rAF loop repaints them
+            on mount regardless. suppressHydrationWarning avoids the mismatch. */}
+        <span suppressHydrationWarning className={`${corner} left-6 top-5`}>
+          {scramble(LABEL_TL, progress)}
+        </span>
+        <span suppressHydrationWarning className={`${corner} right-6 top-5`}>
+          {scramble(LABEL_TR, progress)}
+        </span>
+        <span suppressHydrationWarning className={`${corner} bottom-5 left-6`}>
+          {scramble(LABEL_BL, progress)}
+        </span>
+        <span suppressHydrationWarning className={`${corner} bottom-5 right-6`}>
+          {scramble(LABEL_BR, progress)}
+        </span>
 
         {/* centred counter */}
         <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-mono-df text-sm font-normal tracking-normal text-df-black/70 tabular-nums md:text-base">
