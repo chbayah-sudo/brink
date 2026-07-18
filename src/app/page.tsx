@@ -1,4 +1,6 @@
 import { MenuProvider } from "@/components/menu-context";
+import { Preloader } from "@/components/preloader";
+import { DitherBackground } from "@/components/dither-background";
 import { Header } from "@/components/header";
 import { MenuOverlay } from "@/components/menu-overlay";
 import { Hero } from "@/components/hero";
@@ -6,9 +8,7 @@ import { AsciiBrain } from "@/components/ascii-brain";
 import BrinkSystemExplorer from "@/components/brink-system-explorer";
 import { LenisProvider } from "@/components/lenis-provider";
 import { Writing } from "@/components/writing";
-import GalleryFrame from "@/components/gallery-frame";
-import { Team } from "@/components/team";
-import { Portfolio } from "@/components/portfolio";
+import { Product } from "@/components/product";
 import { Careers } from "@/components/careers";
 import Skiper14 from "@/components/ui/skiper14";
 
@@ -16,17 +16,17 @@ export default function Home() {
   return (
     <LenisProvider>
       <MenuProvider>
+        <Preloader />
+        <DitherBackground />
         <div className="grain-overlay" />
         <Header />
         <MenuOverlay />
-        <main className="relative">
+        <main className="relative z-[1]">
           <Hero />
           <AsciiBrain />
           <BrinkSystemExplorer />
           <Writing />
-          <GalleryFrame />
-          <Team />
-          <Portfolio />
+          <Product />
           <Careers />
           <Skiper14 />
         </main>

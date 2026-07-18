@@ -161,6 +161,10 @@ export default function LineSidebar({
   useEffect(
     () => () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      // Reset so a re-mount (React StrictMode in dev / fast-refresh) can restart
+      // the loop — otherwise startLoop() sees a stale non-null id and bails,
+      // leaving --effect unset (active item never turns accent).
+      rafRef.current = null;
     },
     [],
   );

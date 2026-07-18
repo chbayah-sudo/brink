@@ -4,12 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { featuredWriting } from "@/lib/data";
 import { PixelArrow } from "@/components/glyphs";
+import { AsciiImage } from "@/components/ascii-image";
 
-// Carousel images currently sourced from featuredWriting entries in data.ts:
-// - https://ext.same-assets.com/1560170732/4204020783.webp
-// - https://ext.same-assets.com/1560170732/3744010572.webp
-// - https://ext.same-assets.com/1560170732/2527038437.webp
-// - https://ext.same-assets.com/1560170732/4075116294.webp
 
 export function FeaturedCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -52,37 +48,60 @@ export function FeaturedCarousel() {
         ref={trackRef}
         className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
-        {featuredWriting.map((a) => (
+        {featuredWriting.map((a, i) => (
           <a
-            key={a.title}
+            key={a.category + i}
             href={a.href}
             target="_blank"
             rel="noreferrer"
             className="group snap-start shrink-0 basis-full md:basis-[calc(50%-12px)]"
           >
             <div className="relative aspect-[16/9] overflow-hidden bg-[#080808] border hairline">
-              {a.image && (
+              {a.image && a.ascii ? (
+                <>
+                  <AsciiImage
+                    src={a.image}
+                    alt={a.title}
+                    className="block h-full w-full transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                  {/* Hover reveals the original colour photo; fades back to ASCII on leave. */}
+                  <img
+                    src={a.image}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0 transition-[opacity,transform] duration-700 ease-out group-hover:opacity-100 group-hover:scale-[1.04]"
+                  />
+                </>
+              ) : a.image ? (
                 <img
                   src={a.image}
                   alt={a.title}
                   loading="lazy"
                   className="h-full w-full object-cover opacity-75 grayscale-[0.2] transition-all duration-700 group-hover:opacity-100 group-hover:scale-[1.04]"
                 />
-              )}
+              ) : null}
               <span className="absolute left-3 top-3 mono-label !text-df-white bg-black/60 backdrop-blur-sm border hairline px-2 py-1">
                 {a.category}
               </span>
             </div>
 
-            <div className="mt-4 flex items-start justify-between gap-4">
-              <h3 className="font-grotesque uppercase leading-tight text-df-white text-lg md:text-xl group-hover:text-df-orange transition-colors">
-                {a.title}
-              </h3>
-              <PixelArrow className="mt-1.5 shrink-0 text-df-white group-hover:text-df-orange transition-colors" />
-            </div>
-            <p className="mt-3 font-serif-df text-df-gray leading-relaxed">
+            {a.title && (
+              <div className="mt-4 flex items-start justify-between gap-4">
+                <h3 className="font-grotesque uppercase leading-tight text-df-white text-lg md:text-xl group-hover:text-df-orange transition-colors">
+                  {a.title}
+                </h3>
+                <PixelArrow className="mt-1.5 shrink-0 text-df-white group-hover:text-df-orange transition-colors" />
+              </div>
+            )}
+            <p className={cn("font-serif-df text-df-gray leading-relaxed", a.title ? "mt-3" : "mt-4")}>
               {a.excerpt}
             </p>
+            {a.source && (
+              <p className="mt-2 font-mono-df text-[0.62rem] tracking-[0.14em] text-df-white/35">
+                {a.source}
+              </p>
+            )}
           </a>
         ))}
       </div>

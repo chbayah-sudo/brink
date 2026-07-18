@@ -6,12 +6,9 @@ import { cn } from "@/lib/utils";
 import { PixelMark, Cross } from "@/components/glyphs";
 
 const socials = [
-  { label: "X", href: "https://x.com/dragonfly_xyz" },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/company/dragonfly-capital-partners/",
-  },
-  { label: "Press Kit", href: "https://brand.dragonfly.xyz/" },
+  { label: "X", href: "#" },
+  { label: "LinkedIn", href: "#" },
+  { label: "Press Kit", href: "#" },
 ];
 
 export function MenuOverlay() {
@@ -40,7 +37,7 @@ export function MenuOverlay() {
           <div className="flex items-center gap-2 text-df-white">
             <PixelMark className="text-df-white" />
             <span className="font-mono text-[11px] tracking-[0.22em]">
-              DRAGONFLY
+              BRINK
             </span>
           </div>
           <button
@@ -114,7 +111,7 @@ export function MenuOverlay() {
             >
               Disclosures
             </a>
-            <span className="mono-label">© DRAGONFLY 2026</span>
+            <span className="mono-label">© BRINK 2026</span>
           </div>
         </div>
       </div>

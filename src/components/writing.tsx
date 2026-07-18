@@ -1,7 +1,6 @@
 import { SectionHeader } from "@/components/section-header";
 import { Reveal } from "@/components/reveal";
 import { FeaturedCarousel } from "@/components/featured-carousel";
-import { AllContent } from "@/components/all-content";
 
 export function Writing() {
   return (
@@ -33,11 +32,6 @@ export function Writing() {
 
         <div className="mt-28 md:mt-40">
           <FeaturedCarousel />
-        </div>
-
-        <div className="mt-28 md:mt-40">
-          <SectionHeader title="ALL CONTENT" sec="13" size="md" />
-          <AllContent />
         </div>
       </div>
     </section>

@@ -1,40 +1,46 @@
 "use client";
 
 /**
- * BRINK / HOW BRINK WORKS interactive system explorer
+ * BRINK / HOW BRINK WORKS — merged 3D system explorer
  * ------------------------------------------------------
- * Visual clone of the Skiper UI `skiper76` interaction model (the registry
- * is license-gated, so the design was rebuilt from reference screenshots):
- * one large dark canvas, full-bleed media, floating pill accordion on the
- * left, one item expanded at a time, up/down chevrons, and a top state pill.
- *
- * Every media state is a Higgsfield-generated photograph or animation of the
- * BRINK headband, no code-drawn visualizations. "Internal Architecture"
- * plays the Higgsfield exploded reveal at 2.5× speed (pre-rendered).
+ * One tall (340vh) sticky/pinned section. The BrynkHeadband3D explode is the
+ * full-bleed visual (pinned in the viewport); the heading sits at the top and
+ * the 01–07 stepper floats alongside. A single scroll drives BOTH the explode
+ * (progressRef, read every frame inside the canvas) AND the stepper — 01 at the
+ * top of the section, 07 at full explode — so the narrative and the animation
+ * are one thing. Clicking a pill/chevron scrolls to that step, which the scroll
+ * handler then reflects back into the active state, keeping clicks + scroll in
+ * sync.
  *
  * Restyled to the Brink design system: IBM Plex Mono base (font-mono-df),
  * Newsreader display heading (font-grotesque), off-white #e8e4d8 (df-white)
- * on ink #0a0c10 (df-black), and amber-red #ff5b3a (df-orange) as the single
- * accent — reserved for the "Approaching Brink" live state.
+ * on ink #0a0c10 (df-black), amber-red #ff5b3a (df-orange) as the single accent.
  *
- * Self-contained: React + Tailwind + next/image. No animation library.
- *
- * Required assets (public/media/):
- *   state-sensing.jpg        headband-exploded-2s.mp4 (+poster/still)
- *   state-signal.jpg         state-baseline.jpg
- *   state-prediction.jpg     state-cue.jpg            state-safety.jpg
+ * The 3D scene (BrynkExplodeScene) is loaded client-only via next/dynamic
+ * (react-three-fiber can't be server-rendered). Rendering the scene directly
+ * adds no extra scroll container and no transform/overflow that would break the
+ * section's position: sticky.
  *
  * Usage:  <BrinkSystemExplorer />
  */
 
-import Image from "next/image";
-import { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
+import { KeyboardEvent, memo, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import LineSidebar from "@/components/ui/line-sidebar";
 import GradualBlur from "@/components/ui/gradual-blur";
 
 const MEDIA = "/media";
+const INK = "#0A0E14"; // matches the canvas background so there is no seam
+
+// react-three-fiber's <Canvas> can't be server-rendered; load the scene on the
+// client only. dynamic() renders it directly (no wrapper element), so the
+// section's sticky pin is unaffected.
+const BrynkExplodeScene = dynamic(
+  () => import("@/components/BrynkHeadband3D").then((m) => m.BrynkExplodeScene),
+  { ssr: false },
+);
 
 /* ----------------------------- typed content ----------------------------- */
 
@@ -139,16 +145,6 @@ const ITEMS: ExplorerItem[] = [
   },
 ];
 
-/* Component terminology from the project's headband documentation. */
-const INTERNAL_HOTSPOTS: { label: string; x: number; y: number }[] = [
-  { label: "NEURAL SENSING ARRAY", x: 64, y: 32 },
-  { label: "OPTICAL SENSING LAYER", x: 20, y: 41 },
-  { label: "MOTION SENSING", x: 74, y: 48 },
-  { label: "ONBOARD PROCESSING", x: 22, y: 58 },
-  { label: "POWER SYSTEM", x: 64, y: 66 },
-  { label: "HAPTIC FEEDBACK", x: 26, y: 72 },
-];
-
 type LiveState = "ready" | "approaching" | "recover";
 // Monochrome + single accent: off-white at rest, amber-red only for the brink
 // warning, muted gray for recovery.
@@ -158,121 +154,85 @@ const LIVE_STATES: { id: LiveState; label: string; dot: string }[] = [
   { id: "recover", label: "Recover", dot: "#7c7a76" },
 ];
 
-/* --------------------------------- hooks --------------------------------- */
-
-function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduced(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-  return reduced;
-}
-
-function useInView<T extends Element>(margin = "0px") {
-  const ref = useRef<T | null>(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => setInView(entries.some((e) => e.isIntersecting)),
-      { rootMargin: margin },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [margin]);
-  return { ref, inView };
-}
-
-/* ----------------------------- exploded video ---------------------------- */
-
-function ExplodedMedia({
-  media,
-  active,
-  inView,
-  reduced,
-}: {
-  media: Extract<ItemMedia, { type: "video" }>;
-  active: boolean;
-  inView: boolean;
-  reduced: boolean;
-}) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [ended, setEnded] = useState(false);
-
-  // Play the 2.5×-speed reveal once per activation; hold the exploded end.
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || reduced) return;
-    if (active && inView) {
-      if (video.duration && video.currentTime >= video.duration - 0.05) return;
-      video.play().catch(() => {});
-    } else if (!active) {
-      video.pause();
-      video.currentTime = 0;
-    } else {
-      video.pause();
-    }
-  }, [active, inView, reduced]);
-
-  const showHotspots = reduced || (active && ended);
-
-  return (
-    <div className="absolute inset-0 lg:left-[38%] bg-transparent lg:[mask-image:linear-gradient(to_right,transparent,black_12%)]">
-      {reduced ? (
-        <Image src={media.still} alt={media.alt} fill sizes="100vw" className="object-contain" unoptimized />
-      ) : (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 h-full w-full object-contain"
-          src={media.src}
-          poster={media.poster}
-          muted
-          playsInline
-          preload="metadata"
-          onPlay={() => setEnded(false)}
-          onEnded={() => setEnded(true)}
-          aria-label={media.alt}
-        />
-      )}
-      <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-700"
-        style={{ opacity: showHotspots ? 1 : 0 }}
-        aria-hidden={!showHotspots}
-      >
-        {INTERNAL_HOTSPOTS.map((h, i) => (
-          <p
-            key={h.label}
-            className="absolute m-0 max-w-[30%] rounded border border-df-white/15 bg-df-black/60 px-2 py-0.5 font-mono-df text-[0.54rem] tracking-[0.16em] text-df-white/90 backdrop-blur-sm"
-            style={{ left: `${h.x}%`, top: `${h.y}%`, transitionDelay: `${i * 90}ms` }}
-          >
-            {h.label}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 /* ------------------------------- component ------------------------------- */
+
+// The heading is memoized (no props) so scroll-driven activeIndex re-renders of
+// the parent never re-render it. That matters because TextGenerateEffect reveals
+// its words once (guarded by an internal `started` ref) and re-rendering would
+// re-apply each span's JSX blur(10px) inline style without re-clearing it,
+// leaving the tail of the headline permanently blurred.
+const ExplorerHeading = memo(function ExplorerHeading() {
+  return (
+    <header className="max-w-2xl">
+      <p className="mb-3 font-mono-df text-[0.58rem] tracking-[0.28em] text-df-white/40">
+        HOW BRINK WORKS
+      </p>
+      <TextGenerateEffect
+        as="h2"
+        id="bse-heading"
+        words="One system. Every moment between resistance and your real limit."
+        filter={true}
+        duration={0.8}
+        className="font-grotesque text-2xl leading-[1.05] tracking-tight text-df-white sm:text-4xl lg:text-5xl"
+      />
+      <p className="mt-3.5 max-w-lg text-[0.9rem] leading-relaxed text-df-white/50">
+        BRINK reads you, learns you, and steps in at the right moment. It gets
+        sharper with every session.
+      </p>
+    </header>
+  );
+});
 
 export default function BrinkSystemExplorer() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [liveIndex, setLiveIndex] = useState(0);
-  const reduced = useReducedMotion();
-  const { ref: sectionRef, inView } = useInView<HTMLElement>("15%");
+  const sectionRef = useRef<HTMLElement | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  // Scroll progress (0 → 1) across the section. A plain ref, not state, so the
+  // explode never triggers a React re-render — the canvas reads it each frame.
+  const progressRef = useRef(0);
 
   const live = LIVE_STATES[liveIndex];
   const count = ITEMS.length;
-  const go = useMemo(
-    () => (next: number) => setActiveIndex(((next % count) + count) % count),
-    [count],
-  );
+
+  // One scroll listener drives the whole section: it writes explode progress to
+  // progressRef every event, and advances the 01–07 stepper only when the
+  // discrete step actually changes (so at most `count` state updates over the
+  // full scroll — the explode itself stays render-free).
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const compute = () => {
+      const rect = el.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const scrolled = Math.min(Math.max(-rect.top, 0), total);
+      const p = total > 0 ? scrolled / total : 0;
+      progressRef.current = p;
+      const idx = Math.min(count - 1, Math.max(0, Math.floor(p * count)));
+      setActiveIndex((cur) => (cur === idx ? cur : idx));
+    };
+    compute();
+    window.addEventListener("scroll", compute, { passive: true });
+    window.addEventListener("resize", compute);
+    return () => {
+      window.removeEventListener("scroll", compute);
+      window.removeEventListener("resize", compute);
+    };
+  }, [count]);
+
+  // Click a pill / chevron → scroll to the middle of that step's band. The
+  // scroll handler above then advances activeIndex, keeping clicks + scroll and
+  // the explode all in sync (one source of truth: scroll position).
+  const goToStep = (next: number) => {
+    const idx = ((next % count) + count) % count;
+    const el = sectionRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const total = rect.height - window.innerHeight;
+    const sectionTop = window.scrollY + rect.top;
+    const frac = count > 1 ? (idx + 0.5) / count : 0;
+    window.scrollTo({ top: Math.round(sectionTop + total * frac), behavior: "smooth" });
+  };
 
   const onListKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const keys: Record<string, number | undefined> = {
@@ -284,11 +244,7 @@ export default function BrinkSystemExplorer() {
     const target = keys[e.key];
     if (target === undefined) return;
     e.preventDefault();
-    const idx = ((target % count) + count) % count;
-    go(idx);
-    listRef.current
-      ?.querySelectorAll<HTMLButtonElement>("[data-bse-trigger]")
-      [idx]?.focus();
+    goToStep(target);
   };
 
   return (
@@ -296,74 +252,37 @@ export default function BrinkSystemExplorer() {
       ref={sectionRef}
       id="how-brink-works"
       aria-labelledby="bse-heading"
-      className="mx-auto w-full max-w-[62rem] px-4 py-12 font-mono-df sm:px-6 lg:px-6 lg:py-16"
+      className="relative font-mono-df"
+      style={{ height: "340vh", background: INK }}
     >
-      {/* header: remove if the surrounding page already tells this story */}
-      <header className="mb-7 max-w-2xl lg:mb-9">
-        <p className="mb-3 font-mono-df text-[0.58rem] tracking-[0.28em] text-df-white/40">HOW BRINK WORKS</p>
-        <TextGenerateEffect
-          as="h2"
-          id="bse-heading"
-          words="One system. Every moment between resistance and your real limit."
-          filter={true}
-          duration={0.8}
-          className="font-grotesque text-3xl leading-[1.05] tracking-tight text-df-white sm:text-4xl lg:text-5xl"
+      {/* pinned viewport: the canvas + narrative overlay stay put while the
+          340vh section scrolls past, driving the explode 0 → 1. */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        {/* 3D explode — full-bleed visual (replaces the old static photo stack).
+            BrynkExplodeScene fills this positioned parent and carries its own
+            vignette; MODEL_X (in the component) offsets the model right so the
+            left column below stays clear. */}
+        <BrynkExplodeScene progressRef={progressRef} />
+
+        {/* readability scrim so heading + pills stay legible over the model */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-df-black/75 via-df-black/10 to-df-black/55 lg:bg-gradient-to-r lg:from-df-black/85 lg:via-df-black/15 lg:to-transparent"
         />
-        <p className="mt-3.5 max-w-lg text-[0.95rem] leading-relaxed text-df-white/50">
-          BRINK reads you, learns you, and steps in at the right moment. It gets
-          sharper with every session.
-        </p>
-      </header>
 
-      {/* ============================ the canvas ============================ */}
-      <div className="relative mx-auto overflow-hidden rounded-[1.5rem] bg-df-black">
-        {/* full-bleed media stack */}
-        <div className="relative aspect-[4/5] w-full sm:aspect-[16/10] lg:aspect-[16/10]">
-          {ITEMS.map((item, i) => {
-            const on = i === activeIndex;
-            return (
-              <div
-                key={item.id}
-                aria-hidden={!on}
-                className="absolute inset-0 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
-                style={{
-                  opacity: on ? 1 : 0,
-                  transform: reduced ? "none" : on ? "scale(1)" : "scale(1.02)",
-                  pointerEvents: on ? "auto" : "none",
-                }}
-              >
-                {item.media.type === "image" ? (
-                  <div className="absolute inset-0 lg:left-[38%] lg:[mask-image:linear-gradient(to_right,transparent,black_16%)]">
-                    <Image
-                      src={item.media.src}
-                      alt={item.media.alt}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 62vw"
-                      className="object-cover lg:[object-position:68%_50%]"
-                      unoptimized
-                      priority={i === 0}
-                    />
-                  </div>
-                ) : (
-                  <ExplodedMedia media={item.media} active={on} inView={inView} reduced={reduced} />
-                )}
-              </div>
-            );
-          })}
-          {/* left readability scrim under the pills */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-0 hidden w-[46%] bg-gradient-to-r from-df-black/70 via-df-black/25 to-transparent lg:block"
-          />
-        </div>
+        {/* narrative overlay: heading + stepper as one vertically-centered
+            column on the left, so the stepper never collides with the top bar
+            or the bottom blur regardless of viewport height. */}
+        <div className="relative z-10 mx-auto flex h-full max-w-[76rem] flex-col justify-center gap-7 px-5 py-10 sm:px-8">
+          {/* header (memoized so scroll re-renders don't restart its reveal) */}
+          <ExplorerHeading />
 
-        {/* ---------------- floating pill column (skiper76 layout) ---------------- */}
-        <div className="pointer-events-none inset-0 flex lg:absolute">
-          <div className="pointer-events-auto flex w-full items-center gap-3 bg-df-black px-4 py-6 sm:px-6 lg:w-auto lg:bg-transparent lg:pl-5 lg:pr-0">
-            {/* chevrons */}
-            <div className="hidden flex-col gap-2.5 lg:flex" aria-hidden="false">
+          {/* ---------------- floating pill column (scroll-synced) ---------------- */}
+          <div className="flex items-start gap-3">
+            {/* chevrons: scroll to prev/next step */}
+            <div className="hidden flex-col gap-2.5 lg:flex">
               <button
-                onClick={() => go(activeIndex - 1)}
+                onClick={() => goToStep(activeIndex - 1)}
                 aria-label="Previous state"
                 className="grid h-10 w-10 place-items-center rounded-full bg-df-white/[0.06] text-df-white backdrop-blur-2xl ring-1 ring-df-white/10 transition-colors hover:bg-df-white/[0.14]"
               >
@@ -372,7 +291,7 @@ export default function BrinkSystemExplorer() {
                 </svg>
               </button>
               <button
-                onClick={() => go(activeIndex + 1)}
+                onClick={() => goToStep(activeIndex + 1)}
                 aria-label="Next state"
                 className="grid h-10 w-10 place-items-center rounded-full bg-df-white/[0.06] text-df-white backdrop-blur-2xl ring-1 ring-df-white/10 transition-colors hover:bg-df-white/[0.14]"
               >
@@ -384,7 +303,7 @@ export default function BrinkSystemExplorer() {
 
             {/* pills */}
             <div ref={listRef} onKeyDown={onListKeyDown} className="flex w-full max-w-[20.5rem] flex-col items-start gap-2.5">
-              {/* live-state pill (the "Colors" slot): click to cycle */}
+              {/* live-state pill: click to cycle */}
               <button
                 onClick={() => setLiveIndex((liveIndex + 1) % LIVE_STATES.length)}
                 aria-label={`Live state: ${live.label}. Activate to cycle.`}
@@ -398,26 +317,25 @@ export default function BrinkSystemExplorer() {
                 <span className="text-[0.95rem] font-medium text-df-white">{live.label}</span>
               </button>
 
-              {/* description box: shows the active item's title + copy, above
-                  the animated line list (selecting an item updates it). */}
+              {/* description box: active item's title + copy (advances on scroll) */}
               <div
                 id={`bse-panel-${ITEMS[activeIndex].id}`}
                 role="region"
                 aria-label={ITEMS[activeIndex].title}
-                className="w-full max-w-[20.5rem] rounded-[1.3rem] bg-df-white/[0.07] px-5 py-4 shadow-[0_8px_40px_rgba(0,0,0,0.3)] ring-1 ring-df-white/10 backdrop-blur-2xl"
+                className="w-full max-w-[20.5rem] rounded-[1.3rem] bg-df-white/[0.07] px-4 py-3 shadow-[0_8px_40px_rgba(0,0,0,0.3)] ring-1 ring-df-white/10 backdrop-blur-2xl"
               >
-                <p className="text-[0.9rem] leading-relaxed text-df-white/60">
+                <p className="text-[0.84rem] leading-relaxed text-df-white/60">
                   <strong className="font-semibold text-df-white">{ITEMS[activeIndex].title}</strong>{" "}
                   {ITEMS[activeIndex].description}
                 </p>
               </div>
 
-              {/* animated numbered line list (React Bits LineSidebar, recolored
-                  to the Brink palette; controlled so the chevrons stay in sync) */}
+              {/* animated numbered line list (React Bits LineSidebar), controlled
+                  by scroll-derived activeIndex; clicking scrolls to that step. */}
               <LineSidebar
                 items={ITEMS.map((it) => it.label)}
                 activeIndex={activeIndex}
-                onItemClick={(i) => go(i)}
+                onItemClick={(i) => goToStep(i)}
                 accentColor="#ff5b3a"
                 textColor="#6b6b6b"
                 markerColor="#6b6b6b"
@@ -430,8 +348,8 @@ export default function BrinkSystemExplorer() {
                 markerGap={0}
                 tickScale={0.5}
                 scaleTick
-                itemGap={16}
-                fontSize={0.98}
+                itemGap={12}
+                fontSize={0.9}
                 smoothing={120}
                 className="mt-1"
               />
@@ -439,7 +357,7 @@ export default function BrinkSystemExplorer() {
               {/* mobile prev/next */}
               <div className="mt-1 flex gap-3 lg:hidden">
                 <button
-                  onClick={() => go(activeIndex - 1)}
+                  onClick={() => goToStep(activeIndex - 1)}
                   aria-label="Previous state"
                   className="grid h-11 w-11 place-items-center rounded-full bg-df-white/[0.1] text-df-white"
                 >
@@ -448,7 +366,7 @@ export default function BrinkSystemExplorer() {
                   </svg>
                 </button>
                 <button
-                  onClick={() => go(activeIndex + 1)}
+                  onClick={() => goToStep(activeIndex + 1)}
                   aria-label="Next state"
                   className="grid h-11 w-11 place-items-center rounded-full bg-df-white/[0.1] text-df-white"
                 >
@@ -461,12 +379,11 @@ export default function BrinkSystemExplorer() {
           </div>
         </div>
 
-        {/* soft blur fade at the bottom edge of the product canvas — the
-            content gently blurs into the ink base as it reaches the bottom */}
+        {/* soft blur fade at the bottom edge of the pinned viewport */}
         <GradualBlur
           target="parent"
           position="bottom"
-          height="5.5rem"
+          height="3rem"
           strength={2}
           divCount={6}
           curve="bezier"

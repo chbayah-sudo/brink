@@ -1,3 +1,5 @@
+import { FooterDither } from "@/components/footer-dither";
+
 // Footer in the style of Skiper UI "skiper14" (an ASCII-art element over a
 // giant wordmark with a row of small info columns). The @skiper-ui registry
 // item wasn't fetchable (skiper14.json 404 / auth-gated), so this is a manual
@@ -14,15 +16,18 @@ const INFO_ROWS: { value: string; href?: string }[] = [
   { value: "CONTACT", href: "mailto:YOUR_EMAIL_HERE" },
 ];
 
-// Wordmark panel look. "light" = cream #e8e4d8 panel with ink #0a0c10 BRINK
-// (matches the reference — crisp, high-contrast). "dark" = ink panel with
-// off-white BRINK. Default light.
-const WORDMARK_PANEL: "light" | "dark" = "light";
+// Wordmark panel look. "bleed" = no panel; the dithered page background flows
+// straight through and the BRINK wordmark sits on it in off-white (keeps the
+// background continuous to the very end). "light" = cream #e8e4d8 panel with ink
+// BRINK. "dark" = ink panel with off-white BRINK. Default bleed.
+const WORDMARK_PANEL: "bleed" | "light" | "dark" = "light";
 
-const PANEL_CLASS =
-  WORDMARK_PANEL === "light"
-    ? "bg-df-white text-df-black"
-    : "bg-df-black text-df-white";
+const PANEL_LOOKUP = {
+  light: "bg-df-white text-df-black",
+  dark: "bg-df-black text-df-white",
+  bleed: "text-df-white", // transparent — wordmark sits on the dithered bg
+} as const;
+const PANEL_CLASS = PANEL_LOOKUP[WORDMARK_PANEL];
 
 export default function Skiper14() {
   return (
@@ -30,7 +35,7 @@ export default function Skiper14() {
       {/* TOP — brain visual in its own dark band. The ASCII/dot signal loop,
           object-cover across a tall block. On ink so its black plate blends via
           mix-blend-screen. Animated webp: no motion-reduce hook, but ambient. */}
-      <div className="h-[66vh] min-h-[420px] w-full overflow-hidden">
+      <div className="h-[74vh] min-h-[460px] w-full overflow-hidden bg-df-black">
         <img
           src="/footer-brain.webp"
           alt=""
@@ -69,8 +74,10 @@ export default function Skiper14() {
       {/* BOTTOM — giant wordmark on its OWN clean panel, separated from the
           brain so it stays sharp and fully readable. Panel look is controlled
           by WORDMARK_PANEL (default: light cream panel, ink text). */}
-      <div className={`select-none px-2 pb-3 pt-3 md:px-4 md:pb-4 md:pt-4 ${PANEL_CLASS}`}>
-        <h2 className="font-grotesque leading-[0.74] tracking-[-0.03em] text-center whitespace-nowrap text-[clamp(2rem,9vw,8rem)]">
+      <div className={`relative overflow-hidden select-none px-2 pb-3 pt-3 md:px-4 md:pb-4 md:pt-4 ${PANEL_CLASS}`}>
+        {/* Bayer-dithered cream field behind the wordmark (site's dither language). */}
+        <FooterDither />
+        <h2 className="relative z-[1] font-grotesque leading-[0.74] tracking-[-0.03em] text-center whitespace-nowrap text-[clamp(2rem,9vw,8rem)]">
           BRINK
         </h2>
       </div>

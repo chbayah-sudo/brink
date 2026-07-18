@@ -78,6 +78,20 @@
 .font-grotesque {
   font-family: var(--font-newsreader);
 }
+/* Striper — Indian Type Foundry / Fontshare, self-hosted for the hero wordmark. */
+@font-face {
+  font-family: "Striper";
+  src: url("/fonts/striper.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+.font-slab {
+  font-family: var(--font-slab), "Rockwell", Georgia, serif;
+}
+.font-striper {
+  font-family: "Striper", var(--font-slab), Georgia, serif;
+}
 .font-mono-df {
   font-family: var(--font-ibm-plex-mono);
 }
@@ -242,7 +256,19 @@
   }
 }
 .hero-word {
-  animation: df-hero 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* Entrance, then — a beat after it settles solid — ease down to
+     semi-transparent so the hero video shows through the letters. */
+  animation:
+    df-hero 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    hero-word-dim 1s ease 2.4s forwards;
+}
+@keyframes hero-word-dim {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.55;
+  }
 }
 
 /* link underline sweep */

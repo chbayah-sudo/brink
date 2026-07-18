@@ -68,7 +68,7 @@ export function Transport({ className }: { className?: string }) {
   );
 }
 
-/* Small dragonfly pixel mark for the header logo */
+/* Small pixel mark for the header logo */
 export function PixelMark({ className }: { className?: string }) {
   return (
     <svg

@@ -150,7 +150,7 @@ export function Hero() {
                 <GridDots />
               </span>
               <a
-                href="#about"
+                href="#brain"
                 className="px-3 flex items-center mono-label !text-df-white hover:!text-df-orange transition-colors"
               >
                 Open

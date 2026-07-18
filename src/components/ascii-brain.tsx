@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { BrainNerveScrub } from "@/components/brain-nerve-scrub";
+import { NerveSignals } from "@/components/nerve-signals";
 
 // --- ASCII brain tuning (restored from the original hero renderer) ----------
 const ASCII_RAMP = " .:-=+*#%@";
@@ -16,26 +16,40 @@ const SCATTER = 0.4;
 const INK: [number, number, number] = [10, 12, 16]; // #0a0c10
 
 // ===========================================================================
-// BRAIN <-> NERVE CONNECTION — edit these to align the two.
+// BRAIN -> NERVE — now a SINGLE combined asset (public/brain-nerve.mp4).
 // ---------------------------------------------------------------------------
-// The rotating brain and the nerve share ONE pinned viewport. The brain
-// assembles first (unchanged). Then, as you keep scrolling into the "nerve
-// phase", the assembled brain settles UP and shrinks a little to free room
-// below its stem, and the nerve (components/brain-nerve-scrub.tsx) draws from
-// there. Tune the brain here; tune the nerve with the NERVE_* constants at the
-// top of brain-nerve-scrub.tsx.
+// The clip itself is the whole handoff: it opens on a full glowing brain, then
+// the brain drains downward and pours into a vertical nerve/spine strand. We no
+// longer merge a brain video with a separately-drawn nerve — the ASCII engine
+// just scrubs this one clip by scroll.
 //
-// The brain is NEVER resized or moved — at scroll 0 it is its original clean
-// self. As you scroll into the nerve phase it simply FADES OUT while the nerve
-// draws in on the same progress (one continuous brain -> nerve handoff).
+// Two scroll phases share ONE pinned viewport:
+//   assembly phase (p 0..1)      : the hero zoom-out shreds away and the ASCII
+//                                  brain assembles from scatter. The clip is
+//                                  held on frame 0 (full brain) the whole time.
+//   morph phase   (morphP 0..1)  : the clip's playhead scrubs 0 -> end, so the
+//                                  assembled ASCII brain drains into the nerve
+//                                  exactly as you scroll.
 //
-// BRAIN_FADE_START : nerve-phase progress (0..1) at which the brain starts fading.
-// BRAIN_FADE_END   : progress at which the brain has fully faded away.
-// NERVE_SCROLL_SVH : extra scroll length (svh) devoted to the transition,
-//                    appended after the 200svh brain section (bigger = slower).
-export const BRAIN_FADE_START = 0.0;
-export const BRAIN_FADE_END = 0.6;
-export const NERVE_SCROLL_SVH = 200;
+// MORPH_SCROLL_SVH : extra scroll length (svh) devoted to the brain->nerve
+//                    scrub, appended after the 200svh brain section. Bigger =
+//                    the morph plays out more slowly as you scroll.
+const MORPH_SCROLL_SVH = 360;
+// The combined brain -> nerve clip the ASCII engine samples + scrubs.
+const BRAIN_NERVE_SRC = "/brain-nerve.mp4";
+// Seconds of the clip's head that are still a full brain (before the morph
+// begins ~0.9s in). The morph clip sits paused at BRAIN_IDLE_END (still a full
+// side-view brain) while idle so the scroll scrub can run from there to the end
+// (the morph proper) — and so the crossfade from the spin clip lands on a
+// matching frame.
+const BRAIN_IDLE_END = 0.85;
+
+// Idle 360: a separate spin clip (seamless ping-pong of a real rotating brain)
+// autoplay-loops while parked on the brain, giving a genuine turn. When you
+// scroll, it crossfades into the morph clip (BRAIN_NERVE_SRC) over the first
+// sliver of scroll (HANDOFF window) and the morph scrub takes over.
+const SPIN_SRC = "/brain-360.mp4";
+const SPIN_HANDOFF = 0.12; // morphP over which spin -> morph crossfade completes
 // ===========================================================================
 
 // The hero clip the canvas re-draws during the zoom-out. MUST match whatever
@@ -113,18 +127,20 @@ function coverRect(vw: number, vh: number, dw: number, dh: number) {
 }
 
 export function AsciiBrain() {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const heroRef = useRef<HTMLVideoElement | null>(null); // copy of the hero clip
-  const brainRef = useRef<HTMLVideoElement | null>(null); // /brain-hero.mp4
+  const brainRef = useRef<HTMLVideoElement | null>(null); // /brain-nerve.mp4 (scrubbed)
+  const spinRef = useRef<HTMLVideoElement | null>(null); // /brain-360.mp4 (idle spin)
   const heroBufRef = useRef<HTMLCanvasElement | null>(null);
   const brainBufRef = useRef<HTMLCanvasElement | null>(null);
   const frameRef = useRef<number | null>(null);
   // Eased scroll progress 0..1 for this section, read in the render loop.
   const pRef = useRef(0);
-  // Progress 0..1 through the extra "nerve phase" that follows brain assembly.
-  const nervePRef = useRef(0);
+  // Progress 0..1 through the brain->nerve scrub that follows brain assembly.
+  const morphPRef = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isReduced, setIsReduced] = useState(false);
   // Fires the headline's text-generate reveal once the brain scene is
@@ -151,19 +167,23 @@ export function AsciiBrain() {
     return () => observer.disconnect();
   }, []);
 
-  // Pause both source videos while the scene is off-screen (perf). The hero
-  // copy runs at 2x to match the real hero, so the zoom-out handoff stays in
-  // sync.
+  // Hero copy autoplays (at 2x, to match the real hero) so the zoom-out shred
+  // stays in sync. The brain->nerve clip is NEVER played — it is scrubbed by
+  // scroll in the render loop — so we only pause it when off-screen.
   useEffect(() => {
     const hero = heroRef.current;
     const brain = brainRef.current;
+    const spin = spinRef.current;
     if (isVisible) {
       if (hero) hero.playbackRate = 2;
       hero?.play().catch(() => undefined);
-      brain?.play().catch(() => undefined);
+      // The spin clip drives the idle rotation; the render loop starts/stops it
+      // per scroll, but kick it off here so it's already running when parked.
+      spin?.play().catch(() => undefined);
     } else {
       hero?.pause();
       brain?.pause();
+      spin?.pause();
     }
   }, [isVisible]);
 
@@ -178,11 +198,12 @@ export function AsciiBrain() {
       const scrolled = clamp(-rect.top, 0, total || 1);
       // Brain assembles over the FIRST viewport of scroll — identical pacing to
       // the original 200svh section (where total was exactly one viewport). The
-      // section is now taller only to add scroll room for the nerve phase.
+      // section is now taller only to add scroll room for the nerve morph.
       const assembly = window.innerHeight;
       pRef.current = clamp(scrolled / (assembly || 1), 0, 1);
-      // Nerve phase: everything scrolled beyond assembly, normalised 0..1.
-      nervePRef.current = clamp((scrolled - assembly) / (total - assembly || 1), 0, 1);
+      // Morph phase: everything scrolled beyond assembly, normalised 0..1. This
+      // is the value the brain->nerve clip's playhead is scrubbed against.
+      morphPRef.current = clamp((scrolled - assembly) / (total - assembly || 1), 0, 1);
       // Reveal the headline as the brain assembles (idempotent; React bails
       // after the first true).
       if (pRef.current > 0.6) setHeadlineIn(true);
@@ -221,15 +242,15 @@ export function AsciiBrain() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const p = pRef.current;
-      const nerveP = nervePRef.current;
+      const morphP = morphPRef.current;
       const hero = heroRef.current;
       const brain = brainRef.current;
+      const spin = spinRef.current;
 
-      // Brain fade: the assembled brain FADES OUT (never resized/moved) as the
-      // nerve draws in, tied to the same nerve-phase progress. Identity while
-      // nerveP is 0 (hero + assembly untouched, brain stays clean and full).
-      const brainFade = smoothstep(BRAIN_FADE_START, BRAIN_FADE_END, nerveP);
-      canvas.style.opacity = String(1 - brainFade);
+      // The canvas never fades — the brain->nerve handoff lives INSIDE the clip,
+      // so the ASCII layer stays fully opaque and simply tracks the scrubbed
+      // frame all the way from brain to nerve.
+      canvas.style.opacity = "1";
 
       // --- wrapper crossfade: real hero shows through -> canvas owns the frame
       // Reduced motion uses a gentle plain crossfade instead of the fast handoff.
@@ -238,17 +259,23 @@ export function AsciiBrain() {
         : smoothstep(WRAP_IN, WRAP_FULL, p);
       if (wrapRef.current) wrapRef.current.style.opacity = String(wrapFade);
 
-      // Thesis labels resolve in with the brain, not during the shred.
+      // Thesis labels resolve in with the brain, then fade back out as you
+      // scroll into the nerve so the SIGNAL PATH beats own the stage.
       const brainIn = isReduced
         ? smoothstep(0.1, 0.5, p)
         : smoothstep(BRAIN_IN, BRAIN_FULL, p);
-      if (textRef.current) textRef.current.style.opacity = String(brainIn);
+      const thesisOut = 1 - smoothstep(0.02, 0.14, morphP);
+      if (textRef.current) textRef.current.style.opacity = String(brainIn * thesisOut);
 
       // --- ink background -------------------------------------------------
-      // Non-reduced: solid ink behind everything (hero strips cover it while
-      // full-bleed, then reveal it as they scatter). Reduced: ink itself
+      // Ink veil: fully opaque through the hero shred + brain assembly, then
+      // eased down across the morph so the dithered page background bleeds in
+      // behind the nerve + signal beats (one dithered world). Clear first so the
+      // semi-transparent veil never ghosts the previous frame. Reduced: ink
       // crossfades in over the real hero as the plain fallback.
-      const inkAlpha = isReduced ? smoothstep(0.1, 0.5, p) : 1;
+      const inkFade = 1 - 0.45 * smoothstep(0.14, 0.62, morphP);
+      const inkAlpha = isReduced ? smoothstep(0.1, 0.5, p) : inkFade;
+      ctx.clearRect(0, 0, cssW, cssH);
       ctx.globalCompositeOperation = "source-over";
       ctx.globalAlpha = inkAlpha;
       ctx.fillStyle = `rgb(${INK[0]},${INK[1]},${INK[2]})`;
@@ -331,9 +358,44 @@ export function AsciiBrain() {
         ctx.globalAlpha = 1;
       }
 
-      // ---------------- ASCII brain (scatter -> assembled) ----------------
+      // ---- ASCII brain: idle 360 spin -> crossfade -> scroll-scrub the morph
       const brainReady = !!brain && brain.readyState >= 2 && brain.videoWidth > 0;
-      if (brainIn > 0.001 && brainReady) {
+      const spinReady = !!spin && spin.readyState >= 2 && spin.videoWidth > 0;
+      // 0 = pure spin (idle), 1 = pure morph clip. The spin dissolves into the
+      // morph over the first SPIN_HANDOFF of scroll so the turning brain lands on
+      // the morph's side-view instead of popping. Reduced motion skips the spin.
+      const morphBlend = isReduced ? 1 : smoothstep(0, SPIN_HANDOFF, morphP);
+
+      // Spin clip: autoplay-loops the idle rotation; pause it once fully crossed
+      // into the morph (nothing of it is visible then) to save decode.
+      if (spin) {
+        const wantSpin = isVisible && !isReduced && morphBlend < 0.999;
+        if (wantSpin) {
+          if (spin.paused) spin.play().catch(() => undefined);
+        } else if (!spin.paused) {
+          spin.pause();
+        }
+      }
+
+      // Morph clip: always paused and seek-scrubbed. Held at BRAIN_IDLE_END (the
+      // side-view brain the spin crossfades into) while idle, then advances to
+      // the final nerve frame as you scroll.
+      if (brainReady) {
+        if (!brain.paused) brain.pause();
+        const dur = brain.duration;
+        if (Number.isFinite(dur) && dur > 0) {
+          const target = BRAIN_IDLE_END + clamp(morphP, 0, 1) * (dur - BRAIN_IDLE_END);
+          if (Math.abs(brain.currentTime - target) > 0.02) {
+            try {
+              brain.currentTime = target;
+            } catch {
+              /* seek can throw mid-load; ignore and retry next frame */
+            }
+          }
+        }
+      }
+
+      if (brainIn > 0.001 && (brainReady || spinReady)) {
         const cols = Math.floor(cssW / CELL_PX);
         const rows = Math.floor(cssH / CELL_PX);
         const BBW = cols * 2;
@@ -342,11 +404,27 @@ export function AsciiBrain() {
           bbuf.width = BBW;
           bbuf.height = BBH;
         }
-        const { sx, sy, sw, sh } = coverRect(brain!.videoWidth, brain!.videoHeight, BBW, BBH);
+        // Crossfade spin -> morph into the sample buffer: draw the spin frame
+        // opaque as the base, then the morph frame over it at morphBlend. Both
+        // are opaque brain-on-black, so this is an exact dissolve. Whichever the
+        // luminance sampler reads below then becomes ASCII.
         bbctx.setTransform(1, 0, 0, 1, 0, 0);
         bbctx.imageSmoothingEnabled = true;
+        bbctx.globalCompositeOperation = "source-over";
         bbctx.clearRect(0, 0, BBW, BBH);
-        bbctx.drawImage(brain!, sx, sy, sw, sh, 0, 0, BBW, BBH);
+        let drewBase = false;
+        if (spinReady && morphBlend < 1) {
+          const c = coverRect(spin!.videoWidth, spin!.videoHeight, BBW, BBH);
+          bbctx.globalAlpha = 1;
+          bbctx.drawImage(spin!, c.sx, c.sy, c.sw, c.sh, 0, 0, BBW, BBH);
+          drewBase = true;
+        }
+        if (brainReady && (morphBlend > 0 || !drewBase)) {
+          const c = coverRect(brain!.videoWidth, brain!.videoHeight, BBW, BBH);
+          bbctx.globalAlpha = drewBase ? morphBlend : 1;
+          bbctx.drawImage(brain!, c.sx, c.sy, c.sw, c.sh, 0, 0, BBW, BBH);
+        }
+        bbctx.globalAlpha = 1;
         const bd = bbctx.getImageData(0, 0, BBW, BBH).data;
 
         const cellW = cssW / cols;
@@ -411,19 +489,21 @@ export function AsciiBrain() {
     // -mt-[100svh] overlaps the hero so the zoom-out plays over the still-
     // playing hero video; the sticky child pins while the scene resolves.
     <section
+      ref={sectionRef}
       id="brain"
       className="relative -mt-[100svh]"
-      // 200svh brain (100svh overlap + 100svh assembly) + NERVE_SCROLL_SVH for
-      // the nerve draw. Driven by the constant so the two stay in sync.
-      style={{ height: `${200 + NERVE_SCROLL_SVH}svh` }}
+      // 200svh brain (100svh overlap + 100svh assembly) + MORPH_SCROLL_SVH for
+      // the brain->nerve scrub. Driven by the constant so the two stay in sync.
+      style={{ height: `${200 + MORPH_SCROLL_SVH}svh` }}
     >
       <div
         ref={wrapRef}
         className="pointer-events-none sticky top-0 h-[100svh] overflow-hidden"
         style={{ opacity: 0 }}
       >
-        {/* Off-screen copies the canvas samples. Kept in sync by playing the
-            same clips as <Hero> / the brain — never shown directly. */}
+        {/* Off-screen copies the canvas samples. The hero copy plays to stay in
+            sync with <Hero>; the brain->nerve clip is scrubbed, not played.
+            Neither is ever shown directly. */}
         <video
           ref={heroRef}
           src={HERO_SRC}
@@ -435,7 +515,17 @@ export function AsciiBrain() {
         />
         <video
           ref={brainRef}
-          src="/brain-hero.mp4"
+          src={BRAIN_NERVE_SRC}
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
+          muted
+          playsInline
+          preload="auto"
+        />
+        {/* Idle 360 spin — autoplay-loops a seamless ping-pong of the rotating
+            brain. Sampled by the canvas, never shown directly. */}
+        <video
+          ref={spinRef}
+          src={SPIN_SRC}
           className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
           muted
           loop
@@ -444,9 +534,8 @@ export function AsciiBrain() {
         />
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
-        {/* Nerve drawn in the SAME pinned viewport, below the brain stem, so
-            brain + nerve read as one organism. Scrubs over the nerve phase. */}
-        <BrainNerveScrub />
+        {/* THE SIGNAL PATH — scroll-revealed beats alongside the nerve. */}
+        <NerveSignals sectionRef={sectionRef} />
 
         {/* Thesis labels overlaid on the brain: big headline bottom-left,
             small labeled paragraph bottom-right (resolve in with the scene). */}
