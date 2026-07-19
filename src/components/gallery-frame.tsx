@@ -132,7 +132,6 @@ export default function GalleryFrame() {
           className="absolute inset-0 flex items-center justify-center will-change-transform [transform-origin:center_center]"
         >
           {isReduced ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={RING_POSTER}
               alt="Brink ring"
@@ -143,7 +142,6 @@ export default function GalleryFrame() {
             // Animated webp plays on its own; not driven by scroll. The tiny
             // blur is a background-agnostic safety net that softens any residual
             // hard matte edge so it can't read as a jagged line.
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={RING_SRC}
               alt="Brink ring"
