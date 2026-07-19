@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Static export: `next build` emits the deployable site to out/ (the build
+  // itself uses the default .next). Do NOT set distDir here — pointing it at
+  // "out" makes the build internals and the export share one folder, which
+  // breaks Vercel's output detection (deploys 404).
   output: "export",
-  distDir: "out",
   allowedDevOrigins: ["*.preview.same-app.com"],
   images: {
     unoptimized: true,
