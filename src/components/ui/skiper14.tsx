@@ -11,8 +11,7 @@ const INFO_ROWS: { value: string; href?: string }[] = [
   { value: "SF" },
   { value: "NEUROTECH" },
   { value: "PRE-FATIGUE DETECTION" },
-  // TODO: replace with the real contact address once provided.
-  { value: "CONTACT", href: "mailto:YOUR_EMAIL_HERE" },
+  { value: "CONTACT", href: "mailto:contact@neurabrink.bio" },
 ];
 
 // Wordmark panel look. "bleed" = no panel; the dithered page background flows
