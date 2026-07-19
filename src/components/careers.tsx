@@ -23,6 +23,12 @@ export function Careers() {
             Brink is early, and building fast. If you invest in neurotech, human
             performance, or the science of effort — let&apos;s talk.
           </p>
+          <a
+            href="mailto:contact@neurabrink.bio"
+            className="mt-8 inline-block font-mono-df text-sm md:text-base tracking-[0.16em] text-df-orange transition-colors hover:text-df-white md:mt-10"
+          >
+            [ contact@neurabrink.bio ]
+          </a>
         </Reveal>
       </div>
     </section>
