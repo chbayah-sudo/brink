@@ -4,7 +4,15 @@ import { FeaturedCarousel } from "@/components/featured-carousel";
 
 export function Writing() {
   return (
-    <section id="writing" className="relative py-24 md:py-36">
+    <section
+      id="writing"
+      className="relative py-24 md:py-36"
+      // soft ink seat so the copy doesn't fight the dither haze behind it
+      style={{
+        background:
+          "linear-gradient(180deg, rgba(10,12,16,0) 0%, rgba(10,12,16,0.6) 12%, rgba(10,12,16,0.6) 88%, rgba(10,12,16,0) 100%)",
+      }}
+    >
       <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <SectionHeader number="02" title="SCIENCE" sec="SEC-02" />
 
@@ -17,10 +25,10 @@ export function Writing() {
 
           <Reveal className="md:pl-[38%]" delay={120}>
             <div className="relative max-w-xl">
-              <span className="mono-label absolute -top-6 left-0 md:top-1.5 md:-left-24">
+              <span className="mono-label !text-df-white/55 absolute -top-6 left-0 md:top-1.5 md:-left-24">
                 How It Works
               </span>
-              <p className="font-serif-df text-df-gray text-xl md:text-2xl leading-[1.4]">
+              <p className="font-serif-df text-df-white/80 text-xl md:text-2xl leading-[1.4]">
                 There&apos;s a measurable neural signature in the DLPFC that
                 shows up seconds before you consciously decide to quit. We detect
                 it with EEG and fNIRS, then intervene before the thought becomes

@@ -94,11 +94,11 @@ export function FeaturedCarousel() {
                 <PixelArrow className="mt-1.5 shrink-0 text-df-white group-hover:text-df-orange transition-colors" />
               </div>
             )}
-            <p className={cn("font-serif-df text-df-gray leading-relaxed", a.title ? "mt-3" : "mt-4")}>
+            <p className={cn("font-serif-df text-df-white/75 leading-relaxed", a.title ? "mt-3" : "mt-4")}>
               {a.excerpt}
             </p>
             {a.source && (
-              <p className="mt-2 font-mono-df text-[0.62rem] tracking-[0.14em] text-df-white/35">
+              <p className="mt-2 font-mono-df text-[0.62rem] tracking-[0.14em] text-df-white/55">
                 {a.source}
               </p>
             )}
