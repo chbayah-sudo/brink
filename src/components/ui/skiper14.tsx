@@ -8,7 +8,7 @@ import { FooterDither } from "@/components/footer-dither";
 // accent.
 
 const INFO_ROWS: { value: string; href?: string }[] = [
-  { value: "NYC / SG / ONLINE" },
+  { value: "SF" },
   { value: "NEUROTECH" },
   { value: "PRE-FATIGUE DETECTION" },
   // TODO: replace with the real contact address once provided.
