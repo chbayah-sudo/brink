@@ -15,6 +15,29 @@ const SCATTER = 0.4;
 
 const INK: [number, number, number] = [10, 12, 16]; // #0a0c10
 
+// --- hover "neural probe" lens ----------------------------------------------
+// Cursor interaction over the glyph grid: a radius around the pointer deposits
+// "heat" (painted along the pointer's path, so fast swipes leave an unbroken
+// comet stroke) which decays exponentially into an afterglow trail. Heated
+// glyphs recolor gray -> amber -> near-white core, brighten, and scramble-
+// flicker through SCRAMBLE; heat also reveals a faint latent lattice in cells
+// the brain leaves empty. Pointerdown fires an expanding ring pulse that
+// ignites glyphs as it sweeps. Reduced motion keeps the color highlight but
+// drops the flicker, pulses and reticle spin.
+const LENS_RADIUS_FRAC = 0.11; // lens radius as a fraction of min(vw, vh)
+const LENS_MIN_R = 88; // px floor so the lens stays usable on small screens
+const HEAT_DECAY = 3.4; // 1/s exponential decay of the afterglow
+const SCRAMBLE = "!<>-_\\/[]{}=+*^?#$%&01";
+const ACCENT: [number, number, number] = [255, 91, 58]; // --df-orange
+const ACCENT_HOT: [number, number, number] = [255, 238, 226]; // lens core
+const PULSE_SPEED = 950; // px/s ring expansion on click/tap
+const PULSE_BAND = 90; // px half-thickness of the igniting ring
+const PULSE_LIFE = 1.15; // s until a pulse dies out
+// base glyph color tiers as rgb (the string ternary's values, lerp-able)
+const TIER_HI: [number, number, number] = [232, 228, 216]; // #e8e4d8
+const TIER_MID: [number, number, number] = [168, 165, 160]; // #a8a5a0
+const TIER_LO: [number, number, number] = [124, 122, 118]; // #7c7a76
+
 // ===========================================================================
 // BRAIN -> NERVE — now a SINGLE combined asset (public/brain-nerve.mp4).
 // ---------------------------------------------------------------------------
@@ -147,12 +170,47 @@ export function AsciiBrain() {
   // actually surfacing (scroll progress), not merely in the DOM viewport.
   const [headlineIn, setHeadlineIn] = useState(false);
 
+  // --- neural probe lens state (client coords; converted per frame) ---------
+  const pointerRef = useRef({ x: -1e4, y: -1e4, px: -1e4, py: -1e4, active: false });
+  const heatRef = useRef({ arr: new Float32Array(0), cols: 0, rows: 0 });
+  const pulsesRef = useRef<{ x: number; y: number; t0: number }[]>([]);
+
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setIsReduced(mq.matches);
     update();
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Neural probe lens: window-level pointer tracking. The pinned wrapper is
+  // pointer-events-none, so the lens listens globally and converts client
+  // coords to canvas space inside the render loop.
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      const pt = pointerRef.current;
+      pt.x = e.clientX;
+      pt.y = e.clientY;
+      pt.active = true;
+    };
+    const onDown = (e: PointerEvent) => {
+      const pulses = pulsesRef.current;
+      pulses.push({ x: e.clientX, y: e.clientY, t0: performance.now() });
+      if (pulses.length > 6) pulses.shift();
+    };
+    const onLeave = () => {
+      pointerRef.current.active = false;
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onDown, { passive: true });
+    document.documentElement.addEventListener("mouseleave", onLeave);
+    window.addEventListener("blur", onLeave);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
+      document.documentElement.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("blur", onLeave);
+    };
   }, []);
 
   // Track whether the brain scene is on screen (pause the loop + videos off it).
@@ -228,15 +286,21 @@ export function AsciiBrain() {
     const bbuf = (brainBufRef.current ??= document.createElement("canvas"));
     const bbctx = bbuf.getContext("2d", { willReadFrequently: true })!;
 
-    const render = () => {
+    let lastNow = 0;
+    const render = (now: number) => {
       frameRef.current = window.requestAnimationFrame(render);
       if (!isVisible) return;
+      // dt for the lens heat decay (clamped so tab-switches don't jump it)
+      const dt = lastNow ? Math.min(0.05, (now - lastNow) / 1000) : 0.016;
+      lastNow = now;
 
       const cssW = canvas.clientWidth;
       const cssH = canvas.clientHeight;
       if (!cssW || !cssH) return;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // 1.5 (not 2) — ASCII glyphs stay crisp enough on retina and the canvas
+      // rasterizes ~2x fewer pixels per frame.
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       if (canvas.width !== Math.round(cssW * dpr)) canvas.width = Math.round(cssW * dpr);
       if (canvas.height !== Math.round(cssH * dpr)) canvas.height = Math.round(cssH * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -258,6 +322,15 @@ export function AsciiBrain() {
         ? smoothstep(0.05, 0.5, p)
         : smoothstep(WRAP_IN, WRAP_FULL, p);
       if (wrapRef.current) wrapRef.current.style.opacity = String(wrapFade);
+
+      // Parked on the hero: the whole wrapper is opacity-0, so every bit of
+      // sampling/drawing below would be invisible work. Skip the frame (and
+      // idle the spin clip — it resumes via the wantSpin logic on scroll,
+      // long before the ASCII brain fades in at p≈0.32).
+      if (wrapFade < 0.001) {
+        if (spin && !spin.paused) spin.pause();
+        return;
+      }
 
       // Thesis labels resolve in with the brain, then fade back out as you
       // scroll into the nerve so the SIGNAL PATH beats own the stage.
@@ -438,6 +511,127 @@ export function AsciiBrain() {
         const assembly = isReduced ? 1 : easeInOutCubic(brainIn);
         const scatterPx = SCATTER * Math.min(cssW, cssH) * (1 - assembly);
 
+        // ---- neural probe lens: update the heat field over the char grid ----
+        let heat = heatRef.current;
+        if (heat.cols !== cols || heat.rows !== rows) {
+          heat = heatRef.current = { arr: new Float32Array(cols * rows), cols, rows };
+        }
+        const H = heat.arr;
+        const heatFade = Math.exp(-HEAT_DECAY * dt);
+        for (let i = 0; i < H.length; i += 1) {
+          const v = H[i] * heatFade;
+          H[i] = v < 0.004 ? 0 : v;
+        }
+
+        // max-blend a smooth radial falloff into the grid around (cx, cy)
+        const deposit = (dcx: number, dcy: number, r: number, strength: number) => {
+          const c0 = Math.max(0, Math.floor((dcx - r) / cellW));
+          const c1 = Math.min(cols - 1, Math.ceil((dcx + r) / cellW));
+          const r0 = Math.max(0, Math.floor((dcy - r) / cellH));
+          const r1 = Math.min(rows - 1, Math.ceil((dcy + r) / cellH));
+          for (let rr = r0; rr <= r1; rr += 1) {
+            for (let cc = c0; cc <= c1; cc += 1) {
+              const ddx = (cc + 0.5) * cellW - dcx;
+              const ddy = (rr + 0.5) * cellH - dcy;
+              const dd = Math.sqrt(ddx * ddx + ddy * ddy);
+              if (dd >= r) continue;
+              const f = 1 - dd / r;
+              const v = f * f * (3 - 2 * f) * strength;
+              const ii = rr * cols + cc;
+              if (v > H[ii]) H[ii] = v;
+            }
+          }
+        };
+
+        const rect = canvas.getBoundingClientRect();
+        const lensR = Math.max(LENS_MIN_R, Math.min(cssW, cssH) * LENS_RADIUS_FRAC);
+        const pt = pointerRef.current;
+        const mx = pt.x - rect.left;
+        const my = pt.y - rect.top;
+        const lensOn =
+          pt.active && mx > -lensR && my > -lensR && mx < cssW + lensR && my < cssH + lensR;
+        if (lensOn) {
+          // paint along the pointer's path so fast swipes leave an unbroken
+          // stroke; a huge jump (re-entry after being away) is a teleport, not
+          // a stroke, so it deposits only at the new position
+          const pmx = pt.px - rect.left;
+          const pmy = pt.py - rect.top;
+          const segLen = pt.px > -9e3 ? Math.hypot(mx - pmx, my - pmy) : Infinity;
+          if (segLen > 1 && segLen < lensR * 5) {
+            const steps = Math.min(8, Math.max(1, Math.ceil(segLen / (lensR * 0.35))));
+            for (let s = 1; s <= steps; s += 1) {
+              const tt = s / steps;
+              deposit(pmx + (mx - pmx) * tt, pmy + (my - pmy) * tt, lensR, 1);
+            }
+          } else {
+            deposit(mx, my, lensR, 1);
+          }
+        }
+        pt.px = pt.x;
+        pt.py = pt.y;
+
+        // click/tap pulses: an expanding ring band that ignites glyphs
+        if (!isReduced) {
+          const pulses = pulsesRef.current;
+          for (let i = pulses.length - 1; i >= 0; i -= 1) {
+            const pu = pulses[i];
+            const age = (now - pu.t0) / 1000;
+            const life = 1 - age / PULSE_LIFE;
+            const ringR = age * PULSE_SPEED;
+            if (life <= 0 || ringR - PULSE_BAND > Math.hypot(cssW, cssH)) {
+              pulses.splice(i, 1);
+              continue;
+            }
+            const pux = pu.x - rect.left;
+            const puy = pu.y - rect.top;
+            const rOut = ringR + PULSE_BAND;
+            const c0 = Math.max(0, Math.floor((pux - rOut) / cellW));
+            const c1 = Math.min(cols - 1, Math.ceil((pux + rOut) / cellW));
+            const r0 = Math.max(0, Math.floor((puy - rOut) / cellH));
+            const r1 = Math.min(rows - 1, Math.ceil((puy + rOut) / cellH));
+            for (let rr = r0; rr <= r1; rr += 1) {
+              for (let cc = c0; cc <= c1; cc += 1) {
+                const dd = Math.hypot((cc + 0.5) * cellW - pux, (rr + 0.5) * cellH - puy);
+                const f = 1 - Math.abs(dd - ringR) / PULSE_BAND;
+                if (f <= 0) continue;
+                const v = f * f * life * 0.9;
+                const ii = rr * cols + cc;
+                if (v > H[ii]) H[ii] = v;
+              }
+            }
+          }
+        }
+
+        // lens atmosphere under the glyphs: soft amber glow + rotating reticle
+        if (lensOn && brainIn > 0.2) {
+          const glow = ctx.createRadialGradient(mx, my, 0, mx, my, lensR);
+          glow.addColorStop(0, `rgba(255,91,58,${(0.09 * brainIn).toFixed(3)})`);
+          glow.addColorStop(0.65, `rgba(255,91,58,${(0.028 * brainIn).toFixed(3)})`);
+          glow.addColorStop(1, "rgba(255,91,58,0)");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(mx, my, lensR, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = `rgba(255,91,58,${(0.3 * brainIn).toFixed(3)})`;
+          ctx.lineWidth = 1;
+          ctx.setLineDash([2, 8]);
+          ctx.lineDashOffset = isReduced ? 0 : -(now % 100000) / 36;
+          ctx.beginPath();
+          ctx.arc(mx, my, lensR, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.moveTo(mx - 5, my);
+          ctx.lineTo(mx + 5, my);
+          ctx.moveTo(mx, my - 5);
+          ctx.lineTo(mx, my + 5);
+          ctx.stroke();
+        }
+
+        // quantized clock for the scramble flicker (~12Hz, fps-independent)
+        const tick = isReduced ? 0 : Math.floor(now / 80);
+
         for (let row = 0; row < rows; row += 1) {
           for (let col = 0; col < cols; col += 1) {
             // brightest of the cell's 2x2 block so thin filaments survive
@@ -453,7 +647,22 @@ export function AsciiBrain() {
               }
             }
             const adjusted = Math.min(1, Math.max(0, (lum - 0.5) * CONTRAST + 0.5) * BRIGHTNESS);
-            if (adjusted <= THRESHOLD) continue;
+            const hv = H[row * cols + col]; // lens heat at this cell
+            if (adjusted <= THRESHOLD) {
+              // latent lattice: the lens scans "empty" cortex and finds faint
+              // noise glyphs where the brain draws nothing
+              if (hv > 0.04) {
+                const fl = hash(col * 3.7 + tick, row * 9.1);
+                ctx.fillStyle = "#ff5b3a";
+                ctx.globalAlpha = Math.min(0.3, hv * 0.32) * brainIn;
+                ctx.fillText(
+                  SCRAMBLE[(fl * SCRAMBLE.length) | 0],
+                  (col + 0.5) * cellW,
+                  (row + 0.5) * cellH
+                );
+              }
+              continue;
+            }
             const t = (adjusted - THRESHOLD) / (1 - THRESHOLD);
 
             const h1 = hash(col, row);
@@ -468,10 +677,36 @@ export function AsciiBrain() {
             const reveal = Math.min(1, Math.max(0, (assembly - h2 * 0.55) / 0.45));
             if (reveal <= 0) continue;
 
+            const alpha = (0.4 + t * 0.6) * reveal * brainIn;
+            if (hv > 0.012) {
+              // heated glyph: gray -> amber (sparse deviant cells go straight
+              // to white-hot), then everything blows out near the lens core
+              const base = adjusted > 0.6 ? TIER_HI : adjusted > 0.38 ? TIER_MID : TIER_LO;
+              const deviant = hash(col * 0.53, row * 1.71) > 0.93;
+              const target = deviant ? ACCENT_HOT : ACCENT;
+              const mixA = Math.min(1, hv / 0.7);
+              let cr = base[0] + (target[0] - base[0]) * mixA;
+              let cg = base[1] + (target[1] - base[1]) * mixA;
+              let cb = base[2] + (target[2] - base[2]) * mixA;
+              if (!deviant && hv > 0.7) {
+                const toHot = (hv - 0.7) / 0.3;
+                cr += (ACCENT_HOT[0] - cr) * toHot;
+                cg += (ACCENT_HOT[1] - cg) * toHot;
+                cb += (ACCENT_HOT[2] - cb) * toHot;
+              }
+              let ch = getAsciiChar(t);
+              if (!isReduced && hv > 0.2 && hash(col * 12.9 + tick * 7.3, row * 5.7) < hv * 0.8) {
+                ch = SCRAMBLE[(hash(col + tick, row * 1.7 + tick) * SCRAMBLE.length) | 0];
+              }
+              ctx.fillStyle = `rgb(${cr | 0},${cg | 0},${cb | 0})`;
+              ctx.globalAlpha = Math.min(1, alpha + hv * 0.85);
+              ctx.fillText(ch, drawX, drawY);
+              continue;
+            }
             const color =
               adjusted > 0.6 ? "#e8e4d8" : adjusted > 0.38 ? "#a8a5a0" : "#7c7a76";
             ctx.fillStyle = color;
-            ctx.globalAlpha = (0.4 + t * 0.6) * reveal * brainIn;
+            ctx.globalAlpha = alpha;
             ctx.fillText(getAsciiChar(t), drawX, drawY);
           }
         }
