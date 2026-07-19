@@ -174,6 +174,11 @@ export function AsciiBrain() {
   const pointerRef = useRef({ x: -1e4, y: -1e4, px: -1e4, py: -1e4, active: false });
   const heatRef = useRef({ arr: new Float32Array(0), cols: 0, rows: 0 });
   const pulsesRef = useRef<{ x: number; y: number; t0: number }[]>([]);
+  // Activity timestamps: the render loop runs at 60fps only while scrolling or
+  // interacting; parked idle it halves to 30fps (the sampled videos are ≤30fps,
+  // so nothing visible is lost — measured big main-thread relief).
+  const lastScrollTRef = useRef(0);
+  const lastInputTRef = useRef(0);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -192,11 +197,13 @@ export function AsciiBrain() {
       pt.x = e.clientX;
       pt.y = e.clientY;
       pt.active = true;
+      lastInputTRef.current = performance.now();
     };
     const onDown = (e: PointerEvent) => {
       const pulses = pulsesRef.current;
       pulses.push({ x: e.clientX, y: e.clientY, t0: performance.now() });
       if (pulses.length > 6) pulses.shift();
+      lastInputTRef.current = performance.now();
     };
     const onLeave = () => {
       pointerRef.current.active = false;
@@ -265,6 +272,7 @@ export function AsciiBrain() {
       // Reveal the headline as the brain assembles (idempotent; React bails
       // after the first true).
       if (pRef.current > 0.6) setHeadlineIn(true);
+      lastScrollTRef.current = performance.now();
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -287,9 +295,22 @@ export function AsciiBrain() {
     const bbctx = bbuf.getContext("2d", { willReadFrequently: true })!;
 
     let lastNow = 0;
+    let idleFlip = false;
+    // cached video luminance sample (videos are ≤30fps; resampling at 60 was
+    // pure duplicate drawImage/getImageData cost — measured 39% of the frame)
+    let sampleAt = 0;
+    let sampleBD: Uint8ClampedArray | null = null;
     const render = (now: number) => {
       frameRef.current = window.requestAnimationFrame(render);
       if (!isVisible) return;
+      // Idle throttle: parked (no scroll, no pointer, no pulses) → render at
+      // 30fps. Any interaction snaps it back to full rate on the next frame.
+      idleFlip = !idleFlip;
+      const idle =
+        now - lastScrollTRef.current > 300 &&
+        now - lastInputTRef.current > 300 &&
+        pulsesRef.current.length === 0;
+      if (idle && !isReduced && idleFlip) return;
       // dt for the lens heat decay (clamped so tab-switches don't jump it)
       const dt = lastNow ? Math.min(0.05, (now - lastNow) / 1000) : 0.016;
       lastNow = now;
@@ -359,6 +380,27 @@ export function AsciiBrain() {
       // Skipped entirely under reduced motion (that path is a pure crossfade).
       const heroReady = !!hero && hero.readyState >= 2 && hero.videoWidth > 0;
       const stripFade = 1 - smoothstep(STRIP_FADE_IN, STRIP_FADE_FULL, p);
+
+      // The copy only matters while the shred is visible. Past that it was
+      // decoding at 2x for the whole 5-viewport section — pause it, and on the
+      // way back up resync to the real hero so the p≈0 crossfade still lands
+      // on a matching frame.
+      if (hero && heroReady) {
+        const wantHeroPlay = !isReduced && stripFade > 0.001;
+        if (wantHeroPlay && hero.paused) {
+          const real = document.querySelector<HTMLVideoElement>("#home video");
+          if (real && Number.isFinite(real.currentTime)) {
+            try {
+              hero.currentTime = real.currentTime;
+            } catch {
+              /* mid-load seek — next frame retries */
+            }
+          }
+          hero.play().catch(() => undefined);
+        } else if (!wantHeroPlay && !hero.paused) {
+          hero.pause();
+        }
+      }
       if (!isReduced && heroReady && stripFade > 0.001) {
         // 0 = full-bleed hero, 1 = tiny centered rect (fully dissolved).
         const zoom = easeInOutCubic(smoothstep(ZOOM_IN, ZOOM_FULL, p));
@@ -473,32 +515,39 @@ export function AsciiBrain() {
         const rows = Math.floor(cssH / CELL_PX);
         const BBW = cols * 2;
         const BBH = rows * 2;
-        if (bbuf.width !== BBW || bbuf.height !== BBH) {
+        const dimsChanged = bbuf.width !== BBW || bbuf.height !== BBH;
+        if (dimsChanged) {
           bbuf.width = BBW;
           bbuf.height = BBH;
         }
         // Crossfade spin -> morph into the sample buffer: draw the spin frame
         // opaque as the base, then the morph frame over it at morphBlend. Both
         // are opaque brain-on-black, so this is an exact dissolve. Whichever the
-        // luminance sampler reads below then becomes ASCII.
-        bbctx.setTransform(1, 0, 0, 1, 0, 0);
-        bbctx.imageSmoothingEnabled = true;
-        bbctx.globalCompositeOperation = "source-over";
-        bbctx.clearRect(0, 0, BBW, BBH);
-        let drewBase = false;
-        if (spinReady && morphBlend < 1) {
-          const c = coverRect(spin!.videoWidth, spin!.videoHeight, BBW, BBH);
+        // luminance sampler reads below then becomes ASCII. The videos carry at
+        // most ~30fps, so resample at most every 33ms and reuse the cached
+        // luminance between — drawImage was the single biggest cost here.
+        if (dimsChanged || !sampleBD || now - sampleAt >= 33) {
+          sampleAt = now;
+          bbctx.setTransform(1, 0, 0, 1, 0, 0);
+          bbctx.imageSmoothingEnabled = true;
+          bbctx.globalCompositeOperation = "source-over";
+          bbctx.clearRect(0, 0, BBW, BBH);
+          let drewBase = false;
+          if (spinReady && morphBlend < 1) {
+            const c = coverRect(spin!.videoWidth, spin!.videoHeight, BBW, BBH);
+            bbctx.globalAlpha = 1;
+            bbctx.drawImage(spin!, c.sx, c.sy, c.sw, c.sh, 0, 0, BBW, BBH);
+            drewBase = true;
+          }
+          if (brainReady && (morphBlend > 0 || !drewBase)) {
+            const c = coverRect(brain!.videoWidth, brain!.videoHeight, BBW, BBH);
+            bbctx.globalAlpha = drewBase ? morphBlend : 1;
+            bbctx.drawImage(brain!, c.sx, c.sy, c.sw, c.sh, 0, 0, BBW, BBH);
+          }
           bbctx.globalAlpha = 1;
-          bbctx.drawImage(spin!, c.sx, c.sy, c.sw, c.sh, 0, 0, BBW, BBH);
-          drewBase = true;
+          sampleBD = bbctx.getImageData(0, 0, BBW, BBH).data;
         }
-        if (brainReady && (morphBlend > 0 || !drewBase)) {
-          const c = coverRect(brain!.videoWidth, brain!.videoHeight, BBW, BBH);
-          bbctx.globalAlpha = drewBase ? morphBlend : 1;
-          bbctx.drawImage(brain!, c.sx, c.sy, c.sw, c.sh, 0, 0, BBW, BBH);
-        }
-        bbctx.globalAlpha = 1;
-        const bd = bbctx.getImageData(0, 0, BBW, BBH).data;
+        const bd = sampleBD;
 
         const cellW = cssW / cols;
         const cellH = cssH / rows;

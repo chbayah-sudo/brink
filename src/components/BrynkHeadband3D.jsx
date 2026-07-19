@@ -190,12 +190,19 @@ const PART_NAMES = {
 function PartIdLabels({ partsRef, progressRef }) {
   const [labels, setLabels] = useState([])
   const wp = useRef(new THREE.Vector3())
+  const lastT = useRef(0)
   useFrame(() => {
     const model = partsRef.current
     if (!model || progressRef.current < 0.8) {
       if (labels.length) setLabels([])
       return
     }
+    // 12Hz is plenty for labels gliding with a damped, settling model — a
+    // per-frame setState here re-created 19 <Html> portals 60x/s (measured as
+    // a page-wide React churn once scrolled past the section).
+    const now = performance.now()
+    if (now - lastT.current < 80) return
+    lastT.current = now
     setLabels(model.parts.map((pt) => {
       pt.node.getWorldPosition(wp.current)
       const id = pt.node.name || 'part'
@@ -220,10 +227,26 @@ function PartIdLabels({ partsRef, progressRef }) {
 
 export function BrynkExplodeScene({ progressRef }) {
   const partsRef = useRef(null)
+  const wrapRef = useRef(null)
+  // Only run the WebGL frameloop while the section is actually on screen.
+  // Default 'always' rendered the scene at 60fps for the entire page session
+  // (measured: three.js + label portals taxing every section below this one).
+  const [onScreen, setOnScreen] = useState(true)
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([e]) => setOnScreen(e.isIntersecting),
+      { rootMargin: '10%' },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
   return (
-    <div style={{ position: 'absolute', inset: 0 }}>
+    <div ref={wrapRef} style={{ position: 'absolute', inset: 0 }}>
       <Canvas
-        dpr={[1, 2]}
+        frameloop={onScreen ? 'always' : 'never'}
+        dpr={[1, 1.5]}
         gl={{ antialias: true, toneMapping: THREE.NeutralToneMapping, toneMappingExposure: 1.05 }}
         camera={{ position: [0, 0.95, 6.4], fov: 42 }}
       >

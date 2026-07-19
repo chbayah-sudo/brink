@@ -10,7 +10,13 @@ import { motion } from "motion/react";
 // converges ("BR · [%] · INK") and flies up to land on the permanent masthead
 // while the cream field fades to reveal the (dark) site.
 // ---------------------------------------------------------------------------
-const DURATION = 800; // ms of the count-up (snappy — ~1.2s total)
+// The counter is gated on REAL readiness: it exits as soon as the hero video
+// can play (readyState >= 3), no earlier than MIN_MS (so it never strobes) and
+// no later than MAX_MS (so a slow network can't hold the site hostage — the
+// video keeps buffering behind the site). Previously this was a fixed 800ms
+// cosmetic timer that masked nothing and delayed every load.
+const MIN_MS = 500;
+const MAX_MS = 1100;
 const HOLD = 60;
 const GLYPHS = "ABCDEFGHKMNPRSTVWXZ0123456789#%*+=/·";
 const EASE: [number, number, number, number] = [0.65, 0, 0.35, 1];
@@ -110,10 +116,14 @@ export function Preloader() {
     }
     const start = performance.now();
     const tick = (now: number) => {
-      const lin = Math.min(1, (now - start) / DURATION);
-      setPct(Math.round(smoothstep(lin) * 100));
-      if (lin < 1) rafRef.current = requestAnimationFrame(tick);
-      else {
+      const t = now - start;
+      const heroReady =
+        (document.querySelector<HTMLVideoElement>("#home video")?.readyState ?? 0) >= 3;
+      const done = t >= MAX_MS || (heroReady && t >= MIN_MS);
+      if (!done) {
+        setPct(Math.round(smoothstep(Math.min(1, t / MAX_MS)) * 100));
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
         setPct(100);
         window.setTimeout(() => setPhase("exit"), HOLD);
       }
