@@ -8,7 +8,7 @@ import { AsciiBrain } from "@/components/ascii-brain";
 import BrinkSystemExplorer from "@/components/brink-system-explorer";
 import { LenisProvider } from "@/components/lenis-provider";
 import { Writing } from "@/components/writing";
-import { Product } from "@/components/product";
+import { Preorder } from "@/components/preorder";
 import { Careers } from "@/components/careers";
 import Skiper14 from "@/components/ui/skiper14";
 
@@ -26,7 +26,7 @@ export default function Home() {
           <AsciiBrain />
           <BrinkSystemExplorer />
           <Writing />
-          <Product />
+          <Preorder />
           <Careers />
           <Skiper14 />
         </main>

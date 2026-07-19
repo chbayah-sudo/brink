@@ -39,6 +39,6 @@ export const navLinks = [
   { label: "Home", href: "#home" },
   { label: "Thesis", href: "#brain" },
   { label: "Science", href: "#writing" },
-  { label: "Product", href: "#product" },
+  { label: "Pre-order", href: "#preorder" },
   { label: "Contact", href: "#footer" },
 ];
