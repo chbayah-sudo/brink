@@ -10,8 +10,8 @@ import { useEffect, useRef } from "react";
 // trails the cursor and a vignette that keeps the centre readable.
 // ---------------------------------------------------------------------------
 // Tuning knobs:
-const PIXEL = 3; // dither pixel size in CSS px (bigger = chunkier / cheaper)
-const FPS = 40; // render cap (a background never needs 60)
+const PIXEL = 4; // dither pixel size in CSS px (bigger = chunkier / cheaper)
+const FPS = 30; // render cap (a background never needs 60)
 const LEVELS = 6; // quantisation tones (incl. ink)
 const FIELD_SCALE = 2.8; // fbm zoom (smaller = bigger, slower clouds)
 const FLOW = 0.62; // how fast the current drifts
@@ -104,6 +104,11 @@ export function DitherBackground() {
     let last = 0;
     let img: ImageData | null = null;
     let buf: Uint32Array | null = null;
+    // Per-pixel constants, precomputed at resize so the hot loop doesn't
+    // re-derive them 60x/sec: Bayer dither offset and vignette factor depend
+    // only on the pixel coordinate.
+    let ditherLUT: Float32Array | null = null;
+    let vigLUT: Float32Array | null = null;
     let gw = 0;
     let gh = 0;
     let aspect = 1;
@@ -121,11 +126,22 @@ export function DitherBackground() {
         canvas.height = gh;
         img = ctx.createImageData(gw, gh);
         buf = new Uint32Array(img.data.buffer);
+        ditherLUT = new Float32Array(gw * gh);
+        vigLUT = new Float32Array(gw * gh);
+        for (let gy = 0; gy < gh; gy += 1) {
+          const vy = gy / gh - 0.5;
+          for (let gx = 0; gx < gw; gx += 1) {
+            const vx = gx / gw - 0.5;
+            const i = gy * gw + gx;
+            ditherLUT[i] = (bayer8(gx, gy) - 0.5) * DITHER_STRENGTH;
+            vigLUT[i] = 1 - Math.min(1, (vx * vx + vy * vy) * VIGNETTE);
+          }
+        }
       }
     };
 
     const draw = (time: number) => {
-      if (!img || !buf) return;
+      if (!img || !buf || !ditherLUT || !vigLUT) return;
       const t = time * 0.00006 * FLOW;
       // ease the cursor light toward its target
       mouse.x += (mouse.tx - mouse.x) * 0.06;
@@ -152,15 +168,12 @@ export function DitherBackground() {
           const mLight = Math.max(0, 1 - dist / MOUSE_RADIUS);
           val += mLight * mLight * MOUSE_LIFT;
 
+          const i = gy * gw + gx;
           // vignette + bias toward dark so most of the field is ink
-          const vx = nx - 0.5;
-          const vy = ny - 0.5;
-          const vig = 1 - Math.min(1, (vx * vx + vy * vy) * VIGNETTE);
-          val = (val * (0.55 + 0.45 * vig)) * 1.3 - 0.22;
+          val = (val * (0.55 + 0.45 * vigLUT[i])) * 1.3 - 0.22;
 
-          // ordered dither + quantise
-          const d = (bayer8(gx, gy) - 0.5) * DITHER_STRENGTH;
-          let level = Math.round(clamp01(val + d) * (LEVELS - 1));
+          // ordered dither + quantise (offset precomputed per pixel)
+          let level = Math.round(clamp01(val + ditherLUT[i]) * (LEVELS - 1));
           if (level < 0) level = 0;
           else if (level > LEVELS - 1) level = LEVELS - 1;
 

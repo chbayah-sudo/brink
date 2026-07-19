@@ -8,8 +8,7 @@ import { FooterDither } from "@/components/footer-dither";
 // accent.
 
 const INFO_ROWS: { value: string; href?: string }[] = [
-  { value: "NORMAN, OK" },
-  { value: "AND ONLINE" },
+  { value: "NYC / SG / ONLINE" },
   { value: "NEUROTECH" },
   { value: "PRE-FATIGUE DETECTION" },
   // TODO: replace with the real contact address once provided.
@@ -48,7 +47,7 @@ export default function Skiper14() {
 
       {/* info rows — stay on the dark band, below the brain */}
       <div className="mx-auto w-full max-w-[1440px] px-4 pb-14 pt-2 md:px-8 md:pb-20">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-t border-df-white/10 pt-8 sm:grid-cols-3 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-t border-df-white/10 pt-8 md:grid-cols-4">
           {INFO_ROWS.map((row, i) => (
             <div key={row.value} className="flex flex-col gap-2">
               <span className="font-mono-df text-[0.6rem] tracking-[0.24em] text-df-white/40">
