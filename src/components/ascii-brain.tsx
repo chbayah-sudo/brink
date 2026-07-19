@@ -838,7 +838,7 @@ export function AsciiBrain() {
                 <p className="font-mono-df text-df-gray text-sm md:text-[15px] leading-[1.5]">
                   <span className="text-df-orange">&bull;</span> Fatigue is a
                   decision, not a limit. Your prefrontal cortex calls it before
-                  your body is actually done. Brink reads that signal — and hands
+                  your body is actually done. Brink reads that signal, and hands
                   the reserve back.
                 </p>
               </div>

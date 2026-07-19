@@ -21,7 +21,7 @@ export function About() {
               </span>
               <p className="font-serif-df text-df-gray text-xl md:text-2xl leading-[1.4]">
                 Fatigue is a decision, not a limit. Your prefrontal cortex calls
-                it before your body is actually done. Brink reads that signal —
+                it before your body is actually done. Brink reads that signal,
                 and hands the reserve back.
               </p>
             </div>

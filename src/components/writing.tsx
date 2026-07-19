@@ -6,7 +6,7 @@ export function Writing() {
   return (
     <section
       id="writing"
-      className="relative py-24 md:py-36"
+      className="relative pt-24 pb-14 md:pt-36 md:pb-20"
       // soft ink seat so the copy doesn't fight the dither haze behind it
       style={{
         background:

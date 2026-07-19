@@ -19,7 +19,7 @@ export const featuredWriting: Article[] = [
     image: "/images/hf_20260717_100315_e083d5c7-47a7-4ad6-a16a-6a9dd5f3caea.png",
     ascii: true,
     excerpt:
-      "Cyclists ridden to exhaustion could still produce roughly 3× the power in an all-out effort — the limit was set by the brain, not the muscle. Brink lives in that gap.",
+      "Cyclists ridden to exhaustion could still produce roughly 3× the power in an all-out effort. The limit was set by the brain, not the muscle. Brink lives in that gap.",
     source: "Marcora & Staiano, 2010",
   },
   {
@@ -30,7 +30,7 @@ export const featuredWriting: Article[] = [
     image: "/images/hf_20260717_103317_742ceb50-5ded-4175-ae97-f8a44b85c4c9.png",
     ascii: true,
     excerpt:
-      "Exhaustion isn't your muscles failing — it's your prefrontal cortex deciding the effort isn't worth it. Brink reads that decision and hands the reserve back.",
+      "Exhaustion isn't your muscles failing. It's your prefrontal cortex deciding the effort isn't worth it. Brink reads that decision and hands the reserve back.",
     source: "Marcora, psychobiological model (2009)",
   },
 ];

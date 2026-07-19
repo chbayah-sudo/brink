@@ -68,15 +68,6 @@ export function Header() {
 
         {/* right: desktop status + mobile menu */}
         <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              "hidden md:flex items-center gap-2 mono-label transition-opacity duration-500",
-              scrolled ? "opacity-100" : "opacity-0"
-            )}
-          >
-            <span className="h-[6px] w-[6px] bg-df-white blink" />
-            NYC / SG
-          </span>
           <button
             onClick={() => setOpen(true)}
             className="md:hidden flex items-center gap-2 group"

@@ -39,7 +39,7 @@ function useSignup() {
     }
     if (!WEB3FORMS_KEY) {
       setStatus("error");
-      setError("SETUP REQUIRED — ADD NEXT_PUBLIC_WEB3FORMS_KEY");
+      setError("SETUP REQUIRED: ADD NEXT_PUBLIC_WEB3FORMS_KEY");
       return;
     }
     setStatus("sending");
@@ -60,11 +60,11 @@ function useSignup() {
         setStatus("success");
       } else {
         setStatus("error");
-        setError((data.message || "TRANSMISSION FAILED — RETRY").toUpperCase());
+        setError((data.message || "TRANSMISSION FAILED. RETRY").toUpperCase());
       }
     } catch {
       setStatus("error");
-      setError("NETWORK ERROR — RETRY");
+      setError("NETWORK ERROR. RETRY");
     }
   };
 
@@ -88,7 +88,7 @@ export function Preorder() {
   return (
     <section
       id="preorder"
-      className="relative py-24 md:py-36"
+      className="relative py-14 md:py-20"
       // soft ink seat so the copy doesn't fight the dither haze behind it
       style={{
         background:
@@ -98,7 +98,7 @@ export function Preorder() {
       <div className="mx-auto max-w-[1440px] px-4 md:px-8">
         <SectionHeader number="03" title="PRE-ORDER" sec="SEC-03" />
 
-        <Reveal className="mt-14 text-center md:mt-20">
+        <Reveal className="mt-10 text-center md:mt-14">
           <p className="mx-auto max-w-3xl font-serif-df text-3xl leading-[1.12] text-df-white md:text-5xl lg:text-6xl">
             Be first past the brink.
           </p>
@@ -119,7 +119,7 @@ export function Preorder() {
                 SIGNAL RECEIVED
               </p>
               <p className="mt-3 font-mono-df text-xs tracking-[0.14em] text-df-white/65">
-                YOU&apos;RE ON THE LIST — ONE EMAIL WHEN PRE-ORDERS OPEN.
+                YOU&apos;RE ON THE LIST. ONE EMAIL WHEN PRE-ORDERS OPEN.
               </p>
             </div>
           ) : (
