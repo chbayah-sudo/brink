@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   description:
     "Brink is a neurotech company building a calmer, more intuitive interface for the mind.",
   icons: {
-    // Square 512px crop of the red-horse art (public/icon.webp is the
+    // Square 512px crop of the dot-cluster logo (public/logo.png is the
     // full-size portrait source; regenerate via sips if the art changes).
     icon: "/icon.png",
   },
