@@ -15,7 +15,11 @@ import { Reveal } from "@/components/reveal";
  * Vercel project env; the key is public by design (rate-limited server-side).
  */
 
-const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
+// Web3Forms access key (public by design — it ships in the page source).
+// Submissions are emailed to the inbox this key was created with, and the
+// Web3Forms dashboard keeps the list + CSV export. An env var overrides.
+const WEB3FORMS_KEY =
+  process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "8a4819bc-dae0-4c56-9831-699b97b54265";
 const ACCENT = "#ff5b3a";
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
