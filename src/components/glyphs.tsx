@@ -76,7 +76,7 @@ export function LogoMark({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      className={cn("h-5 w-5", className)}
+      className={cn("h-[34px] w-[34px]", className)}
       fill="currentColor"
       aria-hidden
     >

@@ -32,9 +32,13 @@ export const metadata: Metadata = {
     // All derived from the dot-cluster logo (public/logo.png is the source).
     // favicon.ico exists so the browser's eager /favicon.ico request gets the
     // same mark instead of 404ing and flashing a stale cached icon.
-    icon: [{ url: "/favicon.ico", sizes: "32x32" }, { url: "/icon.png", type: "image/png" }],
+    // ?v=2 busts favicon caches that stored the previous mark
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/icon.png?v=2", type: "image/png" },
+    ],
     shortcut: "/favicon.ico",
-    apple: "/icon.png",
+    apple: "/icon.png?v=2",
   },
 };
 
