@@ -140,8 +140,9 @@ function DualModel({ progressRef, partsRef }) {
   return <group ref={groupRef} position={[MODEL_X, 0, 0]} />
 }
 
-useGLTF.preload(ONE, false, true)
-useGLTF.preload(TWO, false, true)
+// No module-level useGLTF.preload here: it fired ~14MB of GLB downloads the
+// moment the page loaded. The host section lazy-mounts the scene as the
+// visitor approaches, and Suspense loads the models then.
 
 function CameraRig({ progressRef }) {
   const { camera } = useThree()

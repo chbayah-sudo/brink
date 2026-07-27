@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { NerveSignals } from "@/components/nerve-signals";
+import { HERO_SRC_DEFAULT, applyHeroSrc } from "@/lib/hero-src";
 
 // --- ASCII brain tuning (restored from the original hero renderer) ----------
 const ASCII_RAMP = " .:-=+*#%@";
@@ -76,8 +77,8 @@ const SPIN_HANDOFF = 0.12; // morphP over which spin -> morph crossfade complete
 // ===========================================================================
 
 // The hero clip the canvas re-draws during the zoom-out. MUST match whatever
-// <Hero> is actually playing, otherwise the handoff at scroll 0 would jump.
-const HERO_SRC = "/hero-final.mp4";
+// <Hero> is actually playing (same rendition!), otherwise the handoff at
+// scroll 0 would jump — both use the shared picker in lib/hero-src.
 
 // --- one continuous scroll-driven motion (progress 0..1 across #brain) ------
 // The whole hero->brain transition is ONE eased zoom-out. These windows carve
@@ -179,6 +180,9 @@ export function AsciiBrain() {
   // so nothing visible is lost — measured big main-thread relief).
   const lastScrollTRef = useRef(0);
   const lastInputTRef = useRef(0);
+  // The morph + spin clips (12MB together) don't download until the visitor
+  // actually starts scrolling toward the brain — critical on mobile data.
+  const clipsKickedRef = useRef(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -186,6 +190,11 @@ export function AsciiBrain() {
     update();
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Same rendition swap as <Hero> so the shred handoff samples matching frames.
+  useEffect(() => {
+    applyHeroSrc(heroRef.current);
   }, []);
 
   // Neural probe lens: window-level pointer tracking. The pinned wrapper is
@@ -242,9 +251,9 @@ export function AsciiBrain() {
     if (isVisible) {
       if (hero) hero.playbackRate = 2;
       hero?.play().catch(() => undefined);
-      // The spin clip drives the idle rotation; the render loop starts/stops it
-      // per scroll, but kick it off here so it's already running when parked.
-      spin?.play().catch(() => undefined);
+      // The spin clip is NOT kicked here: playing it at mount would trigger its
+      // download on page load. The render loop resumes it (wantSpin) once the
+      // visitor scrolls and the clips have been load()ed.
     } else {
       hero?.pause();
       brain?.pause();
@@ -273,6 +282,13 @@ export function AsciiBrain() {
       // after the first true).
       if (pRef.current > 0.6) setHeadlineIn(true);
       lastScrollTRef.current = performance.now();
+      // First real scroll toward the brain: start fetching the deferred clips
+      // (preload="none" until here).
+      if (!clipsKickedRef.current && pRef.current > 0.02) {
+        clipsKickedRef.current = true;
+        brainRef.current?.load();
+        spinRef.current?.load();
+      }
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -790,12 +806,12 @@ export function AsciiBrain() {
             Neither is ever shown directly. */}
         <video
           ref={heroRef}
-          src={HERO_SRC}
+          src={HERO_SRC_DEFAULT}
           className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
         />
         <video
           ref={brainRef}
@@ -803,7 +819,7 @@ export function AsciiBrain() {
           className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
           muted
           playsInline
-          preload="auto"
+          preload="none"
         />
         {/* Idle 360 spin — autoplay-loops a seamless ping-pong of the rotating
             brain. Sampled by the canvas, never shown directly. */}
@@ -814,7 +830,7 @@ export function AsciiBrain() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="none"
         />
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 

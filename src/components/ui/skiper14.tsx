@@ -1,4 +1,5 @@
 import { FooterDither } from "@/components/footer-dither";
+import { FooterBrainVideo } from "@/components/footer-brain-video";
 
 // Footer in the style of Skiper UI "skiper14" (an ASCII-art element over a
 // giant wordmark with a row of small info columns). The @skiper-ui registry
@@ -30,18 +31,13 @@ const PANEL_CLASS = PANEL_LOOKUP[WORDMARK_PANEL];
 export default function Skiper14() {
   return (
     <footer id="footer" className="relative bg-df-black text-df-white">
-      {/* TOP — brain visual in its own dark band. The ASCII/dot signal loop,
-          object-cover across a tall block. On ink so its black plate blends via
-          mix-blend-screen. Animated webp: no motion-reduce hook, but ambient. */}
+      {/* TOP — brain visual in its own dark band. The ASCII/dot signal loop as
+          an H.264 video (3MB vs the 42MB animated webp it replaced), object-
+          contain across a tall block. On ink so its black plate blends via
+          mix-blend-screen. Playback is IO-gated so the file never loads until
+          the visitor nears the footer. */}
       <div className="h-[74vh] min-h-[460px] w-full overflow-hidden bg-df-black">
-        <img
-          src="/footer-brain.webp"
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          decoding="async"
-          className="pointer-events-none h-full w-full select-none object-contain opacity-90 mix-blend-screen"
-        />
+        <FooterBrainVideo />
       </div>
 
       {/* info rows — stay on the dark band, below the brain */}

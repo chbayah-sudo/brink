@@ -154,8 +154,25 @@ export function AsciiImage({
     };
 
     img.onload = draw;
-    img.src = src;
-    if (img.complete && img.naturalWidth > 0) draw();
+    // Lazy: don't fetch the (multi-MB) source image until the card is within
+    // a viewport of scrolling into view — these sit far below the fold.
+    let kicked = false;
+    const kick = () => {
+      if (kicked) return;
+      kicked = true;
+      img.src = src;
+      if (img.complete && img.naturalWidth > 0) draw();
+    };
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          kick();
+          io.disconnect();
+        }
+      },
+      { rootMargin: "100% 0px" }
+    );
+    io.observe(canvas);
 
     // redraw once the mono font is ready (first paint may use a fallback)
     if (typeof document !== "undefined" && "fonts" in document) {
@@ -171,6 +188,7 @@ export function AsciiImage({
     return () => {
       disposed = true;
       img.onload = null;
+      io.disconnect();
       ro.disconnect();
     };
   }, [src]);

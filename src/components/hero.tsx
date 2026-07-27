@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Cross, GridDots } from "@/components/glyphs";
 import { TypingAnimation } from "@/components/ui/typing-animation";
+import { HERO_SRC_DEFAULT, applyHeroSrc } from "@/lib/hero-src";
 
 function CornerLetter({
   letter,
@@ -49,6 +50,11 @@ export function Hero() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
+  // Phones swap to the 720p rendition before playback ramps up.
+  useEffect(() => {
+    applyHeroSrc(videoRef.current);
+  }, []);
+
   // Track whether the hero is on screen so we can pause the video off-screen.
   useEffect(() => {
     const section = document.getElementById("home");
@@ -93,13 +99,15 @@ export function Hero() {
     <section id="home" className="relative h-[100svh] overflow-hidden">
       <video
         ref={videoRef}
-        src="/hero-final.mp4"
+        src={HERO_SRC_DEFAULT}
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
         muted
         loop
         playsInline
-        autoPlay={!isReduced}
-        preload="auto"
+        /* no autoPlay attr + metadata-only preload: keeps the browser from
+           eagerly pulling the 1080p file on phones before the JS rendition
+           swap; the isVisible effect calls play() right after hydration */
+        preload="metadata"
       />
 
       {/* chrome: BRINK wordmark + corner letters over the video */}

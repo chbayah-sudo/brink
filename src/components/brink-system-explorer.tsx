@@ -186,6 +186,10 @@ const ExplorerHeading = memo(function ExplorerHeading() {
 export default function BrinkSystemExplorer() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [liveIndex, setLiveIndex] = useState(0);
+  // Mount the WebGL scene (and its ~14MB of GLBs) only once the visitor is
+  // within ~1.5 viewports of the section — page load stays light, especially
+  // on mobile data. Once mounted it stays mounted.
+  const [sceneNear, setSceneNear] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   // Scroll progress (0 → 1) across the section. A plain ref, not state, so the
@@ -219,6 +223,22 @@ export default function BrinkSystemExplorer() {
       window.removeEventListener("resize", compute);
     };
   }, [count]);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setSceneNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "150% 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // Click a pill / chevron → scroll to the middle of that step's band. The
   // scroll handler above then advances activeIndex, keeping clicks + scroll and
@@ -262,7 +282,7 @@ export default function BrinkSystemExplorer() {
             BrynkExplodeScene fills this positioned parent and carries its own
             vignette; MODEL_X (in the component) offsets the model right so the
             left column below stays clear. */}
-        <BrynkExplodeScene progressRef={progressRef} />
+        {sceneNear && <BrynkExplodeScene progressRef={progressRef} />}
 
         {/* readability scrim so heading + pills stay legible over the model */}
         <div
