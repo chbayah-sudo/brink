@@ -69,20 +69,25 @@ export function Transport({ className }: { className?: string }) {
 }
 
 /* Small pixel mark for the header logo */
-export function PixelMark({ className }: { className?: string }) {
+// The Brink dot-cluster mark (see public/logo.png): six dots ringing a
+// central speech-bubble dot with a comma tail. currentColor so it inherits
+// hover tints like any glyph.
+export function LogoMark({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 16 16"
+      viewBox="0 0 24 24"
       className={cn("h-4 w-4", className)}
       fill="currentColor"
       aria-hidden
     >
-      <rect x="7" y="0" width="2" height="16" />
-      <rect x="0" y="4" width="6" height="2" />
-      <rect x="10" y="4" width="6" height="2" />
-      <rect x="2" y="9" width="4" height="2" />
-      <rect x="10" y="9" width="4" height="2" />
-      <rect x="6" y="6" width="4" height="4" />
+      <circle cx="12" cy="3.1" r="2.75" />
+      <circle cx="19.7" cy="7.55" r="2.75" />
+      <circle cx="19.7" cy="16.45" r="2.75" />
+      <circle cx="12" cy="20.9" r="2.75" />
+      <circle cx="4.3" cy="16.45" r="2.75" />
+      <circle cx="4.3" cy="7.55" r="2.75" />
+      <circle cx="12" cy="11.6" r="3.3" />
+      <path d="M12.4 14.5 L14.7 14.1 L12.9 17.3 Z" />
     </svg>
   );
 }

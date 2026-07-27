@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useMenu } from "@/components/menu-context";
-import { PixelMark, Transport, VuDashes } from "@/components/glyphs";
+import { LogoMark, Transport, VuDashes } from "@/components/glyphs";
 import { HyperText } from "@/components/ui/hyper-text";
 
 export function Header() {
@@ -33,7 +33,7 @@ export function Header() {
             scrolled ? "md:opacity-100" : "md:opacity-0 md:pointer-events-none"
           )}
         >
-          <PixelMark className="text-df-white group-hover:text-df-orange transition-colors" />
+          <LogoMark className="text-df-white group-hover:text-df-orange transition-colors" />
           <HyperText
             as="span"
             active={scrolled}

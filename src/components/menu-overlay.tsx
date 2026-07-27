@@ -3,7 +3,7 @@
 import { useMenu } from "@/components/menu-context";
 import { navLinks } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { PixelMark, Cross } from "@/components/glyphs";
+import { LogoMark, Cross } from "@/components/glyphs";
 
 const socials = [
   { label: "X", href: "#" },
@@ -35,7 +35,7 @@ export function MenuOverlay() {
         {/* top */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-df-white">
-            <PixelMark className="text-df-white" />
+            <LogoMark className="text-df-white" />
             <span className="font-mono text-[11px] tracking-[0.22em]">
               BRINK
             </span>
