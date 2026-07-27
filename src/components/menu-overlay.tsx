@@ -36,7 +36,7 @@ export function MenuOverlay() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-df-white">
             <LogoMark className="text-df-white" />
-            <span className="font-mono text-[11px] tracking-[0.22em]">
+            <span className="font-mono text-[15px] tracking-[0.22em]">
               BRINK
             </span>
           </div>

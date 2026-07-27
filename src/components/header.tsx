@@ -37,7 +37,7 @@ export function Header() {
           <HyperText
             as="span"
             active={scrolled}
-            className="font-mono text-[11px] tracking-[0.22em] hidden sm:block"
+            className="font-mono text-[15px] tracking-[0.22em] hidden sm:block"
           >
             BRINK
           </HyperText>
