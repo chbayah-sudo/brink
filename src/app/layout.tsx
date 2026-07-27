@@ -29,9 +29,12 @@ export const metadata: Metadata = {
   description:
     "Brink is a neurotech company building a calmer, more intuitive interface for the mind.",
   icons: {
-    // Square 512px crop of the dot-cluster logo (public/logo.png is the
-    // full-size portrait source; regenerate via sips if the art changes).
-    icon: "/icon.png",
+    // All derived from the dot-cluster logo (public/logo.png is the source).
+    // favicon.ico exists so the browser's eager /favicon.ico request gets the
+    // same mark instead of 404ing and flashing a stale cached icon.
+    icon: [{ url: "/favicon.ico", sizes: "32x32" }, { url: "/icon.png", type: "image/png" }],
+    shortcut: "/favicon.ico",
+    apple: "/icon.png",
   },
 };
 
