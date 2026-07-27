@@ -106,6 +106,23 @@ export function Preloader() {
 
   // count-up
   useEffect(() => {
+    // Deep links (e.g. ad URLs like /#preorder) skip the preloader entirely:
+    // the scroll lock + scrollTo(0,0) below would stomp the browser's anchor
+    // jump and strand the visitor at the top.
+    const hash = window.location.hash;
+    if (hash) {
+      let el: Element | null = null;
+      try {
+        el = document.querySelector(hash);
+      } catch {
+        /* malformed hash (e.g. #fbclid junk) — fall through to normal load */
+      }
+      if (el) {
+        setPhase("gone");
+        requestAnimationFrame(() => el.scrollIntoView());
+        return;
+      }
+    }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     document.documentElement.style.overflow = "hidden";
     window.scrollTo(0, 0);
