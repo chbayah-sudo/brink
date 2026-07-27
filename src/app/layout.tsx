@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Newsreader, Roboto_Slab } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import ClientBody from "./ClientBody";
 import "@/lib/safe-storage";
@@ -51,6 +52,7 @@ export default function RootLayout({
     <html lang="en" className={`${newsreader.variable} ${ibmPlexMono.variable} ${robotoSlab.variable}`}>
       <body suppressHydrationWarning className="antialiased">
         <ClientBody>{children}</ClientBody>
+        <Analytics />
       </body>
     </html>
   );
