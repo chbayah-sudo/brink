@@ -24,7 +24,7 @@ const EASE: [number, number, number, number] = [0.65, 0, 0.35, 1];
 const LABEL_TL = "BRINK";
 const LABEL_TR = "© 2026";
 const LABEL_BL = "NEUROTECH";
-const LABEL_BR = "PRE-FATIGUE DETECTION";
+const LABEL_BR = "HUMAN CAPACITY OS";
 
 // --- dithered field tuning ---
 const DOT = 9; // grid spacing (px) between dots

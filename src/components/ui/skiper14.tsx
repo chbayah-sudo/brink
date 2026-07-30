@@ -11,7 +11,7 @@ import { FooterBrainVideo } from "@/components/footer-brain-video";
 const INFO_ROWS: { value: string; href?: string }[] = [
   { value: "SF" },
   { value: "NEUROTECH" },
-  { value: "PRE-FATIGUE DETECTION" },
+  { value: "HUMAN CAPACITY OS" },
   { value: "CONTACT", href: "mailto:contact@neurabrink.bio" },
 ];
 

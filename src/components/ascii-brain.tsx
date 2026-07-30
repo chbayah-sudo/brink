@@ -287,7 +287,16 @@ export function AsciiBrain() {
       if (!clipsKickedRef.current && pRef.current > 0.02) {
         clipsKickedRef.current = true;
         brainRef.current?.load();
-        spinRef.current?.load();
+        const s = spinRef.current;
+        s?.load();
+        // Prime the spin decoder while it's still invisible: without this, its
+        // first play() lands mid-scrub (e.g. scrolling back up through the
+        // handoff) and the pipeline init shows up as a ~100ms stall.
+        s?.play()
+          .then(() => {
+            if (!s.paused) s.pause();
+          })
+          .catch(() => undefined);
       }
     };
     onScroll();
@@ -316,6 +325,7 @@ export function AsciiBrain() {
     // pure duplicate drawImage/getImageData cost — measured 39% of the frame)
     let sampleAt = 0;
     let sampleBD: Uint8ClampedArray | null = null;
+    let seekAt = 0; // scrub seeks are capped to the 30Hz sample cadence too
     const render = (now: number) => {
       frameRef.current = window.requestAnimationFrame(render);
       if (!isVisible) return;
@@ -514,7 +524,8 @@ export function AsciiBrain() {
       if (brainReady) {
         if (!brain.paused) brain.pause();
         const dur = brain.duration;
-        if (Number.isFinite(dur) && dur > 0) {
+        if (Number.isFinite(dur) && dur > 0 && now - seekAt >= 33) {
+          seekAt = now;
           const target = BRAIN_IDLE_END + clamp(morphP, 0, 1) * (dur - BRAIN_IDLE_END);
           if (Math.abs(brain.currentTime - target) > 0.02) {
             try {
@@ -852,10 +863,10 @@ export function AsciiBrain() {
               />
               <div className="max-w-[22rem] md:pb-1.5">
                 <p className="font-mono-df text-df-gray text-sm md:text-[15px] leading-[1.5]">
-                  <span className="text-df-orange">&bull;</span> Fatigue is a
-                  decision, not a limit. Your prefrontal cortex calls it before
-                  your body is actually done. Brink reads that signal, and hands
-                  the reserve back.
+                  <span className="text-df-orange">&bull;</span> Breakdown starts
+                  in the brain before it shows in the body. Brink recognizes the
+                  signal, predicts the decline, and intervenes in real time.
+                  Then it learns what works for you.
                 </p>
               </div>
             </div>

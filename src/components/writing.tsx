@@ -29,10 +29,10 @@ export function Writing() {
                 How It Works
               </span>
               <p className="font-serif-df text-df-white/80 text-xl md:text-2xl leading-[1.4]">
-                There&apos;s a measurable neural signature in the DLPFC that
-                shows up seconds before you consciously decide to quit. We detect
-                it with EEG and fNIRS, then intervene before the thought becomes
-                a stop.
+                Cognitive and physical breakdown announce themselves in the
+                brain before anything shows outside. Brink reads that signature
+                with EEG and fNIRS, predicts the decline before it becomes
+                visible, then intervenes in real time.
               </p>
             </div>
           </Reveal>

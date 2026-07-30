@@ -21,7 +21,7 @@ export function Careers() {
           </p>
           <p className="mt-8 md:mt-12 font-serif-df text-df-white/75 text-xl md:text-2xl leading-[1.4] max-w-2xl mx-auto">
             Brink is early, and building fast. If you invest in neurotech, human
-            performance, or the science of effort, let&apos;s talk.
+            performance, or the future of human capacity, let&apos;s talk.
           </p>
           <a
             href="mailto:contact@neurabrink.bio"

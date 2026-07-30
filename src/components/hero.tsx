@@ -127,9 +127,8 @@ export function Hero() {
           <TypingAnimation
             as="h1"
             phrases={[
-              "YOUR BRAIN QUITS FIRST",
-              "THE SIGNAL BEFORE THE STOP",
-              "FIND YOUR RESERVE",
+              "THE OPERATING SYSTEM FOR HUMAN CAPACITY",
+              "THE INTELLIGENCE LAYER FOR HUMAN PERFORMANCE",
             ]}
             typeSpeed={70}
             deleteSpeed={40}
@@ -137,7 +136,10 @@ export function Hero() {
             loop
             startOnView
             cursorStyle="block"
-            className="font-mono-df text-df-white uppercase tracking-[0.14em] text-[clamp(14px,2.4vw,26px)] [text-shadow:0_0_24px_rgba(10,12,16,0.6)]"
+            cursorClassName="!bg-df-black"
+            /* default-"highlighted" look: solid amber bar with ink text, like
+               the site's ::selection style, growing as the phrase types */
+            className="bg-df-orange px-3 py-0.5 font-mono-df text-df-black uppercase tracking-[0.14em] text-[clamp(14px,2.4vw,26px)]"
           />
         </div>
 

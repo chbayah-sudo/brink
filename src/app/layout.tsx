@@ -28,7 +28,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Brink",
   description:
-    "Brink is a neurotech company building a calmer, more intuitive interface for the mind.",
+    "Brink is the intelligence layer between the brain and human performance: a neurotech headband that recognizes approaching breakdown, predicts decline before it shows, intervenes in real time, and learns what works for you.",
   icons: {
     // All derived from the dot-cluster logo (public/logo.png is the source).
     // favicon.ico exists so the browser's eager /favicon.ico request gets the
