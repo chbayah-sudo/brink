@@ -20,7 +20,7 @@
 //   default BrynkHeadband3D()  — standalone self-contained section (kept intact).
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, Environment, Lightformer, Html } from '@react-three/drei'
 import * as THREE from 'three'
@@ -108,8 +108,10 @@ function setOp(model, o) {
 }
 
 function DualModel({ progressRef, partsRef }) {
-  const g1 = useGLTF(ONE, false, true)
-  const g2 = useGLTF(TWO, false, true)
+  // Models are Draco-compressed (14MB -> 5MB); drei fetches the decoder from
+  // its CDN on first use.
+  const g1 = useGLTF(ONE, true, true)
+  const g2 = useGLTF(TWO, true, true)
   const groupRef = useRef()
   const A = useRef(null)
   const B = useRef(null)
@@ -226,9 +228,29 @@ function PartIdLabels({ partsRef, progressRef }) {
 }
 // ───────────────────────────────────────────────────────────────────────────
 
+// Mounts once every Suspense promise in its boundary resolves (models decoded).
+function SceneReadySignal({ onReady }) {
+  useEffect(() => {
+    onReady()
+  }, [onReady])
+  return null
+}
+
 export function BrynkExplodeScene({ progressRef }) {
   const partsRef = useRef(null)
   const wrapRef = useRef(null)
+  // Warm-up: once the models resolve, run the frameloop briefly even while
+  // offscreen so shaders compile + geometry uploads happen ahead of arrival.
+  // Without this, that one-time GPU work fired the moment the section came
+  // into view — the "band takes a second to appear" delay.
+  const [warming, setWarming] = useState(false)
+  const warmTimer = useRef(0)
+  const onSceneReady = useCallback(() => {
+    setWarming(true)
+    clearTimeout(warmTimer.current)
+    warmTimer.current = setTimeout(() => setWarming(false), 1500)
+  }, [])
+  useEffect(() => () => clearTimeout(warmTimer.current), [])
   // Only run the WebGL frameloop while the section is actually on screen.
   // Default 'always' rendered the scene at 60fps for the entire page session
   // (measured: three.js + label portals taxing every section below this one).
@@ -246,7 +268,7 @@ export function BrynkExplodeScene({ progressRef }) {
   return (
     <div ref={wrapRef} style={{ position: 'absolute', inset: 0 }}>
       <Canvas
-        frameloop={onScreen ? 'always' : 'never'}
+        frameloop={onScreen || warming ? 'always' : 'never'}
         dpr={[1, 1.5]}
         gl={{ antialias: true, toneMapping: THREE.NeutralToneMapping, toneMappingExposure: 1.05 }}
         camera={{ position: [0, 0.95, 6.4], fov: 42 }}
@@ -267,6 +289,7 @@ export function BrynkExplodeScene({ progressRef }) {
           <DualModel progressRef={progressRef} partsRef={partsRef} />
           <CameraRig progressRef={progressRef} />
           <PartIdLabels partsRef={partsRef} progressRef={progressRef} />
+          <SceneReadySignal onReady={onSceneReady} />
         </Suspense>
       </Canvas>
 

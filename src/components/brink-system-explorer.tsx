@@ -33,6 +33,9 @@ import GradualBlur from "@/components/ui/gradual-blur";
 
 const MEDIA = "/media";
 const INK = "#0A0E14"; // matches the canvas background so there is no seam
+// Fraction of the section's scroll that stays on step 01 before the stepper
+// starts advancing — so entering the section always reads "01 Frontal Sensing".
+const STEP_LEAD = 0.12;
 
 // react-three-fiber's <Canvas> can't be server-rendered; load the scene on the
 // client only. dynamic() renders it directly (no wrapper element), so the
@@ -212,10 +215,14 @@ export default function BrinkSystemExplorer() {
       const scrolled = Math.min(Math.max(-rect.top, 0), total);
       const p = total > 0 ? scrolled / total : 0;
       progressRef.current = p;
-      const idx = Math.min(count - 1, Math.max(0, Math.floor(p * count)));
+      // The first stretch of the pin belongs to step 01 (LEAD): without it,
+      // arriving in the section showed 02+ after barely a third of a viewport.
+      const stepP = Math.max(0, (p - STEP_LEAD) / (1 - STEP_LEAD));
+      const idx = Math.min(count - 1, Math.max(0, Math.floor(stepP * count)));
       setActiveIndex((cur) => (cur === idx ? cur : idx));
     };
-    compute();
+    // No compute() on mount: the card always OPENS on 01 Frontal Sensing and
+    // only starts tracking scroll position once the visitor actually scrolls.
     window.addEventListener("scroll", compute, { passive: true });
     window.addEventListener("resize", compute);
     return () => {
@@ -234,7 +241,9 @@ export default function BrinkSystemExplorer() {
           io.disconnect();
         }
       },
-      { rootMargin: "150% 0px" },
+      // generous headroom: chunk + models load and the GPU pipeline warms
+      // ~5 viewports before arrival, so the band is there the moment you are
+      { rootMargin: "500% 0px" },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -250,7 +259,8 @@ export default function BrinkSystemExplorer() {
     const rect = el.getBoundingClientRect();
     const total = rect.height - window.innerHeight;
     const sectionTop = window.scrollY + rect.top;
-    const frac = count > 1 ? (idx + 0.5) / count : 0;
+    // inverse of the LEAD-biased mapping the scroll handler uses
+    const frac = count > 1 ? STEP_LEAD + (1 - STEP_LEAD) * ((idx + 0.5) / count) : 0;
     window.scrollTo({ top: Math.round(sectionTop + total * frac), behavior: "smooth" });
   };
 

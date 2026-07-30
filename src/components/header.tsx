@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useMenu } from "@/components/menu-context";
-import { LogoMark, Transport, VuDashes } from "@/components/glyphs";
+import { GridDots, LogoMark } from "@/components/glyphs";
 import { HyperText } from "@/components/ui/hyper-text";
 
 export function Header() {
@@ -43,28 +43,19 @@ export function Header() {
           </HyperText>
         </a>
 
-        {/* center transport bar */}
-        <div
+        {/* center menu bar — pixel-dot mark + label, no transport chrome */}
+        <button
+          onClick={() => setOpen(true)}
           className={cn(
-            "absolute left-1/2 -translate-x-1/2 hidden md:flex items-stretch border hairline overflow-hidden transition-all duration-500",
+            "absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-2.5 border hairline px-5 py-2 mono-label !text-df-white hover:!text-df-orange transition-all duration-500",
             scrolled
               ? "bg-black/80 backdrop-blur-md"
               : "bg-black/30 backdrop-blur-sm"
           )}
         >
-          <div className="px-3 flex items-center border-r hairline text-df-white/80">
-            <Transport />
-          </div>
-          <div className="px-4 flex items-center border-r hairline">
-            <VuDashes />
-          </div>
-          <button
-            onClick={() => setOpen(true)}
-            className="px-4 mono-label !text-df-white hover:!text-df-orange transition-colors"
-          >
-            Menu
-          </button>
-        </div>
+          <GridDots className="text-current" />
+          Menu
+        </button>
 
         {/* right: desktop status + mobile menu */}
         <div className="flex items-center gap-2">
@@ -76,10 +67,7 @@ export function Header() {
             <span className="mono-label !text-df-white group-hover:!text-df-orange transition-colors">
               Menu
             </span>
-            <span className="flex flex-col gap-[3px]">
-              <span className="block h-px w-4 bg-df-white group-hover:bg-df-orange transition-colors" />
-              <span className="block h-px w-4 bg-df-white group-hover:bg-df-orange transition-colors" />
-            </span>
+            <GridDots className="h-3 w-3 text-df-white group-hover:text-df-orange transition-colors" />
           </button>
         </div>
       </div>
