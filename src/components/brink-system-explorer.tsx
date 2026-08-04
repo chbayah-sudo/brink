@@ -231,37 +231,25 @@ export default function BrinkSystemExplorer() {
     };
   }, [count]);
 
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setSceneNear(true);
-          io.disconnect();
-        }
-      },
-      // generous headroom: chunk + models load and the GPU pipeline warms
-      // ~5 viewports before arrival, so the band is there the moment you are
-      { rootMargin: "500% 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  // The 5.3MB of GLB is the whole delay: mounting 5 viewports out still only
-  // buys a few seconds of lead, and Suspense renders nothing until BOTH models
-  // land. Start them on the visitor's first scroll instead, so they download
-  // across the entire hero + brain scroll rather than the final stretch.
-  // Skipped on metered or slow connections, where eagerly pulling 5.3MB for a
-  // section the visitor may never reach is the worse trade.
+  // Build the 3D scene up front and let it WAIT for the visitor, holding its
+  // drawn frame at step 01 (Frontal Sensing), instead of racing the scroll.
+  // Every previous scheme lost that race somewhere: "mount 5 viewports out"
+  // and "download on first scroll" both still had to fit the chunk import,
+  // the 5.3MB Draco decode and the one-time shader compile into whatever
+  // scrolling time remained — and a visitor jumping here from the menu has
+  // none. So shortly after load: mount the scene AND fetch the models in the
+  // same instant. The plain fetches warm the HTTP cache in parallel with the
+  // chunk import (useGLTF alone would serialize them behind three + fiber,
+  // measured at 1.4s before the first GLB byte); Suspense then reads from
+  // cache, the warm-up compiles the pipeline offscreen, and the assembled
+  // band sits pinned at progress 0 until the section scrolls into view.
+  //
+  // Metered / slow connections (saveData, 2g/3g) skip the eager path and fall
+  // back to mounting when the section is within five viewports, below.
   useEffect(() => {
     let cancelled = false;
     let fired = false;
     const kick = () => {
-      // Scroll and the timer race each other, and the loser still fires: the
-      // scroll listener is once-only but nothing cancels the timer behind it.
-      // Without this guard both run and each URL is fetched twice.
       if (fired || cancelled) return;
       fired = true;
       window.removeEventListener("scroll", kick);
@@ -270,22 +258,33 @@ export default function BrinkSystemExplorer() {
           connection?: { saveData?: boolean; effectiveType?: string };
         }
       ).connection;
-      if (c?.saveData) return;
-      if (c?.effectiveType && /(^|-)(2g|3g)$/.test(c.effectiveType)) return;
-      // Plain fetches rather than useGLTF.preload: that would first have to
-      // import the 3D module, and pulling three + fiber cost 1.4s before the
-      // first GLB byte was even requested. These warm the HTTP cache with no
-      // JS dependency at all, so when the scene mounts useGLTF reads straight
-      // out of cache. Only one fetcher per URL, so nothing downloads twice.
-      for (const url of ["/models/one.glb", "/models/two.glb"]) {
-        fetch(url, { cache: "force-cache" }).catch(() => undefined);
+      const frugal =
+        c?.saveData || (c?.effectiveType && /(^|-)(2g|3g)$/.test(c.effectiveType));
+      if (!frugal) {
+        for (const url of ["/models/one.glb", "/models/two.glb"]) {
+          fetch(url, { cache: "force-cache" }).catch(() => undefined);
+        }
+        setSceneNear(true);
+        return;
       }
+      // Frugal fallback: no eager 5.3MB. Mount when the section approaches.
+      const el = sectionRef.current;
+      if (!el) return;
+      const io = new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting) {
+            setSceneNear(true);
+            io.disconnect();
+          }
+        },
+        { rootMargin: "500% 0px" },
+      );
+      io.observe(el);
     };
-    // First scroll is the strongest intent signal, but someone reading the
-    // hero for a few seconds shouldn't lose that head start, so a timer races
-    // it. Whichever fires first wins.
+    // A short delay keeps the very first hero paint uncontested; first scroll
+    // (someone heading down immediately) skips even that.
     window.addEventListener("scroll", kick, { once: true, passive: true });
-    const timer = window.setTimeout(kick, 2500);
+    const timer = window.setTimeout(kick, 800);
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
