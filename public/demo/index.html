@@ -370,11 +370,13 @@ textarea.input { min-height: 90px; resize: vertical; }
     <div style="padding:0 20px 20px;border-bottom:2px solid var(--color-divider)">
       <div style="font-family:var(--font-heading);font-weight:800;font-size:26px;letter-spacing:-0.02em;line-height:1">BRINK<span style="color:var(--color-accent)">.</span></div>
       <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px;color:var(--color-neutral-600)">Human capacity OS</div>
+      <div data-tour="device-status" data-tip="Seven dry EEG channels, PPG, EDA and motion.&#10;96 ms is the delay between your body and this screen.">
       <div style="display:flex;align-items:center;gap:8px;margin-top:16px;font-size:11px">
         <span style="width:8px;height:8px;background:var(--color-accent);animation:blink 2.4s infinite"></span>
         <span style="font-variant-numeric:tabular-nums">Headband · Connected</span>
       </div>
       <div style="font-size:10px;color:var(--color-neutral-600);margin-top:4px;font-variant-numeric:tabular-nums">Fit good · 7 ch · 96 ms latency</div>
+      </div>
     </div>
     <div style="display:flex;flex-direction:column;padding:12px 0;flex:1 0 auto">
       <sc-for list="{{ navItems }}" as="nv" hint-placeholder-count="5">
@@ -397,7 +399,7 @@ textarea.input { min-height: 90px; resize: vertical; }
       <div style="flex:1"></div>
       <sc-if value="{{ showScenarios }}" hint-placeholder-val="{{ true }}">
         <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">Scenario</span>
-        <div style="display:flex;border:1px solid var(--color-divider)">
+        <div data-tour="scenario-switch" data-tip="Not a theme. Each scenario changes which signals matter,&#10;what the numbers mean, and what Brink asks of you." data-tip-right style="display:flex;border:1px solid var(--color-divider)">
           <sc-for list="{{ scenarios }}" as="sc" hint-placeholder-count="5">
             <button sc-camel-on-click="{{ sc.go }}" style="{{ sc.style }}" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">{{ sc.label }}</button>
           </sc-for>
@@ -416,12 +418,12 @@ textarea.input { min-height: 90px; resize: vertical; }
               <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500)">What you committed to · how it is actually going</div>
             </div>
             <div style="padding:0 24px 18px;border-bottom:1px solid var(--color-divider)">
-              <div style="display:flex;gap:10px">
+              <div data-tour="goal-input" data-tip="Plain words. Brink splits the goal into equal units and&#10;pre-places resets at the two times you historically fade." style="display:flex;gap:10px">
                 <input class="input" style="flex:1;font-size:13px" placeholder="Set a goal, e.g. Read 15 pages by 5 PM" value="{{ goalText }}" sc-camel-on-change="{{ goalTyping }}" aria-label="Goal input">
                 <button class="btn btn-primary" sc-camel-on-click="{{ goalPlan }}">Plan it</button>
               </div>
             </div>
-            <div style="flex:1">
+            <div data-tour="goal-rows" style="flex:1">
               <sc-for list="{{ goalRows }}" as="g" hint-placeholder-count="3">
                 <div style="padding:20px 24px;border-bottom:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)">
                   <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
@@ -434,7 +436,7 @@ textarea.input { min-height: 90px; resize: vertical; }
                       <div style="font-size:11px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums">{{ g.sub }}</div>
                     </div>
                   </div>
-                  <div style="display:flex;gap:2px;height:10px;margin-top:12px">
+                  <div data-tip="One cell = one real thing: a page, a morning, a day.&#10;Filled is done, gold is now, an outline is missed or scheduled." style="display:flex;gap:2px;height:10px;margin-top:12px">
                     <sc-for list="{{ g.segs }}" as="s" hint-placeholder-count="6">
                       <span style="{{ s.style }}"></span>
                     </sc-for>
@@ -450,7 +452,7 @@ textarea.input { min-height: 90px; resize: vertical; }
             </div>
           </div>
           <div style="display:flex;flex-direction:column">
-            <div style="padding:20px 24px;border-bottom:1px solid var(--color-divider)">
+            <div data-tour="narrative" data-tip="Plain language first, figures underneath.&#10;Every claim is against your own baseline, not an average." style="padding:20px 24px;border-bottom:1px solid var(--color-divider)">
               <p style="font-size:14px;line-height:1.6;margin:0;text-wrap:pretty">{{ narrative }}</p>
             </div>
             <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
@@ -461,7 +463,7 @@ textarea.input { min-height: 90px; resize: vertical; }
                 </div>
               </sc-for>
             </div>
-            <div sc-camel-on-mouse-enter="{{ recHover }}" sc-camel-on-mouse-leave="{{ recLeave }}" style="padding:14px 24px;background:var(--color-surface)" style-hover="background:color-mix(in srgb, var(--color-accent) 7%, var(--color-surface))">
+            <div data-tour="rec" data-tip="Exactly one next action, timed to the minute.&#10;It disappears entirely when nothing is needed." data-tip-up sc-camel-on-mouse-enter="{{ recHover }}" sc-camel-on-mouse-leave="{{ recLeave }}" style="padding:14px 24px;background:var(--color-surface)" style-hover="background:color-mix(in srgb, var(--color-accent) 7%, var(--color-surface))">
               <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:4px">Recommendation</div>
               <div style="font-family:var(--font-heading);font-weight:800;font-size:16px">{{ recommendation }}</div>
 
@@ -549,7 +551,7 @@ textarea.input { min-height: 90px; resize: vertical; }
       </sc-if>
 
       <sc-if value="{{ showTimeline }}" hint-placeholder-val="{{ false }}">
-        <div style="padding:24px 28px 8px">
+        <div data-tour="timeline" style="padding:24px 28px 8px">
           <div style="display:flex;justify-content:space-between;align-items:baseline">
             <h2 style="font-size:24px;margin:0">Today · Tuesday, July 29</h2>
             <div style="font-variant-numeric:tabular-nums;font-size:13px;font-weight:600">Cursor <span style="color:var(--color-accent)">{{ scrubTime }}</span></div>
@@ -604,7 +606,7 @@ textarea.input { min-height: 90px; resize: vertical; }
       </sc-if>
 
       <sc-if value="{{ showSignals }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;gap:10px;padding:16px 28px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
+        <div data-tour="signals" style="display:flex;align-items:center;gap:10px;padding:16px 28px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
           <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">Streams</span>
           <sc-for list="{{ streamToggles }}" as="st" hint-placeholder-count="6">
             <button sc-camel-on-click="{{ st.go }}" style="{{ st.style }}" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">{{ st.label }}</button>
@@ -667,7 +669,7 @@ textarea.input { min-height: 90px; resize: vertical; }
       </sc-if>
 
       <sc-if value="{{ showInterv }}" hint-placeholder-val="{{ false }}">
-        <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--color-divider)">
+        <div data-tour="interv" style="display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--color-divider)">
           <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
             <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">Intervention delivered · 3:32 PM</div>
             <h2 style="font-size:26px;margin:8px 0 4px">90-second paced breathing</h2>
@@ -733,7 +735,7 @@ textarea.input { min-height: 90px; resize: vertical; }
       </sc-if>
 
       <sc-if value="{{ showProfile }}" hint-placeholder-val="{{ false }}">
-        <div style="display:grid;grid-template-columns:1fr 400px;border-bottom:2px solid var(--color-divider)">
+        <div data-tour="profile" style="display:grid;grid-template-columns:1fr 400px;border-bottom:2px solid var(--color-divider)">
           <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
             <h2 style="font-size:24px;margin:0 0 4px">Capacity fingerprint</h2>
             <p style="font-size:12px;color:var(--color-neutral-600);margin:0 0 16px">Each ridge is one dimension of capacity: its distribution over 38 days, your baseline (tick), and where you sit right now (red marker).</p>
@@ -788,7 +790,7 @@ textarea.input { min-height: 90px; resize: vertical; }
       </sc-if>
 
       <sc-if value="{{ showAsk }}" hint-placeholder-val="{{ false }}">
-        <div style="display:grid;grid-template-columns:340px 1fr;min-height:100%">
+        <div data-tour="ask" style="display:grid;grid-template-columns:340px 1fr;min-height:100%">
           <div style="border-right:2px solid var(--color-divider);display:flex;flex-direction:column">
             <div style="padding:24px 24px 12px">
               <h2 style="font-size:24px;margin:0 0 4px">Ask Brink</h2>
@@ -840,7 +842,7 @@ textarea.input { min-height: 90px; resize: vertical; }
       </sc-if>
 
       <sc-if value="{{ showDevice }}" hint-placeholder-val="{{ false }}">
-        <div style="display:grid;grid-template-columns:1fr 380px">
+        <div data-tour="device" style="display:grid;grid-template-columns:1fr 380px">
           <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
             <div style="display:flex;justify-content:space-between;align-items:baseline">
               <h2 style="font-size:24px;margin:0">Brink Prototype 04</h2>
@@ -1171,13 +1173,14 @@ class Component extends DCLogic {
   renderVals(){
     const S = this.SCEN(), sc = S[this.state.scenario], st = this.state, tick = st.tick;
     const scenario = this.props.scenario && S[this.props.scenario] ? this.props.scenario : st.scenario;
-    const names = ['Live State','Ask Brink','Interventions','Signal Studio','Capacity Profile','Session Timeline','Device'];
+    const names = ['Live State','Ask Brink','Interventions','Signal Studio','Capacity Profile','Device'];
     const at = n => names.indexOf(n);
     const navItems = names.map((name,i)=>({ name, num:'0'+(i+1), go:()=>this.setState({section:i}),
       numColor: i===st.section? 'var(--color-accent)':'var(--color-neutral-500)',
       style:'display:flex;gap:8px;align-items:baseline;text-align:left;border:none;cursor:pointer;background:'+(i===st.section?'var(--color-surface)':'transparent')+';padding:11px 20px;font:inherit;font-size:13.5px;font-weight:'+(i===st.section?'800':'400')+';font-family:var(--font-heading);color:var(--color-text);border-left:3px solid '+(i===st.section?'var(--color-accent)':'transparent') }));
     const scenarios = Object.keys(S).map(key=>({ label:S[key].label, go:()=>{ this.setState({scenario:key, cursor:S[key].cursor}); this.paintNow && this.paintNow(); },
       style:'border:none;cursor:pointer;font:inherit;font-size:11.5px;font-weight:600;padding:7px 12px;color:'+(key===st.scenario?'var(--color-bg)':'var(--color-text)')+';background:'+(key===st.scenario?'var(--color-accent)':'transparent') }));
+    window.__dash = { names, navItems, scenarios, scenarioKeys: Object.keys(S) };
     const dims = sc.dims.map((d,i)=>{
       const v=d[3]; let spark='M2 '+(22-14*v).toFixed(1)+' ';
       for(let j=1;j<=12;j++){ const u=j/12; const y=22-14*(v + (d[1]==='Rising'||d[2]==='+'? u*0.12: d[2]==='−'? -u*0.1:0)*Math.min(1,u*2) + 0.06*Math.sin(j*2.2+i*3+tick*0.5)); spark+='L'+(2+u*80).toFixed(1)+' '+this.clamp(y,3,24).toFixed(1)+' '; }
@@ -1459,7 +1462,7 @@ class Component extends DCLogic {
       privacyStyle:'display:block;width:100%;text-align:left;margin-top:14px;border:1px solid var(--color-divider);cursor:pointer;font:inherit;font-size:12px;font-weight:600;padding:10px 12px;color:'+(st.privacy?'var(--color-bg)':'var(--color-text)')+';background:'+(st.privacy?'var(--color-neutral-900)':'transparent'),
       chNote: noisy? 'Head motion is degrading frontal channels; affected segments are excluded automatically.' : 'All channels within normal range for the current session.',
       navItems, scenarios, sectionTitle:names[st.section], clock:'3:38 PM',
-      showScenarios: ['Live State','Session Timeline','Signal Studio'].indexOf(names[st.section])>=0,
+      showScenarios: ['Live State','Signal Studio'].indexOf(names[st.section])>=0,
       showLive: st.section===at('Live State'), showTimeline: st.section===at('Session Timeline'), showSignals: st.section===at('Signal Studio'), showInterv: st.section===at('Interventions'), showProfile: st.section===at('Capacity Profile'), showAsk: st.section===at('Ask Brink'), showDevice: st.section===at('Device'),
       stateTitle: sc.title, narrative: sc.narrative,
       metaRows: sc.meta.map(m=>({k:m[0], v:m[1], color:m[2]||'var(--color-text)'})),
@@ -1515,4 +1518,478 @@ class Component extends DCLogic {
 </script>
 
 
+<style>
+[data-tip] { position: relative; }
+[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute; left: 8px; top: calc(100% + 7px); z-index: 80;
+  width: max-content; max-width: 270px; white-space: pre-line;
+  background: var(--color-neutral-900); color: var(--color-bg);
+  font-family: var(--font-body); font-size: 11px; line-height: 1.5;
+  padding: 9px 11px; box-shadow: var(--shadow-md); pointer-events: none;
+}
+[data-tip]:hover::before {
+  content: ""; position: absolute; left: 16px; top: 100%;
+  border: 5px solid transparent; border-bottom-color: var(--color-neutral-900);
+  z-index: 81; pointer-events: none;
+}
+[data-tip-up]:hover::after  { top: auto; bottom: calc(100% + 7px); }
+[data-tip-up]:hover::before { top: auto; bottom: 100%; border-bottom-color: transparent; border-top-color: var(--color-neutral-900); }
+[data-tip-right]:hover::after  { left: auto; right: 8px; }
+[data-tip-right]:hover::before { left: auto; right: 16px; }
+</style>
+<script>
+/**
+ * Guided walkthrough + hover tooltips for the embedded Brink dashboard.
+ * Implements WALKTHROUGH_SPEC.md. Injected into public/demo/index.html by
+ * scripts/build-demo.mjs — it is NOT bundled with the marketing site.
+ *
+ * This runs inside the demo iframe, alongside the dc-runtime rather than
+ * inside it, so it holds no React state at all. That is deliberate: the
+ * dashboard re-renders about once a second from its live loop, and the
+ * measured rect living in a plain closure variable is the one thing that
+ * re-render cannot reach (spec §4 Robustness).
+ *
+ * The parent page starts it through window.__brinkTour.start().
+ */
+(function () {
+  "use strict";
+
+  /* eslint-disable */
+  // === TOUR CONTENT =========================================================
+  // Copy is verbatim from WALKTHROUGH_SPEC.md §3. Two deviations, both because
+  // the dashboard changed after the spec was written:
+  //   - the order follows the nav (Live State's six, then Ask Brink,
+  //     Interventions, Signal Studio, Capacity Profile, Device);
+  //   - the spec's 'timeline' step is dropped, Session Timeline having been
+  //     removed from the dashboard.
+  // NOTE: step 06's closing line still refers to "the Timeline". Left as
+  // written rather than silently rewriting the spec's copy — flag for review.
+  const TOUR_STEPS = [
+  { section: 'live', scenario: 'deepwork', target: 'device-status',
+    kicker: 'Start here · the device',
+    title: 'It is already reading you',
+    body: 'Seven dry EEG channels across the forehead, an optical heart sensor, skin conductance and motion. Everything you see downstream is 96 milliseconds behind your actual body.',
+    life: '9:02 AM. You clip the band on before your first meeting. By the time your laptop wakes, Brink has loaded 38 days of your own baselines and is comparing this morning against them.' },
+
+  { section: 'live', scenario: 'meditation', target: 'scenario-switch',
+    kicker: 'Orientation · scenarios',
+    title: 'Five real situations, one interface',
+    body: 'Deep work, meditation, running, strength, and the hour after a reset. Switching does not change a theme — it changes which signals matter, what the numbers mean, and what Brink asks of you.',
+    life: 'You meditate at 7:14 AM, run at 12:40, and write specs until 6. Same headband, three completely different bodies — the dashboard follows you between them without being told.' },
+
+  { section: 'live', scenario: 'deepwork', target: 'goal-input',
+    kicker: 'Goals · planning',
+    title: 'You say what you want; it plans around your dips',
+    body: 'Type a goal in plain words. Brink breaks it into equal units and pre-places two 90-second resets at the two times of day you historically fade.',
+    life: 'You type "Read 15 pages by 5 PM". Brink parks a reset at 2:40 and another at 4:05 — the exact two moments your blink rate has crept up on every long reading day this month.' },
+
+  { section: 'live', scenario: 'deepwork', target: 'goal-rows',
+    kicker: 'Goals · reading them',
+    title: 'One cell equals one real thing',
+    body: 'A cell is a page, a morning, or a day — never an abstraction. Filled means done, gold is where you are right now, an outline is missed or still scheduled. The caption always states the unit.',
+    life: '3:38 PM: nine cells dark, the tenth gold. Page 10 of 15, done by 4:47 with 13 minutes of slack. You missed Tuesday’s meditation and it simply reads Holding — a streak of 9, not a scolding.' },
+
+  { section: 'live', scenario: 'deepwork', target: 'narrative',
+    kicker: 'Live state · the read',
+    title: 'Plain language before numbers',
+    body: 'Brink states what is happening to you in one paragraph, then backs it with figures underneath. Every claim is relative to your own baseline, not a population average.',
+    life: 'Instead of "HF-HRV 48 ms, frontal alpha 62%", you read: your attention is highly sustained, but strain will likely start rising in about 24 minutes.' },
+
+  { section: 'live', scenario: 'deepwork', target: 'rec',
+    kicker: 'Live state · what to do',
+    title: 'Exactly one next action',
+    body: 'Never a feed of advice. One intervention, timed to a specific minute, with the reason available on hover — and it disappears when nothing is needed.',
+    life: '"90-second reset at 3:52." You take it between two calls. On the Timeline that evening you can see the strain curve bend down before it ever became a headache.' },
+
+  { section: 'ask', scenario: 'deepwork', target: 'ask',
+    kicker: 'Ask Brink',
+    title: 'Ask about your own body',
+    body: 'Questions answered from your data alone, with the signals behind the answer shown next to it — no generic wellness copy.',
+    life: '"Can I train hard tonight?" Answer: yes, but keep it under 40 minutes — this morning’s HRV is 9 ms below your average and today already carries a full deep-work strain load.' },
+
+  { section: 'interventions', scenario: 'postint', target: 'interv',
+    kicker: 'Interventions',
+    title: 'It tells you whether the fix worked',
+    body: 'Each intervention carries an expected effect before you do it, and a measured effect after. Suggestions you ignore or that fail are kept, not hidden.',
+    life: 'You did the 90-second breathing reset at 3:52. Twenty minutes later: HRV up 6 ms, blink rate back to baseline, projected decline pushed out 22 minutes. It worked, and you can see that it did.' },
+
+  { section: 'signals', scenario: 'running', target: 'signals',
+    kicker: 'The evidence',
+    title: 'The raw signals, if you want them',
+    body: 'Toggle any stream, switch EEG to raw, and see the segments Brink excluded. It shows you where it stopped trusting itself instead of quietly smoothing it over.',
+    life: 'Mid-run you doubt the strain number. You open Signal Studio: head motion is 0.61 g, the frontal channels are full of artifact, and Brink has already down-weighted EEG and leaned on your heart data.' },
+
+  { section: 'profile', scenario: 'deepwork', target: 'profile',
+    kicker: 'Your profile',
+    title: 'What you, specifically, are built for',
+    body: 'Thirty-eight days of sessions turn into personal constants: your best cognitive window, how long you last, how fast you recover, and what reliably breaks you.',
+    life: 'Brink learns your sharpest window is 9:40–11:30 AM and that accuracy drops after 112 minutes — so it stops proposing three-hour blocks and starts defending your mornings.' },
+
+  { section: 'device', scenario: 'running', target: 'device',
+    kicker: 'Trust',
+    title: 'It admits what it cannot see',
+    body: 'Fit quality per channel, latency, what each sensor actually measures, and on-device processing you can verify. Confidence drops out loud rather than being faked.',
+    life: 'Your fit loosens at kilometre four. Brink names the two degraded channels, excludes them, and lowers its confidence from 87% to 72% instead of pretending it still knows.' }
+];
+  /* eslint-enable */
+
+  // === ADAPTER =============================================================
+  // The single place the section order matters (spec §3). The spec's section
+  // keys are stable; our nav order is not, so resolve through the live names
+  // array the dashboard renders from rather than through fixed indices.
+  const SECTION_NAME = {
+    live: "Live State",
+    signals: "Signal Studio",
+    interventions: "Interventions",
+    profile: "Capacity Profile",
+    ask: "Ask Brink",
+    device: "Device",
+  };
+
+  function dash() {
+    return window.__dash || null;
+  }
+
+  // Both drive the dashboard through the very closures its own buttons use,
+  // so navigating the tour is indistinguishable from clicking the UI. That
+  // also means the scenario can be set on sections whose switcher is hidden.
+  function goToSection(key) {
+    const d = dash();
+    if (!d) return;
+    const i = d.names.indexOf(SECTION_NAME[key]);
+    if (i >= 0 && d.navItems[i]) d.navItems[i].go();
+  }
+
+  function setScenario(key) {
+    const d = dash();
+    if (!d) return;
+    const i = d.scenarioKeys.indexOf(key);
+    if (i >= 0 && d.scenarios[i]) d.scenarios[i].go();
+  }
+
+  // === STATE ===============================================================
+  // Everything here is a closure variable. Nothing the dashboard re-renders
+  // can reach it.
+  let active = false;
+  let idx = 0;
+  let rect = null;
+  let retryTimer = 0;
+  let rafId = 0;
+  let root = null;
+  let els = null;
+
+  const CW = 376;
+  const CH = 356;
+
+  const target = () =>
+    document.querySelector('[data-tour="' + TOUR_STEPS[idx].target + '"]');
+
+  // === MEASUREMENT =========================================================
+  // Never scrollIntoView (spec §4): it scrolls every ancestor including the
+  // marketing page hosting this iframe, which would yank the visitor away.
+  function revealInContainer(el) {
+    let p = el.parentElement;
+    while (p) {
+      const cs = getComputedStyle(p);
+      if (
+        /(auto|scroll)/.test(cs.overflowY) &&
+        p.scrollHeight > p.clientHeight + 4
+      ) {
+        p.scrollTop +=
+          el.getBoundingClientRect().top - p.getBoundingClientRect().top - 32;
+        return;
+      }
+      p = p.parentElement;
+    }
+  }
+
+  function commit(r) {
+    const n = { t: r.top, l: r.left, w: r.width, h: r.height };
+    if (
+      rect &&
+      Math.abs(rect.t - n.t) <= 0.5 &&
+      Math.abs(rect.l - n.l) <= 0.5 &&
+      Math.abs(rect.w - n.w) <= 0.5 &&
+      Math.abs(rect.h - n.h) <= 0.5
+    ) {
+      return;
+    }
+    rect = n;
+    draw();
+  }
+
+  // Retry until the target both exists and has a real box. Section swaps and
+  // the dc-runtime's re-render are not synchronous, so the first look after a
+  // navigation routinely finds nothing.
+  function measureWithRetries() {
+    clearTimeout(retryTimer);
+    let tries = 0;
+    let revealed = false;
+
+    (function attempt() {
+      if (!active) return;
+      const el = target();
+      if (el) {
+        if (!revealed) {
+          revealInContainer(el);
+          revealed = true;
+        }
+        const r = el.getBoundingClientRect();
+        if (r.width > 2 && r.height > 2) {
+          commit(r);
+          return; // the rAF watcher keeps it glued from here
+        }
+      }
+      if (tries++ < 12) {
+        retryTimer = setTimeout(attempt, 60);
+      } else if (idx < TOUR_STEPS.length - 1) {
+        go(idx + 1); // skip a missing target rather than ring nothing
+      } else {
+        stop();
+      }
+    })();
+  }
+
+  // Re-measure every frame while the tour is up. The explicit resize/scroll
+  // listeners below are what the spec asks for; this additionally survives the
+  // ~1s live re-render, which replaces the target node outright and so moves
+  // the box without firing either event.
+  function watch() {
+    rafId = requestAnimationFrame(watch);
+    if (!active || !rect) return;
+    const el = target();
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.width > 2 && r.height > 2) commit(r);
+  }
+
+  function onMove() {
+    if (!active) return;
+    const el = target();
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.width > 2 && r.height > 2) commit(r);
+  }
+
+  function onKey(e) {
+    if (!active) return;
+    if (e.key === "Escape") stop();
+    else if (e.key === "ArrowRight") next();
+    else if (e.key === "ArrowLeft") prev();
+  }
+
+  // === OVERLAY =============================================================
+  function build() {
+    root = document.createElement("div");
+    root.className = "brink-tour-root";
+
+    // Transparent click-catcher. The ring above carries the visible scrim but
+    // is pointer-events:none, so this is what makes a backdrop click cancel.
+    const backdrop = document.createElement("div");
+    backdrop.setAttribute("aria-hidden", "true");
+    backdrop.style.cssText = "position:fixed;inset:0;z-index:59";
+    backdrop.addEventListener("click", stop);
+
+    const ring = document.createElement("div");
+    ring.setAttribute("aria-hidden", "true");
+    ring.style.cssText =
+      "position:fixed;z-index:60;pointer-events:none;" +
+      "border:2px solid var(--color-accent);" +
+      "box-shadow:0 0 0 9999px rgba(32,31,29,0.42)";
+
+    const card = document.createElement("div");
+    card.setAttribute("role", "dialog");
+    card.setAttribute("aria-modal", "true");
+    card.setAttribute("aria-labelledby", "tour-title");
+    card.setAttribute("tabindex", "-1");
+    card.style.cssText =
+      "position:fixed;z-index:61;width:" +
+      CW +
+      "px;background:var(--color-bg);" +
+      "border:2px solid var(--color-text);box-shadow:var(--shadow-lg);" +
+      "font-family:var(--font-body);color:var(--color-text);outline:none";
+
+    card.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 18px 0">' +
+      '<div data-t="kicker" style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent)"></div>' +
+      '<div data-t="count" style="font-size:10px;font-variant-numeric:tabular-nums;color:var(--color-neutral-600)"></div>' +
+      "</div>" +
+      '<div style="padding:6px 18px 0">' +
+      '<div id="tour-title" data-t="title" style="font-family:var(--font-heading);font-weight:800;font-size:19px;line-height:1.15;letter-spacing:-0.01em;text-wrap:pretty"></div>' +
+      '<p data-t="body" style="font-size:12.5px;line-height:1.55;margin:8px 0 0;color:var(--color-neutral-800);text-wrap:pretty"></p>' +
+      "</div>" +
+      '<div style="margin:14px 18px 0;border-top:1px solid var(--color-divider);padding-top:11px">' +
+      '<div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-500);margin-bottom:5px">In real life</div>' +
+      '<p data-t="life" style="font-size:12.5px;line-height:1.55;margin:0;font-style:italic;text-wrap:pretty"></p>' +
+      "</div>" +
+      '<div style="display:flex;align-items:center;gap:8px;padding:14px 18px 16px">' +
+      '<button type="button" data-t="end" aria-label="End the walkthrough" style="display:flex;align-items:center;gap:6px;border:1px solid var(--color-text);background:none;font:inherit;font-size:11px;font-weight:600;color:var(--color-text);cursor:pointer;padding:6px 11px">' +
+      '<span aria-hidden="true" style="font-size:13px;line-height:1">\u2715</span>End tour</button>' +
+      '<span style="font-size:9.5px;color:var(--color-neutral-500);margin-left:8px">or press Esc</span>' +
+      '<div style="flex:1"></div>' +
+      '<button type="button" data-t="back" class="btn btn-secondary" style="font-size:11.5px;padding:7px 12px">Back</button>' +
+      '<button type="button" data-t="next" style="border:none;background:var(--color-accent);color:var(--color-bg);font:inherit;font-size:11.5px;font-weight:700;padding:8px 15px;cursor:pointer"></button>' +
+      "</div>";
+
+    root.appendChild(backdrop);
+    root.appendChild(ring);
+    root.appendChild(card);
+    document.body.appendChild(root);
+
+    const q = (n) => card.querySelector('[data-t="' + n + '"]');
+    els = {
+      ring,
+      card,
+      kicker: q("kicker"),
+      count: q("count"),
+      title: q("title"),
+      body: q("body"),
+      life: q("life"),
+      back: q("back"),
+      next: q("next"),
+    };
+
+    q("end").addEventListener("click", stop);
+    els.back.addEventListener("click", prev);
+    els.next.addEventListener("click", next);
+  }
+
+  function draw() {
+    if (!active) return;
+    if (!root) build();
+
+    const step = TOUR_STEPS[idx];
+    const total = TOUR_STEPS.length;
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+
+    els.kicker.textContent = step.kicker;
+    els.count.textContent =
+      String(idx + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0");
+    els.title.textContent = step.title;
+    els.body.textContent = step.body;
+    els.life.textContent = step.life;
+    els.next.textContent = idx === total - 1 ? "Finish" : "Next";
+    els.back.style.opacity = idx === 0 ? "0.35" : "1";
+
+    let left;
+    let top;
+    if (rect) {
+      els.ring.style.display = "block";
+      els.ring.style.top = rect.t - 4 + "px";
+      els.ring.style.left = rect.l - 4 + "px";
+      els.ring.style.width = rect.w + 8 + "px";
+      els.ring.style.height = rect.h + 8 + "px";
+
+      // Measured, not the spec's fixed 356: these cards vary by ~40px with the
+      // copy, and guessing high pushes short cards into a needless flip.
+      const cardH = els.card.offsetHeight || CH;
+
+      // Below, then above, then beside. The spec stops after above and clamps,
+      // which lands the card ON a tall target — goal-rows is 393px, so neither
+      // below nor above fits and the clamp pinned the card over the very rows
+      // the step is describing.
+      const fitsBelow = rect.t + rect.h + 14 + cardH <= H - 16;
+      const fitsAbove = rect.t - 14 - cardH >= 16;
+      const roomRight = W - (rect.l + rect.w) - 14 >= CW + 16;
+      const roomLeft = rect.l - 14 >= CW + 16;
+
+      if (fitsBelow) {
+        top = rect.t + rect.h + 14;
+        left = rect.l;
+      } else if (fitsAbove) {
+        top = rect.t - 14 - cardH;
+        left = rect.l;
+      } else if (roomRight) {
+        left = rect.l + rect.w + 14;
+        top = rect.t;
+      } else if (roomLeft) {
+        left = rect.l - CW - 14;
+        top = rect.t;
+      } else {
+        // Nothing fits: sit on the bottom edge, which covers the target's
+        // lower rows rather than its heading.
+        top = H - 16 - cardH;
+        left = rect.l;
+      }
+
+      left = Math.min(left, W - 16 - CW);
+      top = Math.min(top, H - 16 - cardH);
+    } else {
+      // Only ever seen for the frames between navigating and measuring.
+      els.ring.style.display = "none";
+      left = (W - CW) / 2;
+      top = Math.max(16, H - CH - 32);
+    }
+
+    els.card.style.left = Math.round(Math.max(16, left)) + "px";
+    els.card.style.top = Math.round(Math.max(16, top)) + "px";
+  }
+
+  // === CONTROL =============================================================
+  function go(n) {
+    const bounded = Math.max(0, Math.min(TOUR_STEPS.length - 1, n));
+    const first = !active;
+    idx = bounded;
+    active = true;
+    rect = null;
+
+    const step = TOUR_STEPS[idx];
+    goToSection(step.section);
+    setScenario(step.scenario);
+
+    draw();
+    measureWithRetries();
+
+    if (first) {
+      window.addEventListener("resize", onMove);
+      window.addEventListener("scroll", onMove, true);
+      window.addEventListener("keydown", onKey);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(watch);
+    }
+    if (els) els.card.focus({ preventScroll: true });
+  }
+
+  function stop() {
+    if (!active) return;
+    active = false;
+    rect = null;
+    clearTimeout(retryTimer);
+    cancelAnimationFrame(rafId);
+    rafId = 0;
+    window.removeEventListener("resize", onMove);
+    window.removeEventListener("scroll", onMove, true);
+    window.removeEventListener("keydown", onKey);
+    if (root && root.parentNode) root.parentNode.removeChild(root);
+    root = null;
+    els = null;
+    // Leaves the visitor on whatever section they were reading (spec §4).
+  }
+
+  function next() {
+    if (idx === TOUR_STEPS.length - 1) stop();
+    else go(idx + 1);
+  }
+
+  function prev() {
+    go(idx - 1);
+  }
+
+  window.__brinkTour = {
+    start: function () {
+      // Restart at step 0 if it is already running (spec §4).
+      if (active) stop();
+      go(0);
+    },
+    stop: stop,
+    isActive: function () {
+      return active;
+    },
+    steps: TOUR_STEPS.length,
+  };
+})();
+
+</script>
 </body></html>

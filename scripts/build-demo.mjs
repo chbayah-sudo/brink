@@ -130,7 +130,7 @@ template = patch(
 template = patch(
   template,
   `    const names = ['Live State','Session Timeline','Signal Studio','Interventions','Capacity Profile','Ask Brink','Device'];`,
-  `    const names = ['Live State','Ask Brink','Interventions','Signal Studio','Capacity Profile','Session Timeline','Device'];
+  `    const names = ['Live State','Ask Brink','Interventions','Signal Studio','Capacity Profile','Device'];
     const at = n => names.indexOf(n);`,
   "nav order",
 );
@@ -150,11 +150,13 @@ template = patch(
 // 3. Scenario switcher only where scenarios change anything. On Interventions,
 //    Capacity Profile, Ask Brink and Device the panels are identical whichever
 //    scenario is picked, so the control reads as broken rather than optional.
+//    Session Timeline is dropped from `names` above, so its panel never routes
+//    and its markup below is inert.
 template = patch(
   template,
   `      navItems, scenarios, sectionTitle:names[st.section], clock:'3:38 PM',`,
   `      navItems, scenarios, sectionTitle:names[st.section], clock:'3:38 PM',
-      showScenarios: ['Live State','Session Timeline','Signal Studio'].indexOf(names[st.section])>=0,`,
+      showScenarios: ['Live State','Signal Studio'].indexOf(names[st.section])>=0,`,
   "showScenarios flag",
 );
 template = patch(
@@ -183,6 +185,161 @@ template = patch(
   ">Headband · Connected<",
   "device label",
 );
+
+// 5. The guided walkthrough (WALKTHROUGH_SPEC.md). Three parts: a handle the
+//    tour can drive the dashboard through, data-tour anchors on the twelve
+//    elements the steps ring, and data-tip hover copy. The anchors are plain
+//    attributes, so the dc-runtime carries them through to the real DOM.
+
+// Hand the tour the same closures the dashboard's own buttons call, so
+// navigating a step is indistinguishable from a click — and so the scenario
+// can still be set on sections whose switcher is hidden. Re-assigned every
+// render, which keeps it valid across the live loop's re-renders.
+template = patch(
+  template,
+  `    const dims = sc.dims.map((d,i)=>{`,
+  `    window.__dash = { names, navItems, scenarios, scenarioKeys: Object.keys(S) };
+    const dims = sc.dims.map((d,i)=>{`,
+  "tour dashboard handle",
+);
+
+// Anchors, in our current section order. Each is the container that frames the
+// whole feature rather than a single line, so the ring reads as a box.
+const anchors = [
+  // device-status: the connection / fit / latency lines get their own wrapper
+  // so the ring doesn't have to swallow the wordmark above them.
+  [
+    `      <div style="display:flex;align-items:center;gap:8px;margin-top:16px;font-size:11px">`,
+    `      <div data-tour="device-status" data-tip="Seven dry EEG channels, PPG, EDA and motion.&#10;96 ms is the delay between your body and this screen.">
+      <div style="display:flex;align-items:center;gap:8px;margin-top:16px;font-size:11px">`,
+    "anchor device-status (open)",
+  ],
+  [
+    `      <div style="font-size:10px;color:var(--color-neutral-600);margin-top:4px;font-variant-numeric:tabular-nums">Fit good · 7 ch · 96 ms latency</div>`,
+    `      <div style="font-size:10px;color:var(--color-neutral-600);margin-top:4px;font-variant-numeric:tabular-nums">Fit good · 7 ch · 96 ms latency</div>
+      </div>`,
+    "anchor device-status (close)",
+  ],
+  // scenario-switch: the segmented control itself, inside the sc-if patch 3 added.
+  [
+    `>Scenario</span>
+        <div style="display:flex;border:1px solid var(--color-divider)">`,
+    `>Scenario</span>
+        <div data-tour="scenario-switch" data-tip="Not a theme. Each scenario changes which signals matter,&#10;what the numbers mean, and what Brink asks of you." data-tip-right style="display:flex;border:1px solid var(--color-divider)">`,
+    "anchor scenario-switch",
+  ],
+  // goal-input: the input + Plan it row.
+  [
+    `              <div style="display:flex;gap:10px">`,
+    `              <div data-tour="goal-input" data-tip="Plain words. Brink splits the goal into equal units and&#10;pre-places resets at the two times you historically fade." style="display:flex;gap:10px">`,
+    "anchor goal-input",
+  ],
+  // goal-rows: the container holding every goal row.
+  [
+    `            <div style="flex:1">
+              <sc-for list="{{ goalRows }}" as="g" hint-placeholder-count="3">`,
+    `            <div data-tour="goal-rows" style="flex:1">
+              <sc-for list="{{ goalRows }}" as="g" hint-placeholder-count="3">`,
+    "anchor goal-rows",
+  ],
+  // the cell strip inside each goal row states its own unit.
+  [
+    `                  <div style="display:flex;gap:2px;height:10px;margin-top:12px">`,
+    `                  <div data-tip="One cell = one real thing: a page, a morning, a day.&#10;Filled is done, gold is now, an outline is missed or scheduled." style="display:flex;gap:2px;height:10px;margin-top:12px">`,
+    "tip goal cell strip",
+  ],
+  // narrative: the panel around the paragraph, not the <p> itself.
+  [
+    `            <div style="padding:20px 24px;border-bottom:1px solid var(--color-divider)">
+              <p style="font-size:14px;line-height:1.6;margin:0;text-wrap:pretty">{{ narrative }}</p>`,
+    `            <div data-tour="narrative" data-tip="Plain language first, figures underneath.&#10;Every claim is against your own baseline, not an average." style="padding:20px 24px;border-bottom:1px solid var(--color-divider)">
+              <p style="font-size:14px;line-height:1.6;margin:0;text-wrap:pretty">{{ narrative }}</p>`,
+    "anchor narrative",
+  ],
+  // rec: the recommendation block.
+  [
+    `            <div sc-camel-on-mouse-enter="{{ recHover }}" sc-camel-on-mouse-leave="{{ recLeave }}" style="padding:14px 24px;background:var(--color-surface)"`,
+    `            <div data-tour="rec" data-tip="Exactly one next action, timed to the minute.&#10;It disappears entirely when nothing is needed." data-tip-up sc-camel-on-mouse-enter="{{ recHover }}" sc-camel-on-mouse-leave="{{ recLeave }}" style="padding:14px 24px;background:var(--color-surface)"`,
+    "anchor rec",
+  ],
+  // The six remaining sections: the first container inside each sc-if.
+  [
+    `      <sc-if value="{{ showTimeline }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:24px 28px 8px">`,
+    `      <sc-if value="{{ showTimeline }}" hint-placeholder-val="{{ false }}">
+        <div data-tour="timeline" style="padding:24px 28px 8px">`,
+    "anchor timeline",
+  ],
+  [
+    `      <sc-if value="{{ showSignals }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;padding:16px 28px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">`,
+    `      <sc-if value="{{ showSignals }}" hint-placeholder-val="{{ false }}">
+        <div data-tour="signals" style="display:flex;align-items:center;gap:10px;padding:16px 28px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">`,
+    "anchor signals",
+  ],
+  [
+    `      <sc-if value="{{ showInterv }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--color-divider)">`,
+    `      <sc-if value="{{ showInterv }}" hint-placeholder-val="{{ false }}">
+        <div data-tour="interv" style="display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--color-divider)">`,
+    "anchor interv",
+  ],
+  [
+    `      <sc-if value="{{ showProfile }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 400px;border-bottom:2px solid var(--color-divider)">`,
+    `      <sc-if value="{{ showProfile }}" hint-placeholder-val="{{ false }}">
+        <div data-tour="profile" style="display:grid;grid-template-columns:1fr 400px;border-bottom:2px solid var(--color-divider)">`,
+    "anchor profile",
+  ],
+  [
+    `      <sc-if value="{{ showAsk }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:340px 1fr;min-height:100%">`,
+    `      <sc-if value="{{ showAsk }}" hint-placeholder-val="{{ false }}">
+        <div data-tour="ask" style="display:grid;grid-template-columns:340px 1fr;min-height:100%">`,
+    "anchor ask",
+  ],
+  [
+    `      <sc-if value="{{ showDevice }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 380px">`,
+    `      <sc-if value="{{ showDevice }}" hint-placeholder-val="{{ false }}">
+        <div data-tour="device" style="display:grid;grid-template-columns:1fr 380px">`,
+    "anchor device",
+  ],
+];
+
+for (const [find, replace, what] of anchors) {
+  template = patch(template, find, replace, what);
+}
+
+// Hover tips (spec §2) plus the tour bundle, both appended to the document.
+const tipCss = `
+[data-tip] { position: relative; }
+[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute; left: 8px; top: calc(100% + 7px); z-index: 80;
+  width: max-content; max-width: 270px; white-space: pre-line;
+  background: var(--color-neutral-900); color: var(--color-bg);
+  font-family: var(--font-body); font-size: 11px; line-height: 1.5;
+  padding: 9px 11px; box-shadow: var(--shadow-md); pointer-events: none;
+}
+[data-tip]:hover::before {
+  content: ""; position: absolute; left: 16px; top: 100%;
+  border: 5px solid transparent; border-bottom-color: var(--color-neutral-900);
+  z-index: 81; pointer-events: none;
+}
+[data-tip-up]:hover::after  { top: auto; bottom: calc(100% + 7px); }
+[data-tip-up]:hover::before { top: auto; bottom: 100%; border-bottom-color: transparent; border-top-color: var(--color-neutral-900); }
+[data-tip-right]:hover::after  { left: auto; right: 8px; }
+[data-tip-right]:hover::before { left: auto; right: 16px; }
+`;
+
+const tourJs = readFileSync(join(ROOT, "scripts", "demo-tour.js"), "utf8");
+const bodyClose = template.lastIndexOf("</body>");
+if (bodyClose < 0) throw new Error("template has no </body>");
+template =
+  template.slice(0, bodyClose) +
+  `<style>${tipCss}</style>\n<script>\n${tourJs}\n</script>\n` +
+  template.slice(bodyClose);
 
 writeFileSync(join(OUT_DIR, "index.html"), template);
 console.log(`  + index.html                        ${template.length} B`);

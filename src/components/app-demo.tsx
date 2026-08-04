@@ -47,12 +47,33 @@ const DESIGN_H = 900;
 // below this scale, inline interaction is too fiddly, so send to the full page
 const MIN_INTERACTIVE_SCALE = 0.62;
 
+/** The walkthrough's handle, published by the demo document (scripts/demo-tour.js). */
+type TourWindow = Window & { __brinkTour?: { start: () => void } };
+
 export function AppDemo() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const frameRef = useRef<HTMLIFrameElement | null>(null);
   const [near, setNear] = useState(false);
   const [scale, setScale] = useState(1);
   const [active, setActive] = useState(false);
+
+  // Explore starts the guided walkthrough inside the iframe. Same-origin, so
+  // this reaches the demo's own window directly. The iframe may still be
+  // booting its runtime when the click lands, hence the short retry.
+  const explore = () => {
+    setActive(true);
+    let tries = 0;
+    const attempt = () => {
+      const w = frameRef.current?.contentWindow as TourWindow | null;
+      if (w?.__brinkTour) {
+        w.__brinkTour.start();
+        return;
+      }
+      if (tries++ < 40) window.setTimeout(attempt, 100);
+    };
+    attempt();
+  };
 
   // Lazy-load the iframe when the section approaches.
   useEffect(() => {
@@ -114,7 +135,7 @@ export function AppDemo() {
           <div className="relative mt-9 flex">
             <div className="absolute inset-x-0 top-1/2 -translate-y-px border-t border-[#201f1d]/20" />
             <span className="relative bg-[#e8e4d8] pr-4 font-mono-df text-[0.6rem] tracking-[0.2em] text-[#201f1d]/55">
-              SEVEN SECTIONS · FIVE SCENARIOS
+              SIX SECTIONS · FIVE SCENARIOS · GUIDED WALKTHROUGH
             </span>
           </div>
         </Reveal>
@@ -131,14 +152,28 @@ export function AppDemo() {
               <span className="hidden font-mono-df text-[0.6rem] tracking-[0.18em] text-[#201f1d]/50 sm:block">
                 ILLUSTRATIVE DATA
               </span>
-              <a
-                href={DEMO_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="font-mono-df text-[0.62rem] tracking-[0.18em] text-[#b3250f] transition-opacity hover:opacity-70"
-              >
-                OPEN FULL ↗
-              </a>
+              <span className="flex items-center gap-5">
+                {/* Explore is the tour's entry point, but it unmounts with the
+                    interaction gate once the demo is live — so the restart the
+                    spec asks for needs its own control from then on. */}
+                {active && (
+                  <button
+                    type="button"
+                    onClick={explore}
+                    className="font-mono-df text-[0.62rem] tracking-[0.18em] text-[#201f1d]/55 transition-colors hover:text-[#b3250f]"
+                  >
+                    REPLAY WALKTHROUGH
+                  </button>
+                )}
+                <a
+                  href={DEMO_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono-df text-[0.62rem] tracking-[0.18em] text-[#b3250f] transition-opacity hover:opacity-70"
+                >
+                  OPEN FULL ↗
+                </a>
+              </span>
             </div>
 
             {/* scaled live app */}
@@ -146,6 +181,7 @@ export function AppDemo() {
               <div style={{ height: DESIGN_H * scale }}>
                 {near && (
                   <iframe
+                    ref={frameRef}
                     src={DEMO_URL}
                     title="Brink companion app demo"
                     className="border-0"
@@ -165,7 +201,7 @@ export function AppDemo() {
                 <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-b from-transparent via-transparent to-[#201f1d]/10 pb-8">
                   {interactive ? (
                     <button
-                      onClick={() => setActive(true)}
+                      onClick={explore}
                       className="border border-[#b3250f] bg-[#f3f2f2] px-6 py-3 font-mono-df text-xs uppercase tracking-[0.22em] text-[#b3250f] shadow-[0_2px_18px_rgba(32,31,29,0.18)] transition-colors hover:bg-[#b3250f] hover:text-[#f3f2f2]"
                     >
                       [ Explore the demo ]
