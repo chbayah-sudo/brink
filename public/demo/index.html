@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html><head><script>window.__resources = {"https://unpkg.com/react@18.3.1/umd/react.production.min.js":"vendor/react.production.min.js","https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js":"vendor/react-dom.production.min.js"};</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="vendor/support.js"></script>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>/* Modernist — design-system tokens and component classes. This file is the source of truth for the system's look; retune it here and see readme.md. */
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("vendor/archivo-1.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("vendor/archivo-2.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("vendor/archivo-3.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("vendor/archivo-1.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("vendor/archivo-2.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("vendor/archivo-3.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("vendor/archivo-1.woff2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("vendor/archivo-2.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("vendor/archivo-3.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+:root {
+  --color-bg: #f3f2f2;
+  --color-surface: #eae9e9;
+  --color-text: #201e1d;
+  --color-accent: #ec3013;
+  --color-accent-2: #e15b47;
+  --color-divider: color-mix(in srgb, #201e1d 40%, transparent);
+
+  /* Tonal ramps — generated in OKLCH on one shared lightness scale, so the
+     same step of any role matches the others in visual value. */
+  --color-neutral-100: #f8f4f4;
+  --color-neutral-200: #eae7e7;
+  --color-neutral-300: #d7d3d3;
+  --color-neutral-400: #bab6b6;
+  --color-neutral-500: #9b9797;
+  --color-neutral-600: #7d7979;
+  --color-neutral-700: #605d5d;
+  --color-neutral-800: #444141;
+  --color-neutral-900: #2d2b2b;
+
+  --color-accent-100: #fff2ef;
+  --color-accent-200: #ffe0d9;
+  --color-accent-300: #ffc4b8;
+  --color-accent-400: #ff9783;
+  --color-accent-500: #ff563c;
+  --color-accent-600: #dd2b0f;
+  --color-accent-700: #ae1800;
+  --color-accent-800: #7c1405;
+  --color-accent-900: #4d170e;
+
+  --color-accent-2-100: #fff2ef;
+  --color-accent-2-200: #ffe0da;
+  --color-accent-2-300: #ffc4b9;
+  --color-accent-2-400: #ff9784;
+  --color-accent-2-500: #ef6853;
+  --color-accent-2-600: #c94b39;
+  --color-accent-2-700: #9e3526;
+  --color-accent-2-800: #71261b;
+  --color-accent-2-900: #471d16;
+
+  --font-heading: "Archivo", system-ui, sans-serif;
+  --font-heading-weight: 800;
+  --font-body: "Archivo", system-ui, sans-serif;
+
+  --space-1: 4.0px;
+  --space-2: 8.0px;
+  --space-3: 12.0px;
+  --space-4: 16.0px;
+  --space-6: 24.0px;
+  --space-8: 32.0px;
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+
+  /* Elevation — derived from the ground: soft ink-tinted shadows on a
+     light theme, a hairline edge + ambient darkness on a dark one. */
+  --shadow-sm: 0 1px 2px color-mix(in srgb, #2d2b2b 14%, transparent);
+  --shadow-md: 0 3px 10px color-mix(in srgb, #2d2b2b 16%, transparent);
+  --shadow-lg: 0 12px 32px color-mix(in srgb, #2d2b2b 22%, transparent);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: var(--font-heading-weight); }
+
+.grayscale{filter:grayscale(1) contrast(1.08)}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Components — built with the tokens above. Plain CSS
+   on plain HTML: no JavaScript, no build step. Each class is documented in
+   readme.md and demonstrated in foundations/ and components/.
+   ══════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-size: 15px; line-height: 1.55; font-weight: 400; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 var(--space-2);
+}
+h1 { font-size: 42px; }
+h2 { font-size: 32px; }
+h3 { font-size: 25px; }
+h4 { font-size: 20px; }
+h5 { font-size: 16px; }
+h6 { font-size: 13px; }
+h6 { letter-spacing: 0.08em; text-transform: uppercase; }
+p { margin: 0 0 var(--space-3); }
+a { color: var(--color-accent); text-underline-offset: 3px; }
+img { display: block; max-width: 100%; }
+figure { margin: 0; }
+figcaption {
+  font-size: 11px; margin-top: var(--space-1);
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+.text-muted { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+
+/* — rules — */
+.hr {
+  height: 2px; border: 0; margin: var(--space-4) 0;
+  background: var(--color-divider);
+}
+
+/* — buttons — */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  cursor: pointer; text-decoration: none;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 14px; line-height: 1.2; color: var(--color-text); /* matches the .input's 14px —
+     the pair sits side by side in sign-up rows */
+  background: transparent; border: 1px solid transparent;
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+  border-radius: var(--radius-md);
+}
+.btn svg { display: block; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--color-accent); color: var(--color-bg); }
+.btn-primary:hover { background: var(--color-accent-600); }
+.btn-primary:active { background: var(--color-accent-700); }
+.btn-secondary { border-color: var(--color-divider); }
+.btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.btn-secondary:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+.btn-ghost { color: var(--color-accent); padding-inline: var(--space-1); }
+.btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.btn-ghost:active { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
+.btn-icon { width: 36px; height: 36px; padding: 0; }
+.btn-block { width: 100%; margin-top: var(--space-2); justify-content: flex-start; text-align: left; }
+
+/* — forms — */
+.field > label {
+  display: block; font-size: 12px; margin-bottom: 5px;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+.input {
+  width: 100%; min-height: 36px; padding: 6px 10px; font: inherit;
+  font-size: 14px; color: var(--color-text); caret-color: var(--color-accent);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+}
+.input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
+.input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+textarea.input { min-height: 90px; resize: vertical; }
+.radio { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+.radio input, .seg-opt input {
+  position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
+}
+.radio .dot {
+  width: 16px; height: 16px; flex: none; border-radius: 50%;
+  border: 1.5px solid var(--color-divider);
+}
+.radio:hover .dot { border-color: var(--color-accent); }
+.radio input:checked + .dot {
+  border-color: var(--color-accent); background: var(--color-accent);
+  box-shadow: inset 0 0 0 4px var(--color-bg);
+}
+.radio input:focus-visible + .dot { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.seg {
+  display: inline-flex; overflow: hidden;
+  border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+}
+.seg-opt {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; font-size: 13px; cursor: pointer;
+}
+.seg-opt + .seg-opt { border-left: 1px solid var(--color-divider); }
+.seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }
+.seg-opt:not(:has(input:checked)):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.seg-opt:has(input:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+
+/* — cards — */
+.card {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface);
+}
+.card-kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
+.card-title {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 17px; line-height: 1.2;
+}
+.card-body { margin: 0; font-size: 13px; opacity: 0.8; flex: 1; }
+.card-meta {
+  display: flex; align-items: center; gap: 6px; font-size: 11px;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+.elev-sm { box-shadow: var(--shadow-sm); }
+.elev-md { box-shadow: var(--shadow-md); }
+.elev-lg { box-shadow: var(--shadow-lg); }
+
+/* — tags — */
+.tag {
+  display: inline-flex; align-items: center; font-size: 11px;
+  letter-spacing: 0.02em; padding: 3px 10px;
+  border-radius: calc(var(--radius-md) * 0.75);
+}
+.tag-accent { background: var(--color-accent-100); color: var(--color-accent-800); }
+.tag-accent-2 { background: var(--color-accent-2-100); color: var(--color-accent-2-800); }
+.tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
+.tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
+
+/* — navigation — */
+.nav {
+  display: flex; align-items: center; gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 2px solid var(--color-divider);
+}
+.nav-brand {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 18px; margin-right: auto;
+}
+.nav a { color: inherit; text-decoration: none; font-size: 14px; }
+.nav a:hover, .nav a[aria-current='page'] { color: var(--color-accent); }
+
+/* — tables — */
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th {
+  text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  padding: var(--space-2); border-bottom: 2px solid var(--color-divider);
+}
+.table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-divider);
+}
+.table tbody tr:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
+
+/* — dialog — */
+.dialog-backdrop {
+  position: fixed; inset: 0; display: grid; place-items: center;
+  padding: var(--space-4);
+  background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent);
+}
+.dialog {
+  width: min(440px, 100%); display: flex; flex-direction: column; gap: var(--space-3);
+  padding: var(--space-4); border-radius: var(--radius-lg);
+  background: var(--color-surface); box-shadow: var(--shadow-lg);
+}
+.dialog-title {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 20px;
+}
+.dialog-body { font-size: 14px; opacity: 0.85; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }
+
+</style>
+  <script src="vendor/ds-bundle.js"></script>
+  <style>
+    html,body{height:100%}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+    @container (max-width:78px){ .gseg-win{display:none} }
+    @container (max-width:44px){ .gseg-label{display:none} }
+    @container (max-width:352px){ .proveit-cap{display:none} }
+    a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
+    input[type=range].scrub{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--color-divider);cursor:ew-resize}
+    input[type=range].scrub::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:22px;background:var(--color-accent);border:none;border-radius:0;cursor:ew-resize}
+    input[type=range].scrub::-moz-range-thumb{width:14px;height:22px;background:var(--color-accent);border:none;border-radius:0;cursor:ew-resize}
+  </style>
+</helmet>
+<div data-screen-label="Brink Dashboard" style="display:flex;height:100vh;overflow:hidden;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)">
+
+  <nav style="width:216px;flex:0 0 216px;border-right:2px solid var(--color-divider);display:flex;flex-direction:column;padding:24px 0 16px;overflow-y:auto;min-height:0">
+    <div style="padding:0 20px 20px;border-bottom:2px solid var(--color-divider)">
+      <div style="font-family:var(--font-heading);font-weight:800;font-size:26px;letter-spacing:-0.02em;line-height:1">BRINK<span style="color:var(--color-accent)">.</span></div>
+      <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px;color:var(--color-neutral-600)">Human capacity OS</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:16px;font-size:11px">
+        <span style="width:8px;height:8px;background:var(--color-accent);animation:blink 2.4s infinite"></span>
+        <span style="font-variant-numeric:tabular-nums">Headband · Connected</span>
+      </div>
+      <div style="font-size:10px;color:var(--color-neutral-600);margin-top:4px;font-variant-numeric:tabular-nums">Fit good · 7 ch · 96 ms latency</div>
+    </div>
+    <div style="display:flex;flex-direction:column;padding:12px 0;flex:1 0 auto">
+      <sc-for list="{{ navItems }}" as="nv" hint-placeholder-count="5">
+        <button sc-camel-on-click="{{ nv.go }}" style="{{ nv.style }}" style-hover="background:color-mix(in srgb, var(--color-text) 7%, transparent)">
+          <span style="font-variant-numeric:tabular-nums;font-size:10px;color:{{ nv.numColor }};width:20px">{{ nv.num }}</span>{{ nv.name }}
+        </button>
+      </sc-for>
+    </div>
+    <div style="padding:16px 20px 0;border-top:2px solid var(--color-divider)">
+      <div style="font-family:var(--font-heading);font-weight:800;font-size:14px">Alex Morgan</div>
+      <div style="font-size:11px;color:var(--color-neutral-600)">Product builder · endurance athlete</div>
+      <div style="font-size:10px;font-variant-numeric:tabular-nums;color:var(--color-neutral-600);margin-top:6px">38 days calibrated · 126 sessions · 214 h</div>
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500);margin-top:12px">Illustrative demo data</div>
+    </div>
+  </nav>
+
+  <main style="flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+    <header style="display:flex;align-items:center;gap:16px;padding:14px 28px;border-bottom:2px solid var(--color-divider);flex:0 0 auto">
+      <h1 style="font-size:20px;margin:0;letter-spacing:-0.01em">{{ sectionTitle }}</h1>
+      <div style="flex:1"></div>
+      <sc-if value="{{ showScenarios }}" hint-placeholder-val="{{ true }}">
+        <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">Scenario</span>
+        <div style="display:flex;border:1px solid var(--color-divider)">
+          <sc-for list="{{ scenarios }}" as="sc" hint-placeholder-count="5">
+            <button sc-camel-on-click="{{ sc.go }}" style="{{ sc.style }}" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">{{ sc.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+      <span style="font-variant-numeric:tabular-nums;font-size:13px;font-weight:600">{{ clock }}</span>
+    </header>
+
+    <div style="flex:1;overflow-y:auto;min-height:0">
+
+      <sc-if value="{{ showLive }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:1fr 380px;border-bottom:2px solid var(--color-divider)">
+          <div style="border-right:2px solid var(--color-divider);min-height:460px;display:flex;flex-direction:column">
+            <div style="padding:18px 24px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:21px;letter-spacing:-0.01em">Goals</div>
+              <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500)">What you committed to · how it is actually going</div>
+            </div>
+            <div style="padding:0 24px 18px;border-bottom:1px solid var(--color-divider)">
+              <div style="display:flex;gap:10px">
+                <input class="input" style="flex:1;font-size:13px" placeholder="Set a goal, e.g. Read 15 pages by 5 PM" value="{{ goalText }}" sc-camel-on-change="{{ goalTyping }}" aria-label="Goal input">
+                <button class="btn btn-primary" sc-camel-on-click="{{ goalPlan }}">Plan it</button>
+              </div>
+            </div>
+            <div style="flex:1">
+              <sc-for list="{{ goalRows }}" as="g" hint-placeholder-count="3">
+                <div style="padding:20px 24px;border-bottom:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
+                    <div style="min-width:0">
+                      <div style="font-size:13.5px;font-weight:700;text-wrap:pretty">{{ g.title }}</div>
+                      <div style="font-size:11px;color:var(--color-neutral-600);margin-top:2px">{{ g.meta }}</div>
+                    </div>
+                    <div style="text-align:right">
+                      <div style="font-family:var(--font-heading);font-weight:800;font-size:16px;color:{{ g.statusColor }}">{{ g.status }}</div>
+                      <div style="font-size:11px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums">{{ g.sub }}</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:2px;height:10px;margin-top:12px">
+                    <sc-for list="{{ g.segs }}" as="s" hint-placeholder-count="6">
+                      <span style="{{ s.style }}"></span>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:7px">
+                    <div style="font-size:10px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.caption }}</div>
+                    <sc-if value="{{ g.showCommit }}" hint-placeholder-val="{{ false }}">
+                      <button sc-camel-on-click="{{ g.commit }}" style="border:none;background:var(--color-accent);color:var(--color-bg);font:inherit;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;white-space:nowrap;flex:none" style-hover="background:var(--color-accent-600)">Commit and start</button>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <div style="padding:20px 24px;border-bottom:1px solid var(--color-divider)">
+              <p style="font-size:14px;line-height:1.6;margin:0;text-wrap:pretty">{{ narrative }}</p>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+              <sc-for list="{{ metaRows }}" as="m" hint-placeholder-count="6">
+                <div style="display:flex;justify-content:space-between;gap:12px;padding:9px 24px;border-bottom:1px solid color-mix(in srgb, var(--color-text) 12%, transparent);font-size:12px">
+                  <span style="letter-spacing:.08em;text-transform:uppercase;font-size:10px;color:var(--color-neutral-600);padding-top:2px">{{ m.k }}</span>
+                  <span style="font-variant-numeric:tabular-nums;font-weight:600;text-align:right;color:{{ m.color }}">{{ m.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div sc-camel-on-mouse-enter="{{ recHover }}" sc-camel-on-mouse-leave="{{ recLeave }}" style="padding:14px 24px;background:var(--color-surface)" style-hover="background:color-mix(in srgb, var(--color-accent) 7%, var(--color-surface))">
+              <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:4px">Recommendation</div>
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:16px">{{ recommendation }}</div>
+
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:2px solid var(--color-divider)">
+          <sc-for list="{{ dims }}" as="d" hint-placeholder-count="7">
+            <div style="{{ d.cellStyle }}">
+              <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);min-height:24px">{{ d.name }}</div>
+              <svg sc-camel-view-box="0 0 84 26" style="width:100%;height:26px;display:block;margin:6px 0"><path d="{{ d.spark }}" fill="none" stroke="{{ d.sparkColor }}" stroke-width="1.5"></path></svg>
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-family:var(--font-heading);font-weight:800;font-size:15px">{{ d.word }}</span>
+                <span style="font-variant-numeric:tabular-nums;font-size:11px;color:{{ d.trendColor }}">{{ d.trend }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr">
+          <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+              <h2 style="font-size:24px;margin:0">What Brink sees</h2>
+              <div style="display:flex;border:1px solid var(--color-divider)">
+                <button sc-camel-on-click="{{ explSimple }}" style="{{ explSimpleStyle }}" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">Simple</button>
+                <button sc-camel-on-click="{{ explTech }}" style="{{ explTechStyle }}" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">Technical</button>
+              </div>
+            </div>
+            <p style="font-size:12px;color:var(--color-neutral-600);margin:6px 0 18px">Contributing factors behind the current estimate, ranked by weight.</p>
+            <sc-for list="{{ factors }}" as="f" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:28px 1fr;gap:12px;padding:14px 0;border-top:1px solid color-mix(in srgb, var(--color-text) 12%, transparent)">
+                <div style="font-variant-numeric:tabular-nums;font-size:11px;color:var(--color-neutral-500);padding-top:2px">{{ f.num }}</div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline">
+                    <div style="font-family:var(--font-heading);font-weight:800;font-size:14px">{{ f.title }}</div>
+                    <div style="font-variant-numeric:tabular-nums;font-size:10px;color:{{ f.dirColor }};white-space:nowrap">{{ f.dir }}</div>
+                  </div>
+                  <div style="height:2px;background:var(--color-neutral-200);margin:7px 0 8px"><div style="{{ f.barStyle }}"></div></div>
+                  <p style="font-size:12px;line-height:1.55;margin:0;color:var(--color-neutral-800);text-wrap:pretty">{{ f.body }}</p>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="padding:24px 28px">
+            <h2 style="font-size:24px;margin:0">Approaching your brink</h2>
+            <p style="font-size:12px;color:var(--color-neutral-600);margin:6px 0 16px">{{ predSub }}</p>
+            <svg sc-camel-view-box="0 0 520 210" style="width:100%;display:block">
+              <line x1="40" y1="10" x2="40" y2="180" stroke="var(--color-divider)" stroke-width="1"></line>
+              <line x1="40" y1="180" x2="510" y2="180" stroke="var(--color-divider)" stroke-width="2"></line>
+              <sc-for list="{{ predGrid }}" as="g" hint-placeholder-count="4">
+                <line x1="{{ g.x }}" y1="10" x2="{{ g.x }}" y2="180" stroke="color-mix(in srgb, var(--color-text) 10%, transparent)" stroke-width="1"></line>
+                <text x="{{ g.x }}" y="196" font-size="9" fill="var(--color-neutral-600)" text-anchor="middle" style="font-variant-numeric:tabular-nums">{{ g.t }}</text>
+              </sc-for>
+              <text x="36" y="16" font-size="9" fill="var(--color-neutral-600)" text-anchor="end">1.0</text>
+              <text x="36" y="183" font-size="9" fill="var(--color-neutral-600)" text-anchor="end">0</text>
+              <path d="{{ predBand }}" fill="color-mix(in srgb, var(--color-accent) 12%, transparent)"></path>
+              <path d="{{ predBase }}" fill="none" stroke="var(--color-neutral-400)" stroke-width="1.5" stroke-dasharray="3 4"></path>
+              <path d="{{ predLine }}" fill="none" stroke="var(--color-accent)" stroke-width="2"></path>
+              <line x1="{{ predWinX1 }}" y1="10" x2="{{ predWinX1 }}" y2="180" stroke="var(--color-accent-600)" stroke-width="1" stroke-dasharray="2 3"></line>
+              <line x1="{{ predWinX2 }}" y1="10" x2="{{ predWinX2 }}" y2="180" stroke="var(--color-accent-600)" stroke-width="1" stroke-dasharray="2 3"></line>
+              <text x="{{ predWinXm }}" y="26" font-size="9" fill="var(--color-accent-700)" text-anchor="middle" style="letter-spacing:.08em;text-transform:uppercase">{{ predWinLabel }}</text>
+            </svg>
+            <div style="display:flex;gap:20px;font-size:10px;color:var(--color-neutral-600);margin:8px 0 16px">
+              <span><span style="display:inline-block;width:14px;height:2px;background:var(--color-accent);vertical-align:middle;margin-right:5px"></span>Estimated decline likelihood</span>
+              <span><span style="display:inline-block;width:14px;height:2px;background:var(--color-neutral-400);vertical-align:middle;margin-right:5px"></span>Your typical baseline</span>
+              <span><span style="display:inline-block;width:14px;height:8px;background:color-mix(in srgb, var(--color-accent) 12%, transparent);vertical-align:middle;margin-right:5px"></span>Confidence band</span>
+            </div>
+            <p style="font-size:13px;line-height:1.55;font-weight:600;margin:0 0 12px;text-wrap:pretty">{{ predHeadline }}</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;border-top:1px solid var(--color-divider);padding-top:12px">
+              <div>
+                <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:6px">Expected form of decline</div>
+                <sc-for list="{{ predEffects }}" as="e" hint-placeholder-count="4">
+                  <div style="font-size:12px;padding:3px 0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent)">{{ e }}</div>
+                </sc-for>
+              </div>
+              <div>
+                <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:6px">Against your baseline</div>
+                <p style="font-size:12px;line-height:1.55;margin:0;color:var(--color-neutral-800);text-wrap:pretty">{{ predCompare }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showTimeline }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:24px 28px 8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <h2 style="font-size:24px;margin:0">Today · Tuesday, July 29</h2>
+            <div style="font-variant-numeric:tabular-nums;font-size:13px;font-weight:600">Cursor <span style="color:var(--color-accent)">{{ scrubTime }}</span></div>
+          </div>
+          <p style="font-size:12px;color:var(--color-neutral-600);margin:4px 0 12px">Scrub to see what Brink understood at any moment. Every layer is synchronized.</p>
+          <svg sc-camel-view-box="0 0 1160 250" style="width:100%;display:block">
+            <sc-for list="{{ tlHours }}" as="h" hint-placeholder-count="8">
+              <line x1="{{ h.x }}" y1="18" x2="{{ h.x }}" y2="200" stroke="color-mix(in srgb, var(--color-text) 9%, transparent)" stroke-width="1"></line>
+              <text x="{{ h.x }}" y="12" font-size="9" fill="var(--color-neutral-600)" text-anchor="middle" style="font-variant-numeric:tabular-nums">{{ h.t }}</text>
+            </sc-for>
+            <sc-for list="{{ tlActs }}" as="a" hint-placeholder-count="10">
+              <rect x="{{ a.x }}" y="20" width="{{ a.w }}" height="22" fill="{{ a.fill }}"></rect>
+              <text x="{{ a.tx }}" y="34" font-size="9" fill="{{ a.tfill }}" style="letter-spacing:.04em">{{ a.label }}</text>
+            </sc-for>
+            <text x="0" y="66" font-size="9" fill="var(--color-neutral-600)" style="letter-spacing:.1em;text-transform:uppercase">Cognitive state</text>
+            <path d="{{ tlCog }}" fill="none" stroke="var(--color-text)" stroke-width="1.6"></path>
+            <text x="0" y="128" font-size="9" fill="var(--color-neutral-600)" style="letter-spacing:.1em;text-transform:uppercase">Physical strain</text>
+            <path d="{{ tlStrainArea }}" fill="color-mix(in srgb, var(--color-accent) 10%, transparent)"></path>
+            <path d="{{ tlStrain }}" fill="none" stroke="var(--color-accent)" stroke-width="1.6"></path>
+            <sc-for list="{{ tlEvents }}" as="ev" hint-placeholder-count="8">
+              <line x1="{{ ev.x }}" y1="192" x2="{{ ev.x }}" y2="{{ ev.y2 }}" stroke="{{ ev.stroke }}" stroke-width="1"></line>
+              <rect x="{{ ev.x }}" y="{{ ev.by }}" width="5" height="5" fill="{{ ev.stroke }}"></rect>
+              <text x="{{ ev.lx }}" y="{{ ev.ly }}" font-size="8.5" fill="var(--color-neutral-800)">{{ ev.label }}</text>
+            </sc-for>
+            <line x1="{{ cursorX }}" y1="16" x2="{{ cursorX }}" y2="245" stroke="var(--color-accent)" stroke-width="1.5"></line>
+            <rect x="{{ cursorBX }}" y="240" width="9" height="9" fill="var(--color-accent)"></rect>
+          </svg>
+          <input class="scrub" type="range" min="0" max="840" step="2" value="{{ cursor }}" sc-camel-on-change="{{ setCursor }}" sc-camel-on-input="{{ setCursor }}" aria-label="Timeline scrubber">
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--color-divider);margin-top:16px">
+          <div style="padding:18px 28px;border-right:1px solid var(--color-divider)">
+            <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">At cursor · Activity</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:19px;margin-top:6px">{{ scrubAct }}</div>
+          </div>
+          <div style="padding:18px 28px;border-right:1px solid var(--color-divider)">
+            <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">Cognitive state</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:19px;margin-top:6px">{{ scrubCog }}</div>
+          </div>
+          <div style="padding:18px 28px;border-right:1px solid var(--color-divider)">
+            <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">Physical strain</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:19px;margin-top:6px;color:{{ scrubStrainColor }}">{{ scrubStrain }}</div>
+          </div>
+          <div style="padding:18px 28px">
+            <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">Model confidence</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:19px;margin-top:6px;font-variant-numeric:tabular-nums">{{ scrubConf }}</div>
+          </div>
+        </div>
+        <div style="border-top:2px solid var(--color-divider);padding:18px 28px;background:var(--color-surface)">
+          <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:4px">What Brink understood at this moment</div>
+          <p style="font-size:14px;line-height:1.6;margin:0;max-width:760px;text-wrap:pretty">{{ scrubNote }}</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showSignals }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;padding:16px 28px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
+          <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">Streams</span>
+          <sc-for list="{{ streamToggles }}" as="st" hint-placeholder-count="6">
+            <button sc-camel-on-click="{{ st.go }}" style="{{ st.style }}" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">{{ st.label }}</button>
+          </sc-for>
+          <div style="flex:1"></div>
+          <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">EEG view</span>
+          <div style="display:flex;border:1px solid var(--color-divider)">
+            <button sc-camel-on-click="{{ setClean }}" style="{{ cleanStyle }}" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">Cleaned</button>
+            <button sc-camel-on-click="{{ setRaw }}" style="{{ rawStyle }}" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">Raw</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 340px">
+          <div style="border-right:2px solid var(--color-divider)">
+            <sc-for list="{{ traces }}" as="tr" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:120px 1fr 90px;align-items:center;border-bottom:1px solid color-mix(in srgb, var(--color-text) 12%, transparent);padding:10px 0 10px 28px;gap:12px">
+                <div>
+                  <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600">{{ tr.name }}</div>
+                  <div style="font-size:9px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums">{{ tr.unit }}</div>
+                </div>
+                <svg sc-camel-view-box="0 0 640 54" sc-camel-preserve-aspect-ratio="none" style="width:100%;height:54px;display:block">
+                  <rect x="{{ artX }}" y="0" width="{{ artW }}" height="54" fill="{{ tr.artFill }}"></rect>
+                  <path d="{{ tr.path }}" fill="none" stroke="{{ tr.stroke }}" stroke-width="1.3"></path>
+                </svg>
+                <div style="font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;padding-right:20px;text-align:right">{{ tr.val }}</div>
+              </div>
+            </sc-for>
+            <div style="padding:14px 28px;font-size:11px;color:var(--color-neutral-600);display:flex;gap:24px">
+              <span><span style="display:inline-block;width:12px;height:8px;background:color-mix(in srgb, var(--color-accent) 14%, transparent);margin-right:6px;vertical-align:middle"></span>Motion-artifact window (excluded from state estimate)</span>
+              <span style="font-variant-numeric:tabular-nums">{{ artNote }}</span>
+            </div>
+          </div>
+          <div>
+            <div style="padding:20px 24px;border-bottom:2px solid var(--color-divider)">
+              <h3 style="font-size:17px;margin:0 0 12px">Band power</h3>
+              <sc-for list="{{ bands }}" as="b" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:52px 1fr 44px;gap:10px;align-items:center;padding:5px 0">
+                  <span style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">{{ b.name }}</span>
+                  <div style="height:10px;background:var(--color-neutral-200);position:relative">
+                    <div style="{{ b.barStyle }}"></div>
+                    <div style="{{ b.baseStyle }}"></div>
+                  </div>
+                  <span style="font-variant-numeric:tabular-nums;font-size:11px;text-align:right;color:{{ b.deltaColor }}">{{ b.delta }}</span>
+                </div>
+              </sc-for>
+              <div style="font-size:10px;color:var(--color-neutral-600);margin-top:8px">Black tick = your 30-day baseline. Change vs baseline at right.</div>
+            </div>
+            <div style="padding:20px 24px">
+              <h3 style="font-size:17px;margin:0 0 6px">Motion-aware cleaning</h3>
+              <p style="font-size:12px;line-height:1.55;color:var(--color-neutral-800);margin:0 0 12px;text-wrap:pretty">{{ cleanNote }}</p>
+              <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)">Raw · during head motion</div>
+              <svg sc-camel-view-box="0 0 292 40" sc-camel-preserve-aspect-ratio="none" style="width:100%;height:40px;display:block;margin:4px 0 10px"><path d="{{ dirtyPath }}" fill="none" stroke="var(--color-neutral-500)" stroke-width="1.2"></path></svg>
+              <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)">Cleaned · artifact excluded</div>
+              <svg sc-camel-view-box="0 0 292 40" sc-camel-preserve-aspect-ratio="none" style="width:100%;height:40px;display:block;margin:4px 0 10px"><path d="{{ cleanPath }}" fill="none" stroke="var(--color-accent)" stroke-width="1.4"></path></svg>
+              <div style="display:flex;justify-content:space-between;font-size:11px;font-variant-numeric:tabular-nums">
+                <span style="color:var(--color-neutral-600)">Remaining confidence</span><span style="font-weight:600">{{ cleanConf }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showInterv }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--color-divider)">
+          <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
+            <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">Intervention delivered · 3:32 PM</div>
+            <h2 style="font-size:26px;margin:8px 0 4px">90-second paced breathing</h2>
+            <p style="font-size:12px;color:var(--color-neutral-600);margin:0 0 16px">Haptic-guided · 4.5 breaths/min · delivered on-device</p>
+            <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:8px">Triggered because</div>
+            <sc-for list="{{ ivTriggers }}" as="t" hint-placeholder-count="4">
+              <div style="display:flex;gap:10px;font-size:12.5px;line-height:1.5;padding:6px 0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent)">
+                <span style="width:6px;height:6px;background:var(--color-accent);flex:0 0 auto;margin-top:6px"></span><span>{{ t }}</span>
+              </div>
+            </sc-for>
+            <div style="margin-top:20px;padding:16px;background:var(--color-surface)">
+              <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:6px">What Brink learned</div>
+              <p style="font-size:13px;line-height:1.55;margin:0 0 12px;text-wrap:pretty">This intervention appears effective for early cognitive strain. Brink increased its future selection weight for this pattern.</p>
+              <div style="display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums;font-size:12px">
+                <span>0.62</span>
+                <div style="flex:1;height:8px;background:var(--color-neutral-200);position:relative">
+                  <div style="position:absolute;left:0;top:0;bottom:0;width:62%;background:var(--color-neutral-400)"></div>
+                  <div style="position:absolute;left:62%;top:0;bottom:0;width:{{ weightGrow }};background:var(--color-accent);transition:width 1.2s ease"></div>
+                </div>
+                <span style="font-weight:800;color:var(--color-accent-700)">0.71</span>
+              </div>
+              <div style="font-size:10px;color:var(--color-neutral-600);margin-top:6px">Selection weight · early-strain context · 6 supporting sessions</div>
+            </div>
+          </div>
+          <div style="padding:24px 28px">
+            <h3 style="font-size:17px;margin:0 0 4px">Measured response</h3>
+            <p style="font-size:12px;color:var(--color-neutral-600);margin:0 0 14px">Ten minutes before vs. ten minutes after delivery.</p>
+            <svg sc-camel-view-box="0 0 520 150" style="width:100%;display:block;margin-bottom:14px">
+              <rect x="250" y="8" width="2" height="120" fill="var(--color-accent)"></rect>
+              <text x="258" y="18" font-size="9" fill="var(--color-accent-700)" style="letter-spacing:.08em;text-transform:uppercase">Delivery</text>
+              <text x="0" y="18" font-size="9" fill="var(--color-neutral-600)" style="letter-spacing:.08em;text-transform:uppercase">HRV</text>
+              <path d="{{ ivHrv }}" fill="none" stroke="var(--color-text)" stroke-width="1.6"></path>
+              <text x="0" y="88" font-size="9" fill="var(--color-neutral-600)" style="letter-spacing:.08em;text-transform:uppercase">Attention stability</text>
+              <path d="{{ ivAtt }}" fill="none" stroke="var(--color-accent)" stroke-width="1.6"></path>
+              <line x1="0" y1="140" x2="520" y2="140" stroke="var(--color-divider)" stroke-width="2"></line>
+              <text x="0" y="149" font-size="8.5" fill="var(--color-neutral-600)" style="font-variant-numeric:tabular-nums">3:22 PM</text>
+              <text x="520" y="149" font-size="8.5" fill="var(--color-neutral-600)" text-anchor="end" style="font-variant-numeric:tabular-nums">3:42 PM</text>
+            </svg>
+            <sc-for list="{{ ivResults }}" as="r" hint-placeholder-count="4">
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;padding:7px 0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)">
+                <span>{{ r.k }}</span><span style="font-variant-numeric:tabular-nums;font-weight:600;color:{{ r.color }}">{{ r.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding:24px 28px">
+          <h3 style="font-size:17px;margin:0 0 12px">Intervention library · what works for Alex</h3>
+          <sc-raw-table class="table" style="width:100%;font-size:12.5px">
+            <sc-raw-thead><sc-raw-tr><sc-raw-th style="text-align:left">Intervention</sc-raw-th><sc-raw-th style="text-align:left">Best context</sc-raw-th><sc-raw-th style="text-align:right">Tested</sc-raw-th><sc-raw-th style="text-align:right">Median effect</sc-raw-th><sc-raw-th style="text-align:right">Weight</sc-raw-th><sc-raw-th style="text-align:left">Status</sc-raw-th></sc-raw-tr></sc-raw-thead>
+            <sc-raw-tbody>
+              <sc-for list="{{ ivLib }}" as="row" hint-placeholder-count="5">
+                <sc-raw-tr>
+                  <sc-raw-td style="font-weight:600">{{ row.name }}</sc-raw-td><sc-raw-td style="color:var(--color-neutral-700)">{{ row.ctx }}</sc-raw-td>
+                  <sc-raw-td style="text-align:right;font-variant-numeric:tabular-nums">{{ row.n }}</sc-raw-td>
+                  <sc-raw-td style="text-align:right;font-variant-numeric:tabular-nums">{{ row.eff }}</sc-raw-td>
+                  <sc-raw-td style="text-align:right;font-variant-numeric:tabular-nums;font-weight:600">{{ row.w }}</sc-raw-td>
+                  <sc-raw-td><span style="{{ row.tagStyle }}">{{ row.status }}</span></sc-raw-td>
+                </sc-raw-tr>
+              </sc-for>
+            </sc-raw-tbody>
+          </sc-raw-table>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showProfile }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 400px;border-bottom:2px solid var(--color-divider)">
+          <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
+            <h2 style="font-size:24px;margin:0 0 4px">Capacity fingerprint</h2>
+            <p style="font-size:12px;color:var(--color-neutral-600);margin:0 0 16px">Each ridge is one dimension of capacity: its distribution over 38 days, your baseline (tick), and where you sit right now (red marker).</p>
+            <svg sc-camel-view-box="0 0 640 460" style="width:100%;display:block">
+              <sc-for list="{{ ridges }}" as="rg" hint-placeholder-count="8">
+                <g>
+                  <text x="0" y="{{ rg.ly }}" font-size="10" fill="var(--color-neutral-700)" style="letter-spacing:.06em;text-transform:uppercase">{{ rg.name }}</text>
+                  <line x1="180" y1="{{ rg.base }}" x2="620" y2="{{ rg.base }}" stroke="color-mix(in srgb, var(--color-text) 12%, transparent)" stroke-width="1"></line>
+                  <path d="{{ rg.path }}" fill="color-mix(in srgb, var(--color-text) 7%, transparent)" stroke="var(--color-neutral-700)" stroke-width="1.2"></path>
+                  <line x1="{{ rg.bx }}" y1="{{ rg.baseM }}" x2="{{ rg.bx }}" y2="{{ rg.base }}" stroke="var(--color-text)" stroke-width="1.5"></line>
+                  <rect x="{{ rg.cx }}" y="{{ rg.cy }}" width="7" height="7" fill="var(--color-accent)"></rect>
+                  <text x="620" y="{{ rg.ly }}" font-size="9.5" fill="{{ rg.deltaColor }}" text-anchor="end" style="font-variant-numeric:tabular-nums">{{ rg.delta }}</text>
+                </g>
+              </sc-for>
+              <text x="180" y="456" font-size="9" fill="var(--color-neutral-600)">Lower range</text>
+              <text x="620" y="456" font-size="9" fill="var(--color-neutral-600)" text-anchor="end">Upper range</text>
+            </svg>
+            <p style="font-size:13px;line-height:1.6;margin:16px 0 0;max-width:640px;text-wrap:pretty;border-top:1px solid var(--color-divider);padding-top:14px"><strong>Pattern with the strongest evidence:</strong> you recover quickly from short cognitive strain, but prolonged sessions create a delayed recovery cost later in the day. Based on 41 sessions · Brink has high confidence.</p>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <div style="padding:20px 24px;border-bottom:2px solid var(--color-divider)">
+              <h3 style="font-size:17px;margin:0 0 10px">Longitudinal learning</h3>
+              <sc-for list="{{ learnStats }}" as="ls" hint-placeholder-count="5">
+                <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)">
+                  <span style="color:var(--color-neutral-700)">{{ ls.k }}</span><span style="font-variant-numeric:tabular-nums;font-weight:600">{{ ls.v }}</span>
+                </div>
+              </sc-for>
+              <div style="margin-top:14px">
+                <div style="display:flex;justify-content:space-between;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)"><span>Prediction error</span><span>38 days</span></div>
+                <svg sc-camel-view-box="0 0 340 70" sc-camel-preserve-aspect-ratio="none" style="width:100%;height:70px;display:block;margin-top:4px">
+                  <path d="{{ errArea }}" fill="color-mix(in srgb, var(--color-accent) 9%, transparent)"></path>
+                  <path d="{{ errLine }}" fill="none" stroke="var(--color-accent)" stroke-width="1.6"></path>
+                  <line x1="0" y1="68" x2="340" y2="68" stroke="var(--color-divider)" stroke-width="2"></line>
+                </svg>
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums;margin-top:2px"><span>±14.2 min at day 1</span><span style="color:var(--color-accent-700);font-weight:600">±4.1 min today</span></div>
+              </div>
+            </div>
+            <div style="padding:20px 24px;flex:1">
+              <h3 style="font-size:17px;margin:0 0 10px">Milestones</h3>
+              <sc-for list="{{ milestones }}" as="ms" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:52px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);font-size:12px">
+                  <span style="font-variant-numeric:tabular-nums;color:var(--color-accent-700);font-weight:600">{{ ms.d }}</span>
+                  <span style="line-height:1.45">{{ ms.t }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="padding:20px 28px;background:var(--color-surface)">
+          <p style="font-size:14px;line-height:1.6;margin:0;max-width:820px;text-wrap:pretty">Every session narrows the model. Brink began with a population baseline; 38 days later it predicts <strong>this person's</strong> decline onset within ±4 minutes, knows which of 14 tested interventions work for him, and has 6 reliable personal patterns it can act on.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showAsk }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:340px 1fr;min-height:100%">
+          <div style="border-right:2px solid var(--color-divider);display:flex;flex-direction:column">
+            <div style="padding:24px 24px 12px">
+              <h2 style="font-size:24px;margin:0 0 4px">Ask Brink</h2>
+              <p style="font-size:12px;color:var(--color-neutral-600);margin:0">Questions answered from your own recorded sessions, with the evidence attached.</p>
+            </div>
+            <sc-for list="{{ askQs }}" as="q" hint-placeholder-count="4">
+              <button sc-camel-on-click="{{ q.go }}" style="{{ q.style }}" style-hover="background:color-mix(in srgb, var(--color-text) 7%, transparent)">{{ q.label }}</button>
+            </sc-for>
+            <div style="flex:1"></div>
+            <div style="padding:16px 24px;border-top:1px solid var(--color-divider);font-size:10px;color:var(--color-neutral-500);letter-spacing:.08em;text-transform:uppercase">Answers cite recorded evidence · demo data</div>
+          </div>
+          <div style="padding:24px 28px">
+            <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">You asked</div>
+            <h2 style="font-size:26px;margin:6px 0 12px;max-width:640px;letter-spacing:-0.01em">{{ askQ }}</h2>
+            <p style="font-size:14px;line-height:1.65;margin:0 0 18px;max-width:680px;text-wrap:pretty">{{ askA }}</p>
+            <svg sc-camel-view-box="0 0 640 210" style="width:100%;max-width:760px;display:block">
+              <line x1="0" y1="170" x2="640" y2="170" stroke="var(--color-divider)" stroke-width="2"></line>
+              <sc-for list="{{ askBars }}" as="b" hint-placeholder-count="3">
+                <rect x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}" fill="{{ b.fill }}"></rect>
+                <text x="{{ b.lx }}" y="{{ b.ly }}" font-size="9.5" fill="var(--color-neutral-700)" text-anchor="middle" style="font-variant-numeric:tabular-nums">{{ b.label }}</text>
+              </sc-for>
+              <path d="{{ askPath2 }}" fill="none" stroke="var(--color-neutral-400)" stroke-width="1.5" stroke-dasharray="3 4"></path>
+              <path d="{{ askPath }}" fill="none" stroke="var(--color-accent)" stroke-width="2"></path>
+              <sc-for list="{{ askMarks }}" as="mk" hint-placeholder-count="1">
+                <line x1="{{ mk.x }}" y1="20" x2="{{ mk.x }}" y2="170" stroke="var(--color-accent-600)" stroke-width="1" stroke-dasharray="2 3"></line>
+                <rect x="{{ mk.bx }}" y="{{ mk.y }}" width="7" height="7" fill="var(--color-accent)"></rect>
+                <text x="{{ mk.tx }}" y="{{ mk.ty }}" font-size="9" fill="var(--color-accent-700)" style="letter-spacing:.06em;text-transform:uppercase">{{ mk.label }}</text>
+              </sc-for>
+              <text x="0" y="186" font-size="9" fill="var(--color-neutral-600)" style="font-variant-numeric:tabular-nums">{{ askX0 }}</text>
+              <text x="640" y="186" font-size="9" fill="var(--color-neutral-600)" text-anchor="end" style="font-variant-numeric:tabular-nums">{{ askX1 }}</text>
+            </svg>
+            <div style="font-size:11px;color:var(--color-neutral-600);margin:4px 0 18px">{{ askCaption }}</div>
+            <div style="display:grid;grid-template-columns:1fr 260px;gap:32px;border-top:1px solid var(--color-divider);padding-top:14px;max-width:760px">
+              <div>
+                <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:6px">Evidence</div>
+                <sc-for list="{{ askEvidence }}" as="ev" hint-placeholder-count="3">
+                  <div style="display:flex;gap:10px;font-size:12.5px;line-height:1.5;padding:5px 0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent);font-variant-numeric:tabular-nums">
+                    <span style="width:6px;height:6px;background:var(--color-accent);flex:0 0 auto;margin-top:6px"></span><span>{{ ev }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div>
+                <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:6px">Basis</div>
+                <p style="font-size:12px;line-height:1.55;margin:0;color:var(--color-neutral-800)">{{ askMeta }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showDevice }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 380px">
+          <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
+            <div style="display:flex;justify-content:space-between;align-items:baseline">
+              <h2 style="font-size:24px;margin:0">Brink Prototype 04</h2>
+              <span style="font-size:11px;font-variant-numeric:tabular-nums;color:var(--color-neutral-600)">SN BRK-0412 · worn 6h 12m today</span>
+            </div>
+            <p style="font-size:12px;color:var(--color-neutral-600);margin:4px 0 8px">Top-down view; forehead at top. Select a sensor below to see what it measures.</p>
+            <video src="assets/headband.mp4" sc-camel-auto-play="{{ true }}" muted="{{ true }}" sc-camel-plays-inline="{{ true }}" style="width:100%;max-width:560px;display:block;margin:0 auto;background:var(--color-bg)"></video>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px">
+              <sc-for list="{{ devSensors }}" as="s" hint-placeholder-count="7">
+                <button sc-camel-on-mouse-enter="{{ s.hover }}" sc-camel-on-click="{{ s.hover }}" style="border:1px solid {{ s.fill }};background:transparent;color:var(--color-neutral-700);font:inherit;font-size:10px;letter-spacing:.04em;padding:5px 10px;cursor:pointer" style-hover="background:color-mix(in srgb, var(--color-accent) 8%, transparent)">{{ s.tag }}</button>
+              </sc-for>
+            </div>
+            <div style="border-top:2px solid var(--color-divider);padding-top:14px;display:grid;grid-template-columns:200px 1fr 140px;gap:20px">
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:16px">{{ devSelName }}</div>
+              <p style="font-size:12.5px;line-height:1.55;margin:0;color:var(--color-neutral-800);text-wrap:pretty">{{ devSelDesc }}</p>
+              <div style="text-align:right"><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)">Now reading</div><div style="font-variant-numeric:tabular-nums;font-weight:800;font-family:var(--font-heading);font-size:16px">{{ devSelVal }}</div></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <div style="padding:20px 24px;border-bottom:2px solid var(--color-divider)">
+              <h3 style="font-size:17px;margin:0 0 10px">Status</h3>
+              <sc-for list="{{ devRows }}" as="r" hint-placeholder-count="8">
+                <div style="display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)">
+                  <span style="color:var(--color-neutral-700)">{{ r.k }}</span><span style="font-variant-numeric:tabular-nums;font-weight:600;text-align:right">{{ r.v }}</span>
+                </div>
+              </sc-for>
+              <button sc-camel-on-click="{{ togglePrivacy }}" style="{{ privacyStyle }}" style-hover="background:color-mix(in srgb, var(--color-text) 8%, transparent)">{{ privacyLabel }}</button>
+            </div>
+            <div style="padding:20px 24px">
+              <h3 style="font-size:17px;margin:0 0 4px">EEG channel quality</h3>
+              <p style="font-size:11px;color:var(--color-neutral-600);margin:0 0 10px">{{ chNote }}</p>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--color-divider);border:1px solid var(--color-divider)">
+                <sc-for list="{{ channels }}" as="ch" hint-placeholder-count="7">
+                  <div style="{{ ch.style }}">
+                    <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600">{{ ch.name }}</div>
+                    <div style="font-variant-numeric:tabular-nums;font-family:var(--font-heading);font-weight:800;font-size:16px;color:{{ ch.color }}">{{ ch.q }}</div>
+                  </div>
+                </sc-for>
+                <div style="background:var(--color-bg);padding:10px 12px"><div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-500)">Ref</div><div style="font-size:11px;color:var(--color-neutral-600);padding-top:3px">Mastoid</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1600, &quot;height&quot;: 960}, &quot;particles&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 620, &quot;min&quot;: 200, &quot;max&quot;: 1400, &quot;step&quot;: 20, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Capacity field&quot;}, &quot;reducedMotion&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Capacity field&quot;}}">
+class Component extends DCLogic {
+  constructor(p){ super(p);
+    this.state = { section:0, scenario:'deepwork', cursor:512, expl:'simple', eegRaw:false, tick:0, ask:0, sensor:0, privacy:true, goal:0, committed:false,
+      streams:{EEG:true,PPG:true,HRV:true,EDA:true,IMU:true,Resp:false} };
+    this.cv = null; this.win = null; this._gen = 0; this._lastFrame = 0;
+    this._nextPaint = null; this._npWin = null; this._dead = false;
+    // self-re-arming paint chain: every paint schedules the next in the canvas's own realm,
+    // so no suspended realm or stray clearInterval can permanently kill rendering
+    this.paintNow = ()=>{
+      try{ if(this._npWin && this._nextPaint) this._npWin.clearTimeout(this._nextPaint); }catch(e){}
+      this._nextPaint = null;
+      if(this.findCv) this.findCv();
+      if(this.cv && this.cv.isConnected){
+        try{ this.loop((this.win && this.win.performance ? this.win.performance.now() : Date.now())); this._lastFrame = Date.now(); }catch(e){}
+      }
+      if(this._dead) return;
+      const win = this.win || window;
+      try{ this._npWin = win; this._nextPaint = win.setTimeout(this.paintNow, 90); }catch(e){}
+    };
+    this.canvasRef = (el)=>{ this.cv = el;
+      if(el){ this.win = el.ownerDocument.defaultView; this.startLoop(); this.paintNow(); }
+      else this._gen++; };
+  }
+  startLoop(){
+    if(!this.cv || !this.win) return;
+    const gen = ++this._gen, win = this.win;
+    const step = (ts)=>{ if(this._gen !== gen) return;
+      win.requestAnimationFrame(step);
+      if(Date.now()-this._lastFrame < 40) return; // interval driver already painted
+      this.loop(ts); this._lastFrame = Date.now(); };
+    win.requestAnimationFrame(step);
+    this.tcur = null;
+  }
+  // deterministic pseudo-random
+  sr(n){ const x = Math.sin(n*127.1+311.7)*43758.5453; return x - Math.floor(x); }
+  g(t,c,w){ const d=(t-c)/w; return Math.exp(-d*d); }
+  clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+  cog(t){ return this.clamp(0.42+0.28*this.g(t,290,70)+0.30*this.g(t,480,90)-0.10*this.g(t,110,45)-0.12*this.g(t,655,60)+0.08*this.g(t,60,35),0.05,0.98); }
+  strain(t){ return this.clamp(0.22+0.5*this.g(t,108,38)+0.26*this.g(t,520,120)+0.55*this.g(t,655,48)-0.08*this.g(t,60,35),0.03,0.98); }
+  fmtTime(t){ let m=7*60+10+t, h=Math.floor(m/60), mm=m%60, ap=h>=12?'PM':'AM'; h=h%12; if(h===0)h=12; return h+':' + (mm<10?'0':'')+mm+' '+ap; }
+  trace(seed,n,x0,x1,ym,amp,fr,noise,phase){ let d=''; for(let i=0;i<=n;i++){ const u=i/n, x=x0+(x1-x0)*u;
+      let y=ym + amp*Math.sin(u*fr*6.283+phase+seed) + amp*0.5*Math.sin(u*fr*2.7*6.283+seed*2) + noise*amp*(this.sr(seed*100+i)-0.5)*2;
+      d += (i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' '; } return d; }
+
+  SCEN(){ return {
+    deepwork:{ label:'Deep work', title:'Deep work · Stable', field:{order:.85,energy:.3,jitter:.12,spread:.42,rot:.25}, conf:.87, cursor:512,
+      narrative:'Your attention is highly sustained. Neural efficiency remains strong, although physical stillness and rising sympathetic load suggest that cognitive strain may begin increasing within the next 24 minutes.',
+      meta:[['Current activity','Product strategy session',''],['Session duration','1h 42m',''],['Prediction horizon','24 min',''],['Model confidence','87%',''],['Next intervention','90-s reset · ~3:42 PM','var(--color-accent-700)']],
+      rec:'Continue. A short reset around 3:42 PM should preserve this state.',
+      dims:[['Cognitive readiness','High','+',.82],['Physical readiness','Steady','·',.64],['Neural efficiency','Strong','+',.78],['Recovery state','Drawing down','−',.55],['Strain accumulation','Rising','!',.61],['Stability','Holding','·',.74],['Reserve','Moderate','−',.58]],
+      factors:[
+        ['Frontal alpha stability increased','+ supports current state',.92,'Your brain has settled into a steady attention rhythm and is holding it.','Fz/Fp1 alpha-band variance fell 22% over 40 min; associated with sustained attentional control in this user\'s sessions.'],
+        ['HRV has declined gradually','− early strain',.74,'Your body is working a little harder to maintain this focus than an hour ago.','RMSSD down 9 ms over 96 min with no step change, consistent with accumulating physiological load, not acute stress.'],
+        ['Head motion low and consistent','+ raises confidence',.66,'You have been very still, so Brink trusts the brain-signal readings.','IMU RMS < 0.02 g for 89% of the session; EEG pattern unlikely to be movement artifact.'],
+        ['Blink frequency increased 18%','− decline precursor',.58,'You are blinking more often. For you, that has come before attention dips.','Blink rate 18% above session baseline; preceded attention decline in 5 of 6 prior deep-work sessions.'],
+        ['Session exceeds personal optimum','− duration cost',.44,'You have been at this longer than usually works best for you.','Similar sessions historically showed reduced accuracy after ~112 minutes; current elapsed 102 min.']],
+      pred:{ sub:'Estimated likelihood of meaningful attention decline over the next 40 minutes.', onset:.55, steep:9, band:.14,
+        headline:'Without a reset, sustained-attention performance is projected to begin declining between 3:48 and 3:57 PM.',
+        window:[.62,.85], winLabel:'3:48–3:57 PM',
+        effects:['Slower decision-making','Higher correction frequency','Reduced working-memory stability','Increased perceived effort'],
+        compare:'Today\'s decline is developing more gradually than your typical deep-work sessions, likely because this morning\'s run improved autonomic recovery.' } },
+    meditation:{ label:'Meditation', title:'Meditation · Settling', field:{order:.6,energy:.08,jitter:.05,spread:.6,rot:.08}, conf:.91, cursor:56,
+      narrative:'Autonomic activity is settling. Breath regularity is high and neural rhythms are slowing toward your stable meditation pattern, about 3 minutes faster than your 30-day average.',
+      meta:[['Current activity','Guided meditation',''],['Session duration','16 min',''],['Time to settled state','~4 min remaining',''],['Model confidence','91%',''],['Strongest contributor','Slow breathing · 5.2/min','var(--color-accent-700)']],
+      rec:'No intervention needed. Settling is proceeding well.',
+      dims:[['Cognitive readiness','Restoring','+',.6],['Physical readiness','Calm','·',.7],['Neural efficiency','Slowing','·',.55],['Recovery state','Strong','+',.85],['Strain accumulation','Releasing','+',.2],['Stability','Very high','+',.9],['Reserve','Rebuilding','+',.65]],
+      factors:[
+        ['Breath regularity is high','+ drives settling',.9,'Your breathing has become slow and even, the main engine of this recovery.','Respiration estimate steady at 5.2 breaths/min, variance −64% vs session start.'],
+        ['Alpha rhythm amplitude rising','+ settled pattern',.78,'Your brain is shifting into its rest rhythm.','Posterior alpha power +31% over 12 min, approaching this user\'s settled-meditation signature.'],
+        ['Movement near zero','+ raises confidence',.7,'You are almost perfectly still, so the readings are trustworthy.','IMU RMS 0.006 g; artifact probability < 2%.'],
+        ['Heart rate decelerating smoothly','+ autonomic release',.62,'Your heart rate is drifting down without spikes.','HR −8 bpm over 14 min with rising HRV; consistent with parasympathetic recovery.']],
+      pred:{ sub:'Estimated likelihood of reaching your settled meditation pattern.', onset:.3, steep:7, band:.1,
+        headline:'You are projected to reach your stable meditation pattern within about 4 minutes, faster than your 30-day average.',
+        window:[.28,.5], winLabel:'~4 min',
+        effects:['Deeper autonomic settling','Higher HRV plateau','Slower posterior rhythms','Reduced motion micro-adjustments'],
+        compare:'Sessions started within 90 minutes of waking, like this one, produce your fastest autonomic settling.' } },
+    running:{ label:'Running', title:'Interval run · Elevated strain', field:{order:.35,energy:.95,jitter:.55,spread:.75,rot:.6}, conf:.72, cursor:108,
+      narrative:'Cardiovascular strain is elevated, but movement efficiency remains stable. The current limitation appears more perceptual than mechanical. Head motion is reducing EEG confidence; Brink is weighting cardiac and movement streams more heavily.',
+      meta:[['Current activity','Interval run · rep 5 of 8',''],['Session duration','38 min',''],['Remaining quality effort','~2 reps',''],['Model confidence','72% · motion-limited','var(--color-accent-700)'],['Next intervention','Cadence cue · on form drift','']],
+      rec:'Hold pace. A cadence cue will fire if form drift is detected.',
+      dims:[['Cognitive readiness','Taxed','−',.4],['Physical readiness','Working','!',.5],['Neural efficiency','De-weighted','·',.45],['Recovery state','Spending','−',.3],['Strain accumulation','High','!',.85],['Stability','Volatile','−',.35],['Reserve','2 reps est.','−',.4]],
+      factors:[
+        ['Cardiac load elevated but stable','· expected for intervals',.88,'Your heart is working hard, exactly as this workout intends.','HR 172 bpm, 91% of observed max; drift +2 bpm across reps, within normal interval range.'],
+        ['Movement efficiency holding','+ form intact',.8,'Your running form has not degraded despite the effort.','Cadence variance ±2.1 spm; vertical-motion ratio unchanged from rep 1.'],
+        ['EEG confidence reduced by motion','· handled',.7,'Head movement makes brain signals noisy, so Brink is leaning on other sensors.','Channels Fp1/Fp2 affected 4.8 s this rep; segments excluded from the state estimate.'],
+        ['Perceived-effort proxy rising faster than mechanics','− perceptual limit',.6,'You likely feel closer to your limit than your body actually is.','Effort-related frontal theta rising while movement efficiency is flat, a perceptual, not mechanical, ceiling.']],
+      pred:{ sub:'Estimated likelihood of form breakdown over the remaining reps.', onset:.7, steep:8, band:.2,
+        headline:'Form breakdown is projected to become likely during rep 7 without a cadence cue. In similar sessions, a cue at this point delayed breakdown by ~4 minutes.',
+        window:[.72,.95], winLabel:'Rep 7–8',
+        effects:['Cadence irregularity','Reduced ground-contact symmetry','Rising perceived effort','Slower reaction to pace changes'],
+        compare:'Your strongest interval reps occur when the previous recovery restores HRV to within 8% of baseline; the last recovery reached 6%.' } },
+    strength:{ label:'Strength', title:'Strength set · Ready', field:{order:.7,energy:.5,jitter:.25,spread:.5,rot:.35}, conf:.81, cursor:642,
+      narrative:'Recovery between sets is on track. Neural drive proxy has returned to 96% of set-one level and tremor remains low. You are ready for the next working set in about 40 seconds.',
+      meta:[['Current activity','Back squat · set 4 of 5',''],['Rest elapsed','2:20 of 3:00',''],['Set readiness','96% of set 1',''],['Model confidence','81%',''],['Recommended rest','40 s more','var(--color-accent-700)']],
+      rec:'Wait 40 seconds. Readiness is still climbing.',
+      dims:[['Cognitive readiness','Focused','·',.7],['Physical readiness','Recovering','+',.72],['Neural efficiency','Rebounding','+',.68],['Recovery state','Between-set','+',.6],['Strain accumulation','Managed','·',.55],['Stability','Good','+',.75],['Reserve','1–2 sets','·',.5]],
+      factors:[
+        ['Neural drive proxy rebounding','+ readiness',.86,'The signal linked to how forcefully you can move is almost back to fresh levels.','Motor-adjacent beta rebound at 96% of set-one amplitude after 2:20 rest.'],
+        ['Tremor and instability low','+ technique intact',.76,'Your hands and posture are steady; technique is holding.','IMU micro-tremor 8–12 Hz power within baseline band.'],
+        ['HR recovery on personal curve','+ on track',.68,'Your heart rate is coming down at your normal between-set rate.','HR −34 bpm in 2 min, matching this user\'s median between-set recovery.'],
+        ['Movement symmetry unchanged','· no fatigue signature',.55,'Left and right sides are still moving evenly.','Bar-path proxy symmetry within 3% of set 1; no unilateral fatigue pattern detected.']],
+      pred:{ sub:'Estimated set-quality likelihood by rest duration.', onset:.35, steep:6, band:.12,
+        headline:'A set started now is estimated at 88% of set-one quality; waiting the remaining 40 seconds raises the estimate to ~95%.',
+        window:[.4,.62], winLabel:'Optimal window',
+        effects:['Slightly reduced bar speed if started early','Higher grind probability on final rep','Technique holds either way','Full readiness at ~3:00 rest'],
+        compare:'Your best sets this block started after 2:50–3:10 of rest. You tend to cut rest short on set 4.' } },
+    postint:{ label:'Post-reset', title:'Post-intervention · Recovering', field:{order:.75,energy:.2,jitter:.08,spread:.45,rot:.15}, conf:.89, cursor:530,
+      narrative:'The 90-second breathing reset is taking effect. HRV has recovered 11% and attention stability is climbing. Brink estimates roughly 31 minutes of useful focus were preserved, and has increased this intervention\'s future weight.',
+      meta:[['Intervention','90-s paced breathing',''],['Delivered','3:32 PM · 6 min ago',''],['HRV recovery','+11%','var(--color-accent-700)'],['Attention stability','+7%','var(--color-accent-700)'],['Focus preserved','~31 min est.','']],
+      rec:'Return to work. Conditions restored for another ~31 minutes.',
+      dims:[['Cognitive readiness','Restored','+',.76],['Physical readiness','Settled','+',.68],['Neural efficiency','Recovering','+',.7],['Recovery state','Active','+',.72],['Strain accumulation','Reduced','+',.38],['Stability','Climbing','+',.78],['Reserve','Replenished','+',.62]],
+      factors:[
+        ['HRV rebounded after delivery','+ intervention effect',.9,'Your body responded to the breathing reset within two minutes.','RMSSD +11% within 120 s of delivery; response shape matches 5 prior successful resets.'],
+        ['Alpha stability re-established','+ attention recovered',.8,'Your attention rhythm re-formed after the pause.','Frontal alpha variance returned to pre-strain levels; confidence high because motion stayed low.'],
+        ['Blink rate normalized','+ precursor cleared',.68,'The early-warning sign that triggered the reset is gone.','Blink frequency back within 4% of session baseline.'],
+        ['Response matches learned pattern','+ model updated',.6,'This is exactly the response Brink predicted, so it trusts this intervention more now.','Post-delivery trajectory within the 80% predicted band; selection weight updated 0.62 → 0.71.']],
+      pred:{ sub:'Updated decline forecast after the intervention.', onset:.85, steep:7, band:.12,
+        headline:'The projected decline window has moved from 3:48 PM to approximately 4:19 PM, preserving about 31 minutes of useful focus.',
+        window:[.82,1.0], winLabel:'~4:19 PM',
+        effects:['Decline onset delayed ~31 min','Lower correction frequency expected','Perceived effort reduced','Second reset unlikely to be needed'],
+        compare:'Short breathing resets work best for you before visible fatigue begins, which is exactly how this one was timed.' } }
+  }; }
+
+  componentDidMount(){
+    this.findCv = ()=>{
+      if(this.cv && this.cv.isConnected) return;
+      const docs = [];
+      const push = d=>{ try{ if(d && docs.indexOf(d)<0) docs.push(d); }catch(e){} };
+      try{ push(document); }catch(e){}
+      try{ push(window.document); }catch(e){}
+      try{ if(this.win) push(this.win.document); }catch(e){}
+      // Own document only: reaching into window.parent here hijacks the host
+      // page's canvases when this runs embedded on the marketing site.
+      for(const d of docs){ let el=null; try{ el = d.querySelector('canvas'); }catch(e){}
+        if(el){ this.cv = el; this.win = el.ownerDocument.defaultView; return; } }
+    };
+    this.timer = setInterval(()=>this.setState(s=>({tick:s.tick+1})), 2400);
+    // primary render driver: rAF is unreliable in this environment, so an interval paints unconditionally
+    this._dead = false;
+    this.cvTimer = setInterval(this.paintNow, 4000); // logic-realm fallback heartbeat; may be suspended
+    this.paintNow();
+    this.findCv(); if(this.cv) this.startLoop();
+  }
+  componentWillUnmount(){ clearInterval(this.timer); clearInterval(this.cvTimer); this._dead = true; try{ if(this._npWin && this._nextPaint) this._npWin.clearTimeout(this._nextPaint); }catch(e){} this._nextPaint = null; this._gen++; }
+
+  loop(ts){
+    const cv = this.cv;
+    if(!cv || !cv.isConnected) return;
+    const w = cv.clientWidth; let h = cv.clientHeight; if(!w) return;
+    const dpr = Math.min((this.win && this.win.devicePixelRatio)||1, 2);
+    if(cv.width !== w*dpr || cv.height !== h*dpr){ cv.width = w*dpr; cv.height = h*dpr; }
+    const ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+    const t = (this.props.reducedMotion ?? false) ? 0 : ts/1000;
+    const dt = Math.min(Math.max(ts-(this._pts??ts),0),250)/1000; this._pts = ts;
+    const kFast = 1-Math.exp(-dt*5.5), kSlow = 1-Math.exp(-dt*3.5);
+    // causal flow, read left to right: measured signals drive inferred states, states set your brink
+    // nodes: 0 breath, 1 heart rate, 2 HRV, 3 EDA, 4 EEG, 5 motion \u00B7 6 attention, 7 strain, 8 recovery \u00B7 9 your brink
+    const SC = {
+      deepwork:  {n:[[.45,.10],[.55,.25],[.35,.70],[.60,.50],[.80,.15],[.85,.05],[.82,.20],[.70,.80],[.45,.10],[.65,.75]], ew:[.15,.10,.85,.20,.30,.50,.30,.70,.40,.10,.50,.90,.20], act:[2,11], cl:'HRV DECLINE \u2192 STRAIN', out:'CROSSES 4:02 PM', pvs:.25, pvLabel:'PREVIEW \u00B7 THE 3:42 RESET WEAKENS THE STRAIN PATH'},
+      meditation:{n:[[.92,0],[.30,0],[.82,0],[.20,0],[.60,0],[.95,0],[.50,0],[.08,0],[.75,0],[.10,0]], ew:[.85,.40,.20,.70,.10,.10,.20,.40,.30,.05,.20,.10,.80], act:[0,12], cl:'BREATH \u2192 RECOVERY \u00B7 SETTLING', out:'NO CROSSING IN HORIZON', pvs:1, pvLabel:''},
+      running:   {n:[[.90,.20],[.95,.60],[.30,.50],[.80,.60],[.50,.10],[.08,.10],[.45,.20],[.78,.85],[.30,.30],[.70,.80]], ew:[.30,.20,.40,.15,.85,.50,.20,.30,.10,.60,.30,.90,.20], act:[4,11], cl:'HEART RATE \u2192 STRAIN', out:'HOLDS THROUGH REP 7', pvs:.45, pvLabel:'PREVIEW \u00B7 CADENCE CUE WEAKENS THE STRAIN PATH'},
+      strength:  {n:[[.70,0],[.70,.30],[.58,.20],[.50,.30],[.50,0],[.60,.15],[.55,.10],[.45,.40],[.62,0],[.35,.30]], ew:[.50,.20,.30,.80,.40,.30,.20,.30,.20,.20,.20,.40,.85], act:[3,12], cl:'HRV REBOUND \u2192 RECOVERY', out:'READY IN ~40 S', pvs:.3, pvLabel:'PREVIEW \u00B7 AFTER THE REMAINING 40 S OF REST'},
+      postint:   {n:[[.60,0],[.45,.10],[.72,.10],[.35,.10],[.75,0],[.85,0],[.80,0],[.20,.15],[.55,.10],[.25,.15]], ew:[.50,.20,.30,.70,.20,.20,.20,.60,.40,.10,.60,.30,.70], act:[3,12], cl:'RECOVERY REBUILT \u00B7 AFTER THE RESET', out:'CROSSING PUSHED TO ~4:19 PM', pvs:1, pvLabel:''}
+    }[this.state.scenario];
+    const NAMES=['BREATH','HEART RATE','HRV','EDA \u00B7 SKIN','EEG \u00B7 CORTICAL','MOTION \u00B7 IMU','ATTENTION','STRAIN','RECOVERY','YOUR BRINK'];
+    const SHORT=['BREATH','HR','HRV','EDA','EEG','IMU','ATTN','STRAIN','RECOV','BRINK'];
+    const nname=(i)=> w<520? SHORT[i] : NAMES[i];
+    const BASE=[.5,.45,.6,.4,.6,.7,.7,.3,.6,.3];
+    const EDGES=[[0,8],[0,7],[2,7],[2,8],[1,7],[3,7],[3,6],[4,6],[5,6],[5,7],[6,9],[7,9],[8,9]];
+    if(!this.nsm || this.nsm.length!==10) this.nsm = SC.n.map(p=>({v:p[0], s:p[1]}));
+    if(!this.ewm || this.ewm.length!==13) this.ewm = SC.ew.slice();
+    if(!this.tcur || this.tcur.pv===undefined) this.tcur = {pv:0};
+    const b=this.tcur;
+    b.pv += (((this.hoverPreview && SC.pvLabel)?1:0)-b.pv)*kFast;
+    // live body events: applied at display time, so they land on the very next frame
+    const nowMs=Date.now(); this.bodyEv=(this.bodyEv||[]).filter(e=>nowMs-e.at<9000);
+    let evBlink=0, evJaw=0, evBreath=0, evLabel=null, evNode=0;
+    for(const e of this.bodyEv){ const ag=(nowMs-e.at)/1000;
+      if(e.type==='blink'){ evBlink=Math.max(evBlink, Math.exp(-ag*2.6)); if(ag<1.4){ evLabel='BLINK \u00B7 SEEN IN 96 MS'; evNode=4; } }
+      if(e.type==='jaw'){ evJaw=Math.max(evJaw, Math.exp(-ag*1.4)); if(ag<2){ evLabel='JAW CLENCH \u00B7 EMG BURST \u00B7 96 MS'; evNode=5; } }
+      if(e.type==='breath'){ evBreath=Math.max(evBreath, Math.min(ag*2,1)*Math.exp(-ag*0.45)); if(ag<3){ evLabel='DEEP BREATH \u00B7 SETTLING THE GRAPH'; evNode=0; } } }
+    for(let i=0;i<10;i++){ const m=this.nsm[i];
+      m.v += (SC.n[i][0]-m.v)*kSlow;
+      m.s += (SC.n[i][1]*(1-b.pv*(1-SC.pvs))-m.s)*kSlow; }
+    for(let j=0;j<13;j++){ const strainEdge=EDGES[j][0]===7||EDGES[j][1]===7;
+      this.ewm[j] += (SC.ew[j]*(strainEdge? (1-b.pv*(1-SC.pvs)):1)-this.ewm[j])*kSlow; }
+    ctx.clearRect(0,0,w,h);
+    const ink='rgba(32,30,29,', deep='#b3250f';
+    ctx.font='9px Archivo, sans-serif';
+    const placed=[]; // chip rects drawn so far, for collision avoidance
+    const chip = (txt,x,y,align,col,avoid)=>{ const tw=ctx.measureText(txt).width;
+      let bx2 = align==='right'? x-tw : align==='center'? x-tw/2 : x;
+      bx2 = Math.max(6, Math.min(bx2, w-tw-6)); // clamp fully inside the canvas
+      if(avoid){ // nudge down (then up) until clear of already-drawn chips; give up after a few rows
+        const hits=(yy)=>placed.some(r=> bx2-5<r.x+r.w && bx2+tw+5>r.x && yy-9<r.y+r.h && yy+4>r.y);
+        let k3=0; while(hits(y) && k3<4){ y+=14; k3++; }
+        if(hits(y)){ y-=14*5; while(hits(y) && k3<9){ y-=14; k3++; } }
+        if(hits(y)) return; // no clear row: skip rather than garble
+      }
+      placed.push({x:bx2-5, y:y-9, w:tw+10, h:13});
+      ctx.fillStyle='#f3f2f2'; ctx.fillRect(bx2-5,y-9,tw+10,13);
+      ctx.fillStyle=col; ctx.textAlign='left'; ctx.fillText(txt,bx2,y); };
+    const hUse=h-46; // bottom strip reserved for the Prove-it controls
+    h=hUse;
+    // three columns: measured signals -> inferred states -> your brink
+    const padL=Math.max(96,w*0.14), padR=Math.max(80,w*0.12);
+    const xL=padL, xM=w*0.52, xR=w-padR;
+    const yTop=44, yBot=h-14, span=yBot-yTop;
+    const P2=[];
+    for(let i=0;i<10;i++){ const m=this.nsm[i];
+      const sD=Math.min(1, m.s*(1-.5*evBreath)+(i===5? .8*evJaw:0));
+      let vD=m.v+(i===0? .3*evBreath:0)+(i===2? .2*evBreath:0)-(i===3? .3*evBreath:0)+(i===4? .12*evBlink:0);
+      vD=Math.max(.05,Math.min(1,vD));
+      let x,y;
+      if(i<6){ x=xL; y=yTop+span*(i+0.5)/6; }
+      else if(i<9){ x=xM; y=yTop+span*((i-6)+0.5)/3; }
+      else { x=xR; y=yTop+span*0.5; }
+      const jx=Math.sin(t*(2.1+i*.7)+i*3)*(1+sD*4+(i===5? 5*evJaw:0));
+      const jy=Math.cos(t*(1.7+i*.9)+i*5)*(1+sD*4);
+      P2.push({x:x+jx, y:y+jy, v:vD, s:sD}); }
+    // edges: weight = learned coupling strength, red when carrying strain
+    const act0=SC.act[0], act1=SC.act[1];
+    for(let j=0;j<13;j++){ const E=EDGES[j], A2=P2[E[0]], B2=P2[E[1]];
+      const wgt=this.ewm[j]; if(wgt<0.08) continue;
+      const strainy=(E[0]===7||E[1]===7) && this.nsm[7].s>0.3;
+      const active=(j===act0||j===act1);
+      const mx2=(A2.x+B2.x)/2;
+      ctx.beginPath(); ctx.moveTo(A2.x,A2.y);
+      ctx.bezierCurveTo(mx2,A2.y,mx2,B2.y,B2.x,B2.y);
+      if(active){ ctx.strokeStyle=deep; ctx.lineWidth=1.2+wgt*1.8;
+        ctx.setLineDash([6,5]); ctx.lineDashOffset=-(t*30)%11; ctx.stroke();
+        ctx.setLineDash([]); ctx.lineDashOffset=0; }
+      else { ctx.strokeStyle= strainy? 'rgba(236,48,19,'+(0.10+0.30*wgt).toFixed(3)+')' : ink+(0.08+0.22*wgt).toFixed(3)+')';
+        ctx.lineWidth=0.8+wgt*2.2; ctx.stroke(); }
+    }
+    // event pulse: a dot rides the edges out of the node that felt the event
+    for(const e of this.bodyEv){ const ag=(nowMs-e.at)/1000; if(ag>2.2) continue;
+      const src=e.type==='blink'?4: e.type==='jaw'?5:0;
+      for(let j=0;j<13;j++){ const E=EDGES[j]; if(E[0]!==src) continue;
+        const A2=P2[E[0]], B2=P2[E[1]], u=Math.min(1,ag/1.1);
+        const mx2=(A2.x+B2.x)/2, v2=1-u;
+        const px2=v2*v2*v2*A2.x+3*v2*v2*u*mx2+3*v2*u*u*mx2+u*u*u*B2.x;
+        const py2=v2*v2*v2*A2.y+3*v2*v2*u*A2.y+3*v2*u*u*B2.y+u*u*u*B2.y;
+        ctx.fillStyle='rgba(236,48,19,'+(0.85*Math.exp(-ag*1.2)).toFixed(3)+')';
+        ctx.beginPath(); ctx.arc(px2,py2,3,0,6.283); ctx.fill(); } }
+    // nodes
+    for(let i=0;i<10;i++){ const p=P2[i];
+      const s0=6+BASE[i]*16, sz=6+p.v*16, heat=p.s;
+      if(i===9){ // your brink: dashed red square, fill rises as states push it
+        const bz=18+p.v*18;
+        ctx.strokeStyle='#ec3013'; ctx.lineWidth=1.4; ctx.setLineDash([5,4]);
+        ctx.strokeRect(p.x-bz/2,p.y-bz/2,bz,bz); ctx.setLineDash([]);
+        ctx.fillStyle='rgba(236,48,19,'+(0.15+0.75*heat).toFixed(3)+')';
+        const fz=bz*Math.max(0.15,heat); ctx.fillRect(p.x-fz/2,p.y-fz/2,fz,fz);
+        continue; }
+      ctx.strokeStyle=ink+'0.35)'; ctx.lineWidth=1; ctx.strokeRect(p.x-s0/2,p.y-s0/2,s0,s0);
+      ctx.fillStyle= heat>0.25? 'rgba('+Math.round(32+204*heat)+','+Math.round(30+18*heat)+',29,0.9)' : ink+'0.85)';
+      ctx.fillRect(p.x-sz/2,p.y-sz/2,sz,sz); }
+    // labels: signals left of their node, states above, brink below
+    for(let i=0;i<6;i++){ const p=P2[i]; chip(nname(i), p.x-18, p.y+3, 'right', ink+'0.55)', true); }
+    for(let i=6;i<9;i++){ const p=P2[i]; chip(nname(i), p.x, p.y-20, 'center', ink+'0.6)', true); }
+    { const p=P2[9]; chip(nname(9), p.x, p.y-26, 'center', deep, true);
+      chip(SC.out, p.x, p.y+30, 'center', this.nsm[9].s>0.3? deep : ink+'0.6)', true); }
+    // the active causal path, named
+    { const A2=P2[EDGES[act1][0]], B2=P2[EDGES[act1][1]];
+      chip(SC.cl, (A2.x+B2.x)/2, (A2.y+B2.y)/2-14, 'center', deep, true); }
+    if(evLabel){ const p=P2[evNode]; chip(evLabel, p.x+16, p.y-18, 'left', deep, true); }
+    // column headers: shorten, then drop, when the measured chips would overlap
+    { const H = w>760? ['MEASURED','WHAT IT DRIVES','WHERE IT PUTS YOU'] : ['SIGNALS','DRIVES','BRINK'];
+      const widths=H.map(s3=>ctx.measureText(s3).width+10);
+      const fits = (xM-widths[1]/2)-(xL+widths[0]/2) > 8 && (xR-widths[2]/2)-(xM+widths[1]/2) > 8;
+      if(fits){ chip(H[0], xL, yTop-22, 'center', ink+'0.5)');
+        chip(H[1], xM, yTop-22, 'center', ink+'0.5)');
+        chip(H[2], xR, yTop-22, 'center', ink+'0.5)'); } }
+    if(b.pv>0.4) chip(SC.pvLabel, w*0.5, h-8, 'center', deep, true);
+  }
+
+  renderVals(){
+    const S = this.SCEN(), sc = S[this.state.scenario], st = this.state, tick = st.tick;
+    const scenario = this.props.scenario && S[this.props.scenario] ? this.props.scenario : st.scenario;
+    const names = ['Live State','Ask Brink','Interventions','Signal Studio','Capacity Profile','Session Timeline','Device'];
+    const at = n => names.indexOf(n);
+    const navItems = names.map((name,i)=>({ name, num:'0'+(i+1), go:()=>this.setState({section:i}),
+      numColor: i===st.section? 'var(--color-accent)':'var(--color-neutral-500)',
+      style:'display:flex;gap:8px;align-items:baseline;text-align:left;border:none;cursor:pointer;background:'+(i===st.section?'var(--color-surface)':'transparent')+';padding:11px 20px;font:inherit;font-size:13.5px;font-weight:'+(i===st.section?'800':'400')+';font-family:var(--font-heading);color:var(--color-text);border-left:3px solid '+(i===st.section?'var(--color-accent)':'transparent') }));
+    const scenarios = Object.keys(S).map(key=>({ label:S[key].label, go:()=>{ this.setState({scenario:key, cursor:S[key].cursor}); this.paintNow && this.paintNow(); },
+      style:'border:none;cursor:pointer;font:inherit;font-size:11.5px;font-weight:600;padding:7px 12px;color:'+(key===st.scenario?'var(--color-bg)':'var(--color-text)')+';background:'+(key===st.scenario?'var(--color-accent)':'transparent') }));
+    const dims = sc.dims.map((d,i)=>{
+      const v=d[3]; let spark='M2 '+(22-14*v).toFixed(1)+' ';
+      for(let j=1;j<=12;j++){ const u=j/12; const y=22-14*(v + (d[1]==='Rising'||d[2]==='+'? u*0.12: d[2]==='−'? -u*0.1:0)*Math.min(1,u*2) + 0.06*Math.sin(j*2.2+i*3+tick*0.5)); spark+='L'+(2+u*80).toFixed(1)+' '+this.clamp(y,3,24).toFixed(1)+' '; }
+      const warn = d[2]==='!';
+      return { name:d[0], word:d[1], trend:d[2]==='+'?'▲ rising':d[2]==='−'?'▼ easing':d[2]==='!'?'▲ watch':'· steady',
+        trendColor: warn?'var(--color-accent-700)': d[2]==='+'?'var(--color-neutral-800)':'var(--color-neutral-600)',
+        spark, sparkColor: warn?'var(--color-accent)':'var(--color-neutral-800)',
+        cellStyle:'padding:14px 16px;border-right:1px solid color-mix(in srgb, var(--color-text) 12%, transparent);'+(warn?'background:var(--color-accent-100);':'') };
+    });
+    const factors = sc.factors.map((f,i)=>({ num:'0'+(i+1), title:f[0], dir:f[1], body: st.expl==='simple'? f[3]: f[4],
+      dirColor: f[1][0]==='−'? 'var(--color-accent-700)':'var(--color-neutral-600)',
+      barStyle:'height:2px;width:'+(f[2]*100).toFixed(0)+'%;background:'+(i===0?'var(--color-accent)':'var(--color-neutral-700)') }));
+    // prediction curve
+    const P = sc.pred, px0=40, px1=510, py0=180, py1=20;
+    const py = v => py0-(py0-py1)*v;
+    let line='', bandTop='', bandBot='', base='';
+    for(let i=0;i<=60;i++){ const u=i/60, x=px0+(px1-px0)*u;
+      const p = 1/(1+Math.exp(-P.steep*(u-P.onset)));
+      const b = 1/(1+Math.exp(-8*(u-0.72)))*0.9;
+      const bw = P.band*(0.3+u);
+      line += (i?'L':'M')+x.toFixed(1)+' '+py(p).toFixed(1)+' ';
+      base += (i?'L':'M')+x.toFixed(1)+' '+py(b).toFixed(1)+' ';
+      bandTop += (i?'L':'M')+x.toFixed(1)+' '+py(this.clamp(p+bw,0,1)).toFixed(1)+' ';
+      bandBot = 'L'+x.toFixed(1)+' '+py(this.clamp(p-bw,0,1)).toFixed(1)+' ' + bandBot;
+    }
+    const predBand = bandTop + bandBot.replace('L','L') + 'Z';
+    const predGrid = [0.25,0.5,0.75,1].map(u=>({ x:(px0+(px1-px0)*u).toFixed(0), t:'+'+Math.round(u*40)+' min' }));
+    // timeline
+    const tx = t => (t/840*1160);
+    const acts=[[10,40,'Waking baseline','n'],[40,75,'Meditation','n'],[80,135,'Morning run','s'],[135,160,'Recovery','n'],[195,245,'Team meeting','n'],[250,330,'Deep work','k'],[365,405,'Lunch','n'],[420,560,'Product design','k'],[630,690,'Strength','s'],[800,840,'Evening recovery','n']];
+    const tlActs = acts.map(a=>({ x:tx(a[0]).toFixed(1), w:(tx(a[1])-tx(a[0])).toFixed(1), tx:(tx(a[0])+4).toFixed(1), label:a[2],
+      fill: a[3]==='k'?'var(--color-neutral-900)': a[3]==='s'?'var(--color-accent)':'var(--color-neutral-300)',
+      tfill: a[3]==='n'?'var(--color-neutral-800)':'var(--color-bg)' }));
+    const tlHours=[]; for(let hh=8;hh<=21;hh+=2){ const t=(hh*60)-430; if(t>0&&t<840) tlHours.push({x:tx(t).toFixed(1), t: (hh>12?hh-12:hh)+(hh>=12?' PM':' AM')}); }
+    let tlCog='', tlStrain='', tlStrainArea='M'+tx(0).toFixed(1)+' 190 ';
+    for(let t=0;t<=840;t+=6){ const x=tx(t);
+      tlCog += (t?'L':'M')+x.toFixed(1)+' '+(108-52*this.cog(t)).toFixed(1)+' ';
+      tlStrain += (t?'L':'M')+x.toFixed(1)+' '+(190-56*this.strain(t)).toFixed(1)+' ';
+      tlStrainArea += 'L'+x.toFixed(1)+' '+(190-56*this.strain(t)).toFixed(1)+' '; }
+    tlStrainArea += 'L1160 190 Z';
+    const evs=[[52,'Entered settled meditation','n'],[112,'Peak cardiac load','a'],[262,'Entered deep focus','n'],[300,'Movement artifact removed','n'],[452,'First detectable strain','a'],[500,'Decline predicted','a'],[522,'Breathing reset delivered','a'],[540,'Recovery response detected','n'],[660,'Set-readiness pattern learned','n']];
+    const tlEvents = evs.map((e,i)=>{ const up=i%2===0, y2=up?208:224;
+      return { x:tx(e[0]).toFixed(1), y2, by:y2, lx:(tx(e[0])+8).toFixed(1), ly:y2+5, label:e[1], stroke: e[2]==='a'?'var(--color-accent)':'var(--color-neutral-600)' }; });
+    const cur = st.cursor;
+    const actAt = acts.find(a=>cur>=a[0]&&cur<=a[1]);
+    const cogV=this.cog(cur), strV=this.strain(cur);
+    const confV = this.clamp(0.9-0.25*strV+0.05*Math.sin(cur/53),0.6,0.95);
+    const scrubNotes = actAt? ({'Morning run':'High movement: EEG confidence reduced, cardiac and IMU streams weighted up. Cardiovascular strain building as intended.',
+      'Deep work':'Stable frontal alpha with low motion: high-confidence deep focus. Strain accumulating slowly in the background.',
+      'Product design':'Extended cognitive session. HRV drifting down; Brink is watching for the blink-rate precursor it learned on day 12.',
+      'Meditation':'Slow breathing driving autonomic settling. Fastest-settling context for this user.',
+      'Strength':'Between-set analysis active: neural drive proxy and tremor tracked per set.',
+      'Team meeting':'Moderate cognitive load with frequent switching. No strain flags.',
+      'Lunch':'Passive recovery. Model confidence reduced; device worn, low signal richness.',
+      'Recovery':'Post-exercise recovery on the personal curve. HRV rebounding.',
+      'Waking baseline':'Daily calibration snapshot against the 38-day baseline.',
+      'Evening recovery':'Parasympathetic recovery. Day\'s strain integrating into the capacity profile.'})[actAt[2]] : 'Transition period. Brink holds its last high-confidence estimate and lowers stated confidence.';
+    // signals
+    const seedBase = {deepwork:11, meditation:23, running:37, strength:47, postint:59}[st.scenario];
+    const noisy = st.scenario==='running';
+    const eegNoise = st.eegRaw? (noisy? 1.6:0.5) : (noisy? 0.35:0.12);
+    const phase = tick*0.7;
+    const trDefs = [
+      ['EEG','Fp1 · µV', this.trace(seedBase,180,0,640,27,noisy?16:11,8,eegNoise,phase),'var(--color-text)', st.eegRaw?'raw':'cleaned'],
+      ['PPG','a.u.', this.trace(seedBase+1,140,0,640,27,10,st.scenario==='running'?16:6,0.1,phase),'var(--color-neutral-700)', ''],
+      ['HRV','RMSSD ms', this.trace(seedBase+2,90,0,640,27,8,2.2,0.25,phase*0.4),'var(--color-accent)', ''],
+      ['EDA','µS', this.trace(seedBase+3,90,0,640,30,6,1.4,0.3,phase*0.3),'var(--color-neutral-700)', ''],
+      ['IMU','g RMS', this.trace(seedBase+4,160,0,640,noisy?27:38,noisy?14:2.5,noisy?10:3,noisy?0.8:0.4,phase),'var(--color-neutral-800)', ''],
+      ['Resp','br/min', this.trace(seedBase+5,80,0,640,27,9,st.scenario==='meditation'?1.2:2.4,0.1,phase*0.2),'var(--color-neutral-700)', ''] ];
+    const vals = { deepwork:['α 62%','·','48 ms','1.8 µS','0.02 g','11.4'], meditation:['α 74%','·','71 ms','1.2 µS','0.01 g','5.2'], running:['· art.','·','22 ms','4.1 µS','0.61 g','32'], strength:['β 58%','·','35 ms','2.9 µS','0.18 g','19'], postint:['α 66%','·','54 ms','1.5 µS','0.02 g','8.7'] }[st.scenario];
+    const hrLive = {deepwork:64, meditation:56, running:172, strength:118, postint:62}[st.scenario] + Math.round(Math.sin(tick*1.3)*2);
+    vals[1] = hrLive+' bpm';
+    const names2=['EEG','PPG','HRV','EDA','IMU','Resp'];
+    const traces = trDefs.filter((t,i)=>st.streams[names2[i]]).map((t,i0)=>{
+      const i = names2.indexOf(t[0]);
+      return { name:t[0]+(t[4]?' · '+t[4]:''), unit:t[1], path:t[2], stroke:t[3], val:vals[i],
+        artFill: (t[0]==='EEG'&&noisy&&st.eegRaw===false)||(t[0]==='EEG'&&noisy)?'color-mix(in srgb, var(--color-accent) 14%, transparent)':'transparent' }; });
+    const streamToggles = names2.map(n=>({ label:n, go:()=>this.setState(s=>({streams:{...s.streams,[n]:!s.streams[n]}})),
+      style:'border:1px solid var(--color-divider);cursor:pointer;font:inherit;font-size:11px;font-weight:600;padding:5px 10px;color:'+(st.streams[n]?'var(--color-bg)':'var(--color-neutral-600)')+';background:'+(st.streams[n]?'var(--color-neutral-900)':'transparent') }));
+    const bandVals = { deepwork:[[.3,.35],[.45,.4],[.72,.55],[.55,.5],[.28,.3]], meditation:[[.4,.35],[.6,.45],[.85,.55],[.35,.5],[.2,.3]], running:[[.5,.35],[.55,.4],[.3,.55],[.7,.5],[.45,.3]], strength:[[.35,.35],[.4,.4],[.45,.55],[.68,.5],[.4,.3]], postint:[[.32,.35],[.5,.4],[.68,.55],[.48,.5],[.26,.3]] }[st.scenario];
+    const bandNames=['Delta','Theta','Alpha','Beta','Gamma'];
+    const bands = bandVals.map((b,i)=>{ const d=Math.round((b[0]-b[1])*100);
+      return { name:bandNames[i], delta:(d>0?'+':'')+d+'%', deltaColor: Math.abs(d)>15? 'var(--color-accent-700)':'var(--color-neutral-600)',
+        barStyle:'position:absolute;left:0;top:0;bottom:0;width:'+(b[0]*100)+'%;background:'+(i===2?'var(--color-accent)':'var(--color-neutral-700)'),
+        baseStyle:'position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--color-text);left:'+(b[1]*100)+'%' }; });
+    const segT=tick*0.5;
+    // intervention charts
+    let ivHrv='', ivAtt='';
+    for(let i=0;i<=80;i++){ const u=i/80, x=u*520;
+      const post = 1/(1+Math.exp(-14*(u-0.5)));
+      ivHrv += (i?'L':'M')+x.toFixed(1)+' '+(52 - (-14*u + post*22) + 3*Math.sin(u*24+3)).toFixed(1)+' ';
+      ivAtt += (i?'L':'M')+x.toFixed(1)+' '+(120 - (-10*u + post*16) + 2.5*Math.sin(u*30+1)).toFixed(1)+' '; }
+    // ridges
+    const profDims=[['Focus endurance',.62,.58,.12,'+6%'],['Recovery speed',.78,.72,.1,'+8%'],['Strain tolerance',.55,.55,.16,'0%'],['Switching cost',.42,.5,.14,'−16%'],['Stress responsiveness',.6,.62,.11,'−3%'],['Circadian readiness',.7,.66,.09,'+6%'],['Intervention response',.74,.6,.13,'+23%'],['Movement resilience',.66,.64,.12,'+3%']];
+    const ridges = profDims.map((d,i)=>{ const base = 50+i*52, x0=180, x1=620;
+      const mu = x0+(x1-x0)*d[2], sig=(x1-x0)*d[3];
+      let path='M'+x0+' '+base+' ';
+      for(let j=0;j<=44;j++){ const x=x0+(x1-x0)*j/44; const y=base-38*Math.exp(-((x-mu)*(x-mu))/(2*sig*sig)); path+='L'+x.toFixed(1)+' '+y.toFixed(1)+' '; }
+      path+='L'+x1+' '+base+' Z';
+      const cxp = x0+(x1-x0)*d[1];
+      const dPct = d[4], up = dPct[0]==='+';
+      return { name:d[0], ly:base-30, base, baseM:base-14, path, bx:(x0+(x1-x0)*d[2]).toFixed(1), cx:(cxp-3.5).toFixed(1), cy:(base-38*Math.exp(-((cxp-mu)*(cxp-mu))/(2*sig*sig))-4).toFixed(1),
+        delta:dPct+' / 30 d', deltaColor: dPct==='0%'?'var(--color-neutral-500)': up?'var(--color-accent-700)':'var(--color-neutral-700)' }; });
+    let errLine='', errArea='M0 68 ';
+    for(let i=0;i<=38;i++){ const u=i/38, x=u*340; const y=10+50*(1-Math.exp(-u*2.6))*(0.92+0.08*Math.sin(i*1.7)); const yy=68-(58-y)+0; const yv=12+46*Math.exp(-u*2.2)+3*Math.sin(i*1.9)*Math.exp(-u*2);
+      errLine += (i?'L':'M')+x.toFixed(1)+' '+yv.toFixed(1)+' '; errArea += 'L'+x.toFixed(1)+' '+yv.toFixed(1)+' '; }
+    errArea += 'L340 68 Z';
+    // Ask Brink
+    const lin=(pts)=>{let d='';pts.forEach((p,i)=>{d+=(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)+' ';});return d;};
+    const curve=(fn,n)=>{const pts=[];for(let i=0;i<=n;i++){const u=i/n;pts.push([u*640,this.clamp(170-140*fn(u),20,170)]);}return lin(pts);};
+    const ASK=[
+      { q:'Why did my focus drop this afternoon?',
+        a:'Your focus dipped at 2:47 PM. The strongest contributor was a gradual HRV decline that began around 2:20, followed by the blink-rate rise Brink learned on day 12. The session was also 10 minutes past your personal optimum. This matches your usual late-session pattern, though it developed more slowly than average today.',
+        path: curve(u=>0.72-0.28/(1+Math.exp(-12*(u-0.72)))+0.015*Math.sin(u*22),90), path2:'',
+        bars:[{x:'400',y:'20',w:'110',h:'150',fill:'color-mix(in srgb, var(--color-accent) 8%, transparent)',label:'Precursor window',lx:'455',ly:'186'}],
+        marks:[{x:'480',bx:'476',y:'96',tx:'488',ty:'40',label:'Dip onset · 2:47 PM'}],
+        x0:'1:30 PM', x1:'3:30 PM', cap:'Attention stability, this afternoon. Shaded region: precursor window Brink flagged before the dip.',
+        ev:['HRV −9 ms between 2:21 and 2:47 PM','Blink rate +18% above baseline at 2:39 PM','Session length 112 min at dip onset, past your 102-min optimum'],
+        meta:'Repeated pattern · 6 supporting sessions · Brink has high confidence this is causal for you.' },
+      { q:'Did the breathing intervention actually help?',
+        a:'Yes, with high confidence. Within two minutes of the 3:32 PM delivery, HRV recovered 11% and attention stability rose 7%. The dashed line shows the trajectory Brink projected without intervention; the measured curve separated from it decisively.',
+        path: curve(u=>0.42-0.12*u + (u>0.48? 0.34/(1+Math.exp(-14*(u-0.6))):0)+0.012*Math.sin(u*26),90),
+        path2: curve(u=>0.42-0.26*u+0.012*Math.sin(u*26+2),90),
+        bars:[], marks:[{x:'307',bx:'303',y:'20',tx:'315',ty:'32',label:'Delivery · 3:32 PM'}],
+        x0:'3:22 PM', x1:'3:42 PM', cap:'HRV, measured (red) vs. projected without intervention (dashed).',
+        ev:['HRV +11% within 120 s of delivery','Attention stability +7% over 6 min','Response shape matched 5 prior successful resets'],
+        meta:'Measured effect · 11 tested deliveries of this intervention · selection weight now 0.71.' },
+      { q:'When do I usually do my best analytical work?',
+        a:'Late morning. Across 38 days, your sustained-attention quality peaks between roughly 9:30 and 11:40 AM, especially on days that start with exercise. Afternoons recover partially after lunch, then taper.',
+        path:'', path2:'',
+        bars:[['7–9A',.55],['9–11A',.9],['11–1P',.82],['1–3P',.58],['3–5P',.66],['5–7P',.5],['7–9P',.4]].map((b,i)=>({x:(30+i*86).toFixed(0),y:(170-b[1]*140).toFixed(0),w:'58',h:(b[1]*140).toFixed(0),fill:i===1?'var(--color-accent)':'var(--color-neutral-700)',label:b[0],lx:(59+i*86).toFixed(0),ly:'186'})),
+        marks:[], x0:'', x1:'', cap:'Median attention quality by time of day, 38 days. Red: your strongest window.',
+        ev:['41 analytical sessions scored across 38 days','Morning-exercise days raise the late-morning peak a further 8%','Pattern held in 5 of the last 6 weeks'],
+        meta:'Strong repeated pattern, not just correlation; it held when Brink controlled for sleep and workload.' },
+      { q:'Which intervention works fastest for me?',
+        a:'Paced breathing. It produces a measurable HRV response in about 2 minutes, roughly three times faster than a walking break, but only when delivered before visible fatigue. After decline has already started, walking produces the stronger recovery even though it is slower.',
+        path:'', path2:'',
+        bars:[['Breathing · 2.1 min',2.1],['Audio cue · 3.8 min',3.8],['Walking · 6.4 min',6.4]].map((b,i)=>({x:(70+i*190).toFixed(0),y:(170-b[1]/7*140).toFixed(0),w:'120',h:(b[1]/7*140).toFixed(0),fill:i===0?'var(--color-accent)':'var(--color-neutral-700)',label:b[0],lx:(130+i*190).toFixed(0),ly:'186'})),
+        marks:[], x0:'', x1:'', cap:'Median time from delivery to first measurable effect.',
+        ev:['Breathing: 11 deliveries, median 2.1 min to effect','Walking: 8 deliveries, median 6.4 min but larger total recovery','Timing matters more than choice: pre-fatigue delivery doubles effectiveness'],
+        meta:'Based on 33 measured interventions across contexts · moderate-to-high confidence.' }];
+    const ak = ASK[st.ask];
+    const askQs = ASK.map((x,i)=>({ label:x.q, go:()=>this.setState({ask:i}),
+      style:'display:block;text-align:left;border:none;border-top:1px solid color-mix(in srgb, var(--color-text) 12%, transparent);cursor:pointer;font:inherit;font-size:13px;line-height:1.45;padding:13px 24px;color:var(--color-text);font-weight:'+(i===st.ask?'700':'400')+';background:'+(i===st.ask?'var(--color-surface)':'transparent')+';border-left:3px solid '+(i===st.ask?'var(--color-accent)':'transparent') }));
+    // Device
+    const SENS=[
+      ['Frontal EEG · Fp1',171,105,'Dry-contact electrode over the left forehead. Measures cortical electrical activity, the source of attention, strain and rhythm estimates.','96% contact','end'],
+      ['Frontal EEG · Fp2',249,105,'Dry-contact electrode over the right forehead. Paired with Fp1 for frontal asymmetry and artifact cross-checking.','94% contact','start'],
+      ['Contact-quality array',210,100,'Impedance sensing distributed along the band. Continuously scores how well each electrode touches skin, so Brink knows what to trust.','7/7 reporting','middle'],
+      ['Skin temperature',104,144,'Thermistor at the temple. Tracks peripheral temperature shifts associated with autonomic state and circadian phase.','33.4 °C','end'],
+      ['Haptic actuator',316,144,'Delivers interventions (breathing pacing, cadence cues and reset prompts) as silent vibration patterns.','Idle','start'],
+      ['Optical PPG',62,224,'Optical sensor behind the ear. Reads pulse waveform for heart rate, HRV and respiration estimates.','64 bpm','end'],
+      ['IMU · 6-axis',358,224,'Accelerometer and gyroscope. Tracks head motion for artifact detection, posture, cadence and stillness.','0.02 g RMS','start']];
+    const devSensors = SENS.map((s,i)=>({ hover:()=>this.setState({sensor:i}),
+      hx:(s[1]-13).toFixed(0), hy:(s[2]-13).toFixed(0), bx:(s[1]-6).toFixed(0), by:(s[2]-6).toFixed(0),
+      fill: i===st.sensor? 'var(--color-accent)':'var(--color-bg)',
+      tx:(s[1]+(s[5]==='start'?16:s[5]==='end'?-16:0)).toFixed(0), ty:(s[2]+(s[5]==='middle'?-16:4)).toFixed(0),
+      anchor:s[5], tag:s[0].split(' · ')[0] }));
+    const sel = SENS[st.sensor];
+    const chBase=[['Fp1',96],['Fp2',94],['F3',91],['F4',93],['Fz',97],['T7',88],['T8',90]];
+    const channels = chBase.map(c=>{ const q = noisy? Math.max(40,c[1]-(c[0][0]==='F'&&c[0][1]==='p'?24:10)) : c[1];
+      const poor=q<75; return { name:c[0], q:q+'%', color: poor?'var(--color-accent-700)':'var(--color-text)',
+        style:'background:'+(poor?'var(--color-accent-100)':'var(--color-bg)')+';padding:10px 12px' }; });
+    // Goal planner: input → plan → ledger → lessons
+    const gFmt = m => this.fmtTime(508 + m);
+    const cg = st.customGoal;
+    let barSrc, gTitle, gNow=null, coachMsg, coachWhy, coachActions=[];
+    const rTaken=!!st.goalResetTaken, adj=st.goalAdjust;
+    const actP='border:none;background:var(--color-accent);color:var(--color-bg);font:inherit;font-size:12px;font-weight:700;padding:9px 16px;cursor:pointer';
+    const actS='border:1px solid var(--color-divider);background:transparent;color:var(--color-text);font:inherit;font-size:12px;font-weight:600;padding:9px 16px;cursor:pointer';
+    const takeReset={label:'Take the reset now', go:()=>this.setState({goalResetTaken:true}), style:actP};
+    if(cg){
+      gTitle = cg.title;
+      barSrc = cg.steps.map((s,i)=> st.committed && i===0? [s[0],s[1],s[2],s[3],'active'] : s);
+      if(st.goalEase && !st.committed) barSrc = barSrc.map((s,i)=> i<2? s : i===2? [s[0]+' \u00B7 lighter',s[1],24,40,s[4]] : [s[0],s[1],s[2]-8,s[3]-8,s[4]]);
+      if(st.committed){ gNow = barSrc[0][2];
+        coachMsg='We\u2019re on. This first block sits in your best remaining focus window. Just start reading, I\u2019ll handle the pacing.';
+        coachWhy='I\u2019ll speak up before you fade: the first reset lands in 22 minutes, ahead of your usual 24-minute drop.';
+        coachActions=[{label:'Scrap this goal', go:()=>this.setState({customGoal:null,committed:false,goalEase:false}), style:actS}];
+      } else if(st.goalEase){
+        coachMsg='Lightened: I cut the middle block by a third. You finish a little later, but with real slack instead of racing the clock.';
+        coachWhy='Commit when you\u2019re ready; I\u2019ll hold this version of the plan.';
+        coachActions=[{label:'Commit and start session', go:()=>this.setState({committed:true}), style:actP},
+                      {label:'Back to the fuller plan', go:()=>this.setState({goalEase:false}), style:actS}];
+      } else {
+        coachMsg='This needs about 74 focused minutes; you\u2019ve got roughly 82 good ones left today. It fits, barely. I front-loaded the hard part and placed two resets where you usually fade.';
+        coachWhy='Done around '+cg.done+'. If it feels heavy, I can lighten the middle block and buy you slack.';
+        coachActions=[{label:'Commit and start session', go:()=>this.setState({committed:true}), style:actP},
+                      {label:'Make it lighter', go:()=>this.setState({goalEase:true}), style:actS},
+                      {label:'Scrap it', go:()=>this.setState({customGoal:null,goalEase:false}), style:actS}];
+      }
+    } else {
+      gTitle = 'Read 15 pages of the systems spec'; gNow = 93;
+      barSrc = [
+        ['Pages 1\u20135','2:05\u20132:28',0,23,'done'],
+        ['Pages 6\u20139','2:28\u20132:55',23,50,'done'],
+        ['Reset','',50,53,'reset'],
+        ['Pages 10\u201312','3:00\u20133:42',55,97,'active'],
+        ['Reset','',97,100,'reset'],
+        ['Pages 13\u201315','3:45\u20134:47',100,162,'upcoming']];
+      if(rTaken){
+        coachMsg='Reset: 90 seconds. Drop your shoulders and make each exhale longer than the inhale.';
+        coachWhy='You took it 4 minutes early, good call. I\u2019ll re-time the last two blocks when you\u2019re back; the 4:47 finish still holds.';
+        coachActions=[{label:'Back to the pages', go:()=>this.setState({goalResetTaken:false}), style:actS}];
+      } else if(adj==='ask'){
+        coachMsg='Okay. Two ways to lighten the load:';
+        coachWhy='Either way the 3:42 reset stays; pushing through fatigue is how the last hour gets slow.';
+        coachActions=[{label:'Trim to 12 pages \u00B7 done 4:12', go:()=>this.setState({goalAdjust:'trim'}), style:actP},
+                      {label:'Keep 15 \u00B7 finish 5:20', go:()=>this.setState({goalAdjust:'push'}), style:actS},
+                      {label:'Never mind, I\u2019m fine', go:()=>this.setState({goalAdjust:null}), style:actS}];
+      } else if(adj==='trim'){
+        barSrc[5]=['Pages 13\u201314 + skim 15','3:45\u20134:12',100,127,'upcoming'];
+        coachMsg='Trimmed: 12 close-read pages, skim the last three, done by 4:12 with 48 minutes of slack before 5.';
+        coachWhy='I\u2019ve also noted that afternoon spec reading runs heavy for you; tomorrow\u2019s plans will budget for it.';
+        coachActions=[takeReset, {label:'Restore the full 15', go:()=>this.setState({goalAdjust:null}), style:actS}];
+      } else if(adj==='push'){
+        barSrc[5]=['Pages 13\u201315 \u00B7 easier pace','3:45\u20135:20',100,195,'upcoming'];
+        coachMsg='Full 15 pages at an easier pace: new finish 5:20, with an extra breather at 4:30.';
+        coachWhy='Slower is fine; your comprehension holds at this pace. I\u2019ll warn you if it starts to slip.';
+        coachActions=[takeReset, {label:'Back to the 5 PM plan', go:()=>this.setState({goalAdjust:null}), style:actS}];
+      } else {
+        coachMsg='Four more minutes on pages 10\u201312, then I\u2019m giving you 90 seconds to breathe. You\u2019re ahead: on this pace you finish at 4:47, with 13 minutes of slack before 5.';
+        coachWhy='Your blink rate started climbing at 3:31, your earliest fatigue signal, so I moved the reset up to 3:42. The 2:49 dip cost you nothing: catching it early won back about 26 minutes.';
+        coachActions=[takeReset, {label:'This pace isn\u2019t working', go:()=>this.setState({goalAdjust:'ask'}), style:actS}];
+      }
+    }
+    const gT0 = barSrc[0][2], gTot = barSrc[barSrc.length-1][3] - gT0;
+    const segStyles = {
+      done:'background:var(--color-neutral-200);color:var(--color-neutral-700)',
+      active:'background:var(--color-neutral-900);color:var(--color-bg)',
+      upcoming:'background:transparent;border:1px solid var(--color-divider);color:var(--color-neutral-600)',
+      reset:'background:var(--color-accent)' };
+    const goalBar = barSrc.map(s=>{ const isR=s[4]==='reset';
+      return { label:isR?'':s[0], win:isR?'':s[1],
+        style:'flex:0 1 '+(((s[3]-s[2])/gTot)*100).toFixed(2)+'%;min-width:'+(isR?'8px':'0')+';display:flex;flex-direction:column;justify-content:center;gap:1px;padding:'+(isR?'0':'0 10px')+';overflow:hidden;white-space:nowrap;container-type:inline-size;'+segStyles[s[4]] }; });
+    const segS=k=>({done:'flex:1 1 0;background:var(--color-neutral-800)',active:'flex:1 1 0;background:var(--color-accent)',up:'flex:1 1 0;border:1px solid var(--color-divider)',day:'flex:1 1 0;background:var(--color-neutral-800)',miss:'flex:1 1 0;border:1px solid var(--color-accent)',sched:'flex:1 1 0;border:1px solid var(--color-neutral-400)',faint:'flex:1 1 0;background:var(--color-neutral-200)'}[k]);
+    const cells=a=>a.map(k=>({style:segS(k)}));
+    const goalRows=[];
+    if(cg){ const sing=(cg.unit||'part').replace(/s$/,''), n=cg.n||3;
+      const perUnit = n<=24, cnt = perUnit? n : 3;
+      goalRows.push({ title:cg.title, meta:'Planned just now', segs:cells(Array.from({length:cnt},(x,i)=> st.committed&&i===0?'active':'up')),
+        caption: perUnit? '1 cell = 1 '+sing+' \u00B7 '+n+' planned \u00B7 2 resets pre-placed between blocks' : '1 cell = 1 block of ~'+Math.ceil(n/3)+' '+cg.unit+' \u00B7 2 resets pre-placed between blocks',
+        status: st.committed?'Live':'Planned', statusColor: st.committed?'var(--color-accent-700)':'var(--color-text)', sub:'projected done '+cg.done, showCommit: !st.committed, commit:()=>this.setState({committed:true}) }); }
+    goalRows.push({ title:'Read 15 pages of the systems spec', meta:'Today \u00B7 due 5:00 PM', segs:cells(Array.from({length:15},(x,i)=> i<9?'done': i===9?'active':'up')), caption:'1 cell = 1 page \u00B7 9 read, page 10 now, 5 to go', status:'On pace', statusColor:'var(--color-text)', sub:'done ~4:47 \u00B7 13 min slack', showCommit:false, commit:null });
+    goalRows.push({ title:'Meditate 10 minutes each morning', meta:'Daily \u00B7 last 14 days', segs:cells([1,1,1,1,0,1,1,1,1,1,1,1,1,1].map(d3=>d3?'day':'miss')), caption:'1 cell = 1 morning \u00B7 12 of 14, outlined = missed Tue', status:'Holding', statusColor:'var(--color-text)', sub:'streak 9 \u00B7 usually 7:14 AM', showCommit:false, commit:null });
+    goalRows.push({ title:'Three hard training sessions', meta:'This week \u00B7 Mon\u2013Sun', segs:cells(['day','faint','day','sched','faint','faint','faint']), caption:'1 cell = 1 day, Mon\u2013Sun \u00B7 2 done, Thu outlined = scheduled', status:'On plan', statusColor:'var(--color-text)', sub:'fits your strain budget', showCommit:false, commit:null });
+    const goalPlanFn = ()=>{ const txt=(this.state.goalText||'').trim(); if(!txt) return;
+      const q=(txt.match(/(\d+)/)||[])[1], lower=txt.toLowerCase();
+      const unit = lower.indexOf('page')>=0?'pages': lower.indexOf('word')>=0?'words': lower.indexOf('slide')>=0?'slides': lower.indexOf('km')>=0?'km':'parts';
+      const n = q? parseInt(q,10) : 3;
+      const a=Math.max(1,Math.ceil(n*0.4)), b2=Math.max(1,Math.ceil(n*0.35)), c=Math.max(1,n-Math.max(1,Math.ceil(n*0.4))-Math.max(1,Math.ceil(n*0.35)));
+      this.setState({customGoal:{ title:txt, done:gFmt(78), n:n, unit:unit,
+        steps:[
+          ['First '+a+' '+unit, gFmt(4)+'\u2013'+gFmt(26),0,22,'upcoming'],
+          ['Reset','',22,24,'reset'],
+          ['Next '+b2+' '+unit, gFmt(28)+'\u2013'+gFmt(52),24,48,'upcoming'],
+          ['Walk','',48,51,'reset'],
+          ['Final '+c+' '+unit, gFmt(55)+'\u2013'+gFmt(78),51,74,'upcoming']]}, committed:false, goalEase:false, goalAdjust:null, goalResetTaken:false}); };
+    return {
+      canvasRef: this.canvasRef,
+      recHover:()=>{ this.hoverPreview=true; this.paintNow && this.paintNow(); }, recLeave:()=>{ this.hoverPreview=false; this.paintNow && this.paintNow(); },
+      bodyTriggers:[['Blink','blink'],['Clench jaw','jaw'],['Deep breath','breath']].map(x=>({label:x[0], go:()=>{ (this.bodyEv=this.bodyEv||[]).push({type:x[1], at:Date.now()}); this.paintNow && this.paintNow(); }})),
+      showRecPreview: st.section===0 && ({deepwork:1,running:1,strength:1})[scenario]===1,
+      goalText: st.goalText||'', goalTyping:(e)=>this.setState({goalText:e.target.value}),
+      goalPlan: goalPlanFn, goalRows,
+      goalExamples: ['Read 15 pages by 5 PM','Write 1,500 words of the memo','Prep 12 slides for Friday'].map(x=>({t:x, go:()=>this.setState({goalText:x})})),
+      goalTitle:gTitle, coachMsg, coachWhy, coachActions,
+      goalBar, goalNowShow: gNow!==null, goalNowLeft: gNow===null?'0%':(((gNow-gT0)/gTot)*100).toFixed(2)+'%',
+      goalLessons: [
+        {t:'Your reading pace holds for about 24 minutes, then drops sharply. Resets are now scheduled at minute 22 by default.', ev:'Learned from 6 reading sessions'},
+        {t:'Afternoon goals take ~15% longer than your own estimate. Plans after 1 PM are budgeted accordingly.', ev:'9 sessions \u00B7 high confidence'},
+        {t:'Resets only restore full pace if taken before output drops ~20%. Brink now acts on precursors, not on visible decline.', ev:'This session + 3 prior'}],
+      askQs, askQ:ak.q, askA:ak.a, askPath:ak.path, askPath2:ak.path2, askBars:ak.bars, askMarks:ak.marks,
+      askX0:ak.x0, askX1:ak.x1, askCaption:ak.cap, askEvidence:ak.ev, askMeta:ak.meta,
+      devSensors, devSelName:sel[0], devSelDesc:sel[3], devSelVal:sel[4],
+      devRows:[{k:'Connection',v:'Bluetooth LE · strong'},{k:'Battery',v:'68% · ~9 h remaining'},{k:'Fit quality',v:'Good · 6/7 contacts optimal'},{k:'Firmware',v:'0.9.4-rc2 · up to date'},{k:'Recording',v:'Active · continuous'},{k:'Streaming latency',v:'96 ms'},{k:'Storage',v:'13.1 / 32 GB on device'},{k:'Calibration',v:'Day 38 · stable'}],
+      togglePrivacy:()=>this.setState(s=>({privacy:!s.privacy})),
+      privacyLabel: st.privacy? 'Privacy mode · on-device processing only' : 'Cloud sync enabled · tap for on-device only',
+      privacyStyle:'display:block;width:100%;text-align:left;margin-top:14px;border:1px solid var(--color-divider);cursor:pointer;font:inherit;font-size:12px;font-weight:600;padding:10px 12px;color:'+(st.privacy?'var(--color-bg)':'var(--color-text)')+';background:'+(st.privacy?'var(--color-neutral-900)':'transparent'),
+      chNote: noisy? 'Head motion is degrading frontal channels; affected segments are excluded automatically.' : 'All channels within normal range for the current session.',
+      navItems, scenarios, sectionTitle:names[st.section], clock:'3:38 PM',
+      showScenarios: ['Live State','Session Timeline','Signal Studio'].indexOf(names[st.section])>=0,
+      showLive: st.section===at('Live State'), showTimeline: st.section===at('Session Timeline'), showSignals: st.section===at('Signal Studio'), showInterv: st.section===at('Interventions'), showProfile: st.section===at('Capacity Profile'), showAsk: st.section===at('Ask Brink'), showDevice: st.section===at('Device'),
+      stateTitle: sc.title, narrative: sc.narrative,
+      metaRows: sc.meta.map(m=>({k:m[0], v:m[1], color:m[2]||'var(--color-text)'})),
+      recommendation: sc.rec,
+      fieldOrg: {deepwork:'62% · drawing down', meditation:'70% · rebuilding', running:'42% · spending', strength:'56% · recovering', postint:'58% · restored'}[st.scenario],
+      fieldVol: {deepwork:'Declining · reset advised', meditation:'Rising', running:'Managed decline', strength:'Rising to next set', postint:'Recovered · extended'}[st.scenario],
+      confPct: Math.round(sc.conf*100)+'%', confColor: sc.conf<0.75?'var(--color-accent-700)':'var(--color-text)',
+      dims, factors,
+      explSimple:()=>this.setState({expl:'simple'}), explTech:()=>this.setState({expl:'technical'}),
+      explSimpleStyle:'border:none;cursor:pointer;font:inherit;font-size:11px;font-weight:600;padding:6px 12px;color:'+(st.expl==='simple'?'var(--color-bg)':'var(--color-text)')+';background:'+(st.expl==='simple'?'var(--color-neutral-900)':'transparent'),
+      explTechStyle:'border:none;cursor:pointer;font:inherit;font-size:11px;font-weight:600;padding:6px 12px;color:'+(st.expl==='technical'?'var(--color-bg)':'var(--color-text)')+';background:'+(st.expl==='technical'?'var(--color-neutral-900)':'transparent'),
+      predSub:P.sub, predLine:line, predBase:base, predBand, predGrid,
+      predWinX1:(px0+(px1-px0)*P.window[0]).toFixed(1), predWinX2:(px0+(px1-px0)*Math.min(P.window[1],1)).toFixed(1),
+      predWinXm:(px0+(px1-px0)*(P.window[0]+Math.min(P.window[1],1))/2).toFixed(1), predWinLabel:P.winLabel,
+      predHeadline:P.headline, predEffects:P.effects, predCompare:P.compare,
+      // timeline
+      tlHours, tlActs, tlCog, tlStrain, tlStrainArea, tlEvents,
+      cursor:cur, cursorX:tx(cur).toFixed(1), cursorBX:(tx(cur)-4.5).toFixed(1),
+      setCursor:(e)=>this.setState({cursor:+e.target.value}),
+      scrubTime:this.fmtTime(cur), scrubAct: actAt? actAt[2] : 'Transition',
+      scrubCog: cogV>0.7?'Deep focus':cogV>0.5?'Engaged':cogV>0.35?'Moderate':'Low', 
+      scrubStrain: strV>0.65?'High':strV>0.4?'Elevated':'Low', scrubStrainColor: strV>0.65?'var(--color-accent-700)':'var(--color-text)',
+      scrubConf: Math.round(confV*100)+'%', scrubNote: scrubNotes,
+      // signals
+      streamToggles, traces,
+      setRaw:()=>this.setState({eegRaw:true}), setClean:()=>this.setState({eegRaw:false}),
+      rawStyle:'border:none;cursor:pointer;font:inherit;font-size:11px;font-weight:600;padding:6px 12px;color:'+(st.eegRaw?'var(--color-bg)':'var(--color-text)')+';background:'+(st.eegRaw?'var(--color-neutral-900)':'transparent'),
+      cleanStyle:'border:none;cursor:pointer;font:inherit;font-size:11px;font-weight:600;padding:6px 12px;color:'+(!st.eegRaw?'var(--color-bg)':'var(--color-text)')+';background:'+(!st.eegRaw?'var(--color-neutral-900)':'transparent'),
+      artX: noisy? '390':'0', artW: noisy? '86':'0',
+      artNote: noisy? 'Fp1/Fp2 affected 4.8 s; segment excluded from state estimate' : 'No artifacts in current window',
+      bands, cleanNote: noisy? 'Movement affected channels Fp1 and Fp2 for 4.8 seconds. The affected segment was excluded from the current-state estimate; cardiac and IMU streams were weighted up instead.' : 'Head motion is low. Cleaning is running but removing almost nothing; confidence in the EEG estimate is high.',
+      dirtyPath: this.trace(seedBase+9,160,0,292,20,noisy?14:6,9,noisy?1.8:0.4,phase),
+      cleanPath: this.trace(seedBase+9,160,0,292,20,noisy?7:6,9,0.1,phase),
+      cleanConf: noisy? '72%':'96%',
+      // interventions
+      ivTriggers:['HRV declined for 16 minutes','Blink frequency increased 18% above baseline','Neural stability began weakening','Similar patterns preceded attention decline in 5 previous sessions'],
+      ivResults:[{k:'HRV recovery',v:'+11%',color:'var(--color-accent-700)'},{k:'Attention stability',v:'+7%',color:'var(--color-accent-700)'},{k:'Perceived effort',v:'Decreased',color:'var(--color-text)'},{k:'Estimated focus preserved',v:'31 min',color:'var(--color-text)'}],
+      ivHrv, ivAtt, weightGrow: st.section===at('Interventions')? '9%':'0%',
+      ivLib:[
+        {name:'90-s paced breathing', ctx:'Early cognitive strain', n:'11', eff:'+31 min focus', w:'0.71', status:'Preferred', tagStyle:'font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;background:var(--color-accent);color:var(--color-bg)'},
+        {name:'Walking break · 5 min', ctx:'After decline onset', n:'8', eff:'+24 min focus', w:'0.64', status:'Context-preferred', tagStyle:'font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;background:var(--color-neutral-900);color:var(--color-bg)'},
+        {name:'Cadence cue', ctx:'Late-run form drift', n:'6', eff:'+4 min form', w:'0.66', status:'Active', tagStyle:'font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--color-divider)'},
+        {name:'Audio focus cue', ctx:'Open-plan distraction', n:'9', eff:'+9% stability', w:'0.52', status:'Testing', tagStyle:'font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--color-divider)'},
+        {name:'Posture correction', ctx:'Long desk sessions', n:'12', eff:'Inconclusive', w:'0.31', status:'De-weighted', tagStyle:'font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--color-divider);color:var(--color-neutral-600)'}],
+      // profile
+      ridges,
+      learnStats:[{k:'Sessions recorded',v:'126'},{k:'Hours understood',v:'214'},{k:'Activities learned',v:'9'},{k:'Interventions tested',v:'14'},{k:'Reliable personal patterns',v:'6'},{k:'Prediction error (decline onset)',v:'±4.1 min'}],
+      errLine, errArea,
+      milestones:[{d:'Day 1',t:'Population baseline: predictions borrowed from cohort priors.'},{d:'Day 4',t:'Initial personal calibration across sleep-adjacent baselines.'},{d:'Day 12',t:'First repeatable fatigue pattern: blink-rate rise precedes attention decline.'},{d:'Day 21',t:'Intervention preference learned: breathing beats walking before visible fatigue.'},{d:'Day 35',t:'Cross-activity pattern: late-workout form-decline signature also precedes decision fatigue.'}]
+    };
+  }
+}
+</script>
+
+
+</body></html>

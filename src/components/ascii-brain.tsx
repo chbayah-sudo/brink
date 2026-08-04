@@ -111,6 +111,10 @@ const BRIGHT_SCATTER = 0.1;
 function clamp(v: number, a: number, b: number) {
   return v < a ? a : v > b ? b : v;
 }
+// identical to THREE.MathUtils.damp used by the 3D sections
+function damp(a: number, b: number, lambda: number, dt: number) {
+  return b + (a - b) * Math.exp(-lambda * dt);
+}
 function smoothstep(e0: number, e1: number, x: number) {
   const t = clamp((x - e0) / (e1 - e0 || 1), 0, 1);
   return t * t * (3 - 2 * t);
@@ -180,9 +184,10 @@ export function AsciiBrain() {
   // so nothing visible is lost — measured big main-thread relief).
   const lastScrollTRef = useRef(0);
   const lastInputTRef = useRef(0);
-  // The morph + spin clips (12MB together) don't download until the visitor
-  // actually starts scrolling toward the brain — critical on mobile data.
+  // The morph + spin clips don't download until the visitor actually starts
+  // scrolling toward the brain — critical on mobile data.
   const clipsKickedRef = useRef(false);
+  const blobUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -286,7 +291,20 @@ export function AsciiBrain() {
       // (preload="none" until here).
       if (!clipsKickedRef.current && pRef.current > 0.02) {
         clipsKickedRef.current = true;
-        brainRef.current?.load();
+        // The morph clip is scrubbed BACKWARD when scrolling up; served over
+        // HTTP, each reverse seek can trigger range refetches that stall the
+        // decoder (measured: main thread idle, frames landing late). At ~2MB,
+        // loading it fully into memory makes every seek local and instant.
+        fetch(BRAIN_NERVE_SRC)
+          .then((r) => r.blob())
+          .then((b) => {
+            const v = brainRef.current;
+            if (!v) return;
+            blobUrlRef.current = URL.createObjectURL(b);
+            v.src = blobUrlRef.current;
+            v.load();
+          })
+          .catch(() => brainRef.current?.load());
         const s = spinRef.current;
         s?.load();
         // Prime the spin decoder while it's still invisible: without this, its
@@ -321,10 +339,39 @@ export function AsciiBrain() {
 
     let lastNow = 0;
     let idleFlip = false;
+    // Damped morph progress: the brain->nerve scrub previously chased RAW
+    // scroll, so every wheel tick jumped the clip several frames at once —
+    // the "jumpy" transition. Damping glides the playhead between targets
+    // (same treatment the assembly phase always had).
+    let dMorph = 0;
     // cached video luminance sample (videos are ≤30fps; resampling at 60 was
     // pure duplicate drawImage/getImageData cost — measured 39% of the frame)
     let sampleAt = 0;
     let sampleBD: Uint8ClampedArray | null = null;
+    // Seeks are async: without this, the sampler could redraw a STALE frame
+    // while the scrub seek was still in flight, adding visible stutter to the
+    // brain->nerve transition. Invalidate the cache the moment a frame LANDS —
+    // requestVideoFrameCallback fires exactly at presentation (seeked as the
+    // fallback for browsers without it).
+    const brainVid = brainRef.current as
+      | (HTMLVideoElement & {
+          requestVideoFrameCallback?: (cb: () => void) => number;
+          cancelVideoFrameCallback?: (id: number) => void;
+        })
+      | null;
+    const onSeeked = () => {
+      sampleAt = 0;
+    };
+    let vfcId = 0;
+    if (brainVid?.requestVideoFrameCallback) {
+      const onFrame = () => {
+        sampleAt = 0;
+        vfcId = brainVid.requestVideoFrameCallback!(onFrame);
+      };
+      vfcId = brainVid.requestVideoFrameCallback(onFrame);
+    } else {
+      brainVid?.addEventListener("seeked", onSeeked);
+    }
     let seekAt = 0; // scrub seeks are capped to the 30Hz sample cadence too
     const render = (now: number) => {
       frameRef.current = window.requestAnimationFrame(render);
@@ -353,7 +400,8 @@ export function AsciiBrain() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const p = pRef.current;
-      const morphP = morphPRef.current;
+      dMorph = isReduced ? morphPRef.current : damp(dMorph, morphPRef.current, 7, dt);
+      const morphP = dMorph;
       const hero = heroRef.current;
       const brain = brainRef.current;
       const spin = spinRef.current;
@@ -793,6 +841,8 @@ export function AsciiBrain() {
     frameRef.current = window.requestAnimationFrame(render);
     return () => {
       if (frameRef.current) window.cancelAnimationFrame(frameRef.current);
+      brainVid?.removeEventListener("seeked", onSeeked);
+      if (vfcId) brainVid?.cancelVideoFrameCallback?.(vfcId);
     };
   }, [isVisible, isReduced]);
 

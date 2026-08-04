@@ -6,6 +6,7 @@ import { MenuOverlay } from "@/components/menu-overlay";
 import { Hero } from "@/components/hero";
 import { AsciiBrain } from "@/components/ascii-brain";
 import BrinkSystemExplorer from "@/components/brink-system-explorer";
+import { AppDemo } from "@/components/app-demo";
 import { LenisProvider } from "@/components/lenis-provider";
 import { Writing } from "@/components/writing";
 import { Preorder } from "@/components/preorder";
@@ -25,6 +26,7 @@ export default function Home() {
           <Hero />
           <AsciiBrain />
           <BrinkSystemExplorer />
+          <AppDemo />
           <Writing />
           <Preorder />
           <Careers />
