@@ -270,6 +270,24 @@ const anchors = [
         <div data-tour="timeline" style="padding:24px 28px 8px">`,
     "anchor timeline",
   ],
+  // factors: the "What Brink sees" panel (why the estimate reads as it does)
+  [
+    `        <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+              <h2 style="font-size:24px;margin:0">What Brink sees</h2>`,
+    `        <div data-tour="factors" data-tip="The factors behind the current estimate, ranked by weight.&#10;Technical swaps the plain wording for the underlying measure." style="padding:24px 28px;border-right:2px solid var(--color-divider)">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+              <h2 style="font-size:24px;margin:0">What Brink sees</h2>`,
+    "anchor factors",
+  ],
+  // prediction: the "Approaching your brink" projection panel
+  [
+    `          <div style="padding:24px 28px">
+            <h2 style="font-size:24px;margin:0">Approaching your brink</h2>`,
+    `          <div data-tour="prediction" data-tip="Projected decline over the next 40 minutes.&#10;The shaded band is confidence: it widens when signals disagree." style="padding:24px 28px">
+            <h2 style="font-size:24px;margin:0">Approaching your brink</h2>`,
+    "anchor prediction",
+  ],
   [
     `      <sc-if value="{{ showSignals }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;align-items:center;gap:10px;padding:16px 28px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">`,

@@ -27,6 +27,11 @@ import * as THREE from 'three'
 
 const ONE = '/models/one.glb'
 const TWO = '/models/two.glb'
+// Self-hosted Draco decoder. Passing `true` here makes drei pull it from
+// gstatic.com instead: 101KB from a third party that has to land before a
+// single byte of geometry can be decoded, and that no visitor behind a
+// blocked CDN ever gets. Copied from three/examples/jsm/libs/draco/gltf.
+const DRACO = '/draco/'
 const INK = '#0A0E14'
 
 // ── tweaks ──
@@ -108,10 +113,10 @@ function setOp(model, o) {
 }
 
 function DualModel({ progressRef, partsRef }) {
-  // Models are Draco-compressed (14MB -> 5MB); drei fetches the decoder from
-  // its CDN on first use.
-  const g1 = useGLTF(ONE, true, true)
-  const g2 = useGLTF(TWO, true, true)
+  // Args must match preloadHeadband() below, or drei caches under a
+  // different key and downloads all 5MB a second time.
+  const g1 = useGLTF(ONE, DRACO, true)
+  const g2 = useGLTF(TWO, DRACO, true)
   const groupRef = useRef()
   const A = useRef(null)
   const B = useRef(null)
@@ -142,9 +147,11 @@ function DualModel({ progressRef, partsRef }) {
   return <group ref={groupRef} position={[MODEL_X, 0, 0]} />
 }
 
-// No module-level useGLTF.preload here: it fired ~14MB of GLB downloads the
-// moment the page loaded. The host section lazy-mounts the scene as the
-// visitor approaches, and Suspense loads the models then.
+// No useGLTF.preload here, at module scope or otherwise: reaching it means
+// importing this module, and pulling three + fiber first cost 1.4s before the
+// first GLB byte was requested. The host section warms the HTTP cache with
+// plain fetches on the visitor's first scroll instead, so by the time Suspense
+// asks for these the bytes are already local.
 
 function CameraRig({ progressRef }) {
   const { camera } = useThree()

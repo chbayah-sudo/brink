@@ -249,6 +249,48 @@ export default function BrinkSystemExplorer() {
     return () => io.disconnect();
   }, []);
 
+  // The 5.3MB of GLB is the whole delay: mounting 5 viewports out still only
+  // buys a few seconds of lead, and Suspense renders nothing until BOTH models
+  // land. Start them on the visitor's first scroll instead, so they download
+  // across the entire hero + brain scroll rather than the final stretch.
+  // Skipped on metered or slow connections, where eagerly pulling 5.3MB for a
+  // section the visitor may never reach is the worse trade.
+  useEffect(() => {
+    let cancelled = false;
+    const kick = () => {
+      window.removeEventListener("scroll", kick);
+      if (cancelled) return;
+      const c = (
+        navigator as Navigator & {
+          connection?: { saveData?: boolean; effectiveType?: string };
+        }
+      ).connection;
+      if (c?.saveData) return;
+      if (c?.effectiveType && /(^|-)(2g|3g)$/.test(c.effectiveType)) return;
+      // Plain fetches rather than useGLTF.preload: that would first have to
+      // import the 3D module, and pulling three + fiber cost 1.4s before the
+      // first GLB byte was even requested. These warm the HTTP cache with no
+      // JS dependency at all, so when the scene mounts useGLTF reads straight
+      // out of cache. Only one fetcher per URL, so nothing downloads twice.
+      for (const url of ["/models/one.glb", "/models/two.glb"]) {
+        fetch(url, { cache: "force-cache" }).catch(() => undefined);
+      }
+    };
+    // First scroll is the strongest intent signal, but someone reading the
+    // hero for a few seconds shouldn't lose that head start, so an idle
+    // callback races it. Whichever fires first wins; kick() is idempotent.
+    // First scroll is the strongest intent signal, but someone reading the
+    // hero for a few seconds shouldn't lose that head start, so a timer races
+    // it. Whichever fires first wins; kick() removes its own listener.
+    window.addEventListener("scroll", kick, { once: true, passive: true });
+    const timer = window.setTimeout(kick, 2500);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", kick);
+    };
+  }, []);
+
   // Click a pill / chevron → scroll to the middle of that step's band. The
   // scroll handler above then advances activeIndex, keeping clicks + scroll and
   // the explode all in sync (one source of truth: scroll position).

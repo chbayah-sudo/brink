@@ -485,7 +485,7 @@ textarea.input { min-height: 90px; resize: vertical; }
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr">
-          <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
+          <div data-tour="factors" data-tip="The factors behind the current estimate, ranked by weight.&#10;Technical swaps the plain wording for the underlying measure." style="padding:24px 28px;border-right:2px solid var(--color-divider)">
             <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
               <h2 style="font-size:24px;margin:0">What Brink sees</h2>
               <div style="display:flex;border:1px solid var(--color-divider)">
@@ -509,7 +509,7 @@ textarea.input { min-height: 90px; resize: vertical; }
             </sc-for>
           </div>
 
-          <div style="padding:24px 28px">
+          <div data-tour="prediction" data-tip="Projected decline over the next 40 minutes.&#10;The shaded band is confidence: it widens when signals disagree." style="padding:24px 28px">
             <h2 style="font-size:24px;margin:0">Approaching your brink</h2>
             <p style="font-size:12px;color:var(--color-neutral-600);margin:6px 0 16px">{{ predSub }}</p>
             <svg sc-camel-view-box="0 0 520 210" style="width:100%;display:block">
@@ -1557,14 +1557,13 @@ class Component extends DCLogic {
 
   /* eslint-disable */
   // === TOUR CONTENT =========================================================
-  // Copy is verbatim from WALKTHROUGH_SPEC.md §3. Two deviations, both because
-  // the dashboard changed after the spec was written:
-  //   - the order follows the nav (Live State's six, then Ask Brink,
-  //     Interventions, Signal Studio, Capacity Profile, Device);
-  //   - the spec's 'timeline' step is dropped, Session Timeline having been
-  //     removed from the dashboard.
-  // NOTE: step 06's closing line still refers to "the Timeline". Left as
-  // written rather than silently rewriting the spec's copy — flag for review.
+  // Based on WALKTHROUGH_SPEC.md §3, since amended on request:
+  //   - order follows the nav: Live State's steps, then Ask Brink,
+  //     Interventions, Signal Studio, Capacity Profile, Device;
+  //   - the spec's 'timeline' step is gone with Session Timeline, and the
+  //     line in step 06 that pointed at the Timeline was rewritten;
+  //   - steps 07 and 08 (What Brink sees, Approaching your brink) are new;
+  //   - em dashes removed throughout.
   const TOUR_STEPS = [
   { section: 'live', scenario: 'deepwork', target: 'device-status',
     kicker: 'Start here · the device',
@@ -1575,20 +1574,20 @@ class Component extends DCLogic {
   { section: 'live', scenario: 'meditation', target: 'scenario-switch',
     kicker: 'Orientation · scenarios',
     title: 'Five real situations, one interface',
-    body: 'Deep work, meditation, running, strength, and the hour after a reset. Switching does not change a theme — it changes which signals matter, what the numbers mean, and what Brink asks of you.',
-    life: 'You meditate at 7:14 AM, run at 12:40, and write specs until 6. Same headband, three completely different bodies — the dashboard follows you between them without being told.' },
+    body: 'Deep work, meditation, running, strength, and the hour after a reset. Switching one does not change a theme. It changes which signals matter, what the numbers mean, and what Brink asks of you.',
+    life: 'You meditate at 7:14 AM, run at 12:40, and write specs until 6. Same headband, three completely different bodies. The dashboard follows you between them without being told.' },
 
   { section: 'live', scenario: 'deepwork', target: 'goal-input',
     kicker: 'Goals · planning',
     title: 'You say what you want; it plans around your dips',
     body: 'Type a goal in plain words. Brink breaks it into equal units and pre-places two 90-second resets at the two times of day you historically fade.',
-    life: 'You type "Read 15 pages by 5 PM". Brink parks a reset at 2:40 and another at 4:05 — the exact two moments your blink rate has crept up on every long reading day this month.' },
+    life: 'You type "Read 15 pages by 5 PM". Brink parks a reset at 2:40 and another at 4:05, the exact two moments your blink rate has crept up on every long reading day this month.' },
 
   { section: 'live', scenario: 'deepwork', target: 'goal-rows',
     kicker: 'Goals · reading them',
     title: 'One cell equals one real thing',
-    body: 'A cell is a page, a morning, or a day — never an abstraction. Filled means done, gold is where you are right now, an outline is missed or still scheduled. The caption always states the unit.',
-    life: '3:38 PM: nine cells dark, the tenth gold. Page 10 of 15, done by 4:47 with 13 minutes of slack. You missed Tuesday’s meditation and it simply reads Holding — a streak of 9, not a scolding.' },
+    body: 'A cell is a page, a morning, or a day, never an abstraction. Filled means done, gold is where you are right now, an outline is missed or still scheduled. The caption always states the unit.',
+    life: '3:38 PM: nine cells dark, the tenth gold. Page 10 of 15, done by 4:47 with 13 minutes of slack. You missed Tuesday’s meditation and it simply reads Holding, a streak of 9 rather than a scolding.' },
 
   { section: 'live', scenario: 'deepwork', target: 'narrative',
     kicker: 'Live state · the read',
@@ -1599,14 +1598,26 @@ class Component extends DCLogic {
   { section: 'live', scenario: 'deepwork', target: 'rec',
     kicker: 'Live state · what to do',
     title: 'Exactly one next action',
-    body: 'Never a feed of advice. One intervention, timed to a specific minute, with the reason available on hover — and it disappears when nothing is needed.',
-    life: '"90-second reset at 3:52." You take it between two calls. On the Timeline that evening you can see the strain curve bend down before it ever became a headache.' },
+    body: 'Never a feed of advice. One intervention, timed to a specific minute, with the reason available on hover. It disappears entirely when nothing is needed.',
+    life: '"90-second reset at 3:52." You take it between two calls. Twenty minutes later your strain is flat instead of climbing, and the afternoon never turns into a headache.' },
+
+  { section: 'live', scenario: 'deepwork', target: 'factors',
+    kicker: 'Live state · the evidence',
+    title: 'Why it thinks that',
+    body: 'Every estimate is broken into the factors behind it, ranked by how much each one moved the result. Switch to Technical for the underlying measure, or leave it in plain words.',
+    life: 'You are told strain is rising. You open the factors: your blink rate is up 18 percent, your frontal channels have been drifting for 16 minutes, and stillness has held for over an hour. Three things you can act on, not a score.' },
+
+  { section: 'live', scenario: 'deepwork', target: 'prediction',
+    kicker: 'Live state · what is next',
+    title: 'The decline before it happens',
+    body: 'A projected curve for the next 40 minutes, with a shaded band for how sure Brink is. The band widens when the signals disagree, so you can see confidence drop rather than take a number on faith.',
+    life: 'At 3:38 the curve crosses your threshold at about 4:02. You move the hard part of the task forward twenty minutes and finish it before the dip instead of pushing through it.' },
 
   { section: 'ask', scenario: 'deepwork', target: 'ask',
     kicker: 'Ask Brink',
     title: 'Ask about your own body',
-    body: 'Questions answered from your data alone, with the signals behind the answer shown next to it — no generic wellness copy.',
-    life: '"Can I train hard tonight?" Answer: yes, but keep it under 40 minutes — this morning’s HRV is 9 ms below your average and today already carries a full deep-work strain load.' },
+    body: 'Questions answered from your data alone, with the signals behind the answer shown next to it. No generic wellness copy.',
+    life: '"Can I train hard tonight?" Answer: yes, but keep it under 40 minutes. This morning’s HRV is 9 ms below your average and today already carries a full deep-work strain load.' },
 
   { section: 'interventions', scenario: 'postint', target: 'interv',
     kicker: 'Interventions',
@@ -1624,7 +1635,7 @@ class Component extends DCLogic {
     kicker: 'Your profile',
     title: 'What you, specifically, are built for',
     body: 'Thirty-eight days of sessions turn into personal constants: your best cognitive window, how long you last, how fast you recover, and what reliably breaks you.',
-    life: 'Brink learns your sharpest window is 9:40–11:30 AM and that accuracy drops after 112 minutes — so it stops proposing three-hour blocks and starts defending your mornings.' },
+    life: 'Brink learns your sharpest window is 9:40 to 11:30 AM and that accuracy drops after 112 minutes, so it stops proposing three-hour blocks and starts defending your mornings.' },
 
   { section: 'device', scenario: 'running', target: 'device',
     kicker: 'Trust',
