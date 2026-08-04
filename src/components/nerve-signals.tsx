@@ -12,6 +12,7 @@ import {
 } from "motion/react";
 import { useState } from "react";
 import { HyperText } from "@/components/ui/hyper-text";
+import { toSectionProgress } from "@/lib/brain-phases";
 
 // ===========================================================================
 // THE SIGNAL PATH — sticky-step scrollytelling alongside the nerve.
@@ -21,9 +22,10 @@ import { HyperText } from "@/components/ui/hyper-text";
 // a pulsing node. The narrative rides the anatomy: cortex -> cord -> sensing ->
 // return. Each beat is scroll-scrubbed (reveal, hold, exit) so nothing pops.
 //
-// Windows are in the section's scrollYProgress (0 at top, 1 at bottom). The
-// brain assembles over roughly the first ~0.22 (one viewport of a ~4.6-viewport
-// section), so beats live from ~0.28 to ~0.99.
+// Windows are authored against the MORPH phase (see lib/brain-phases), not raw
+// section progress: the brain assembles and then holds ahead of the nerve, and
+// those phases change length. Anchoring to section progress meant lengthening
+// the hold slid beat 01 back on top of the brain's own thesis.
 // ===========================================================================
 
 type Beat = {
@@ -38,7 +40,12 @@ type Beat = {
   decimals?: number;
   unit: string; // e.g. "%", "m/s", "Hz"
   caption: string; // small label under the stat
-  start: number; // scrollYProgress window
+  // Window this beat occupies, in MORPH-LOCAL terms (0..1 across the
+  // brain->nerve scrub), mapped to section progress by toSectionProgress.
+  // 0 is the instant the morph starts, which is after the brain has finished
+  // assembling and held. Beat 01 starts at 0.18 so it lands clear of the
+  // thesis, which fades out over the morph's first 0.14.
+  start: number;
   end: number;
 };
 
@@ -49,12 +56,12 @@ const BEATS: Beat[] = [
     side: "left",
     vy: 44,
     title: "It starts\nin the brain",
-    body: "Cognitive and physical breakdown begin as a neural signature, long before anything shows on the outside.",
+    body: "Decline begins as a neural signature long before anything shows outside. Brink reads it with your physiology, movement, and context.",
     value: 1000,
     unit: "Hz",
     caption: "NEURAL SAMPLING",
-    start: 0.28,
-    end: 0.48,
+    start: 0.18,
+    end: 0.44,
   },
   {
     index: "02",
@@ -66,8 +73,8 @@ const BEATS: Beat[] = [
     value: 120,
     unit: "m/s",
     caption: "CONDUCTION VELOCITY",
-    start: 0.45,
-    end: 0.65,
+    start: 0.37,
+    end: 0.63,
   },
   {
     index: "03",
@@ -75,11 +82,11 @@ const BEATS: Beat[] = [
     side: "left",
     vy: 47,
     title: "It steps in\nbefore the break",
-    body: "A personalized cue at the exact moment it matters, unlocking capacity your brain was still holding back.",
+    body: "A personalized intervention at the exact moment it matters, unlocking capacity your brain was still holding back.",
     value: 3,
     unit: "×",
     caption: "RESERVE BEYOND EXHAUSTION · MARCORA 2010",
-    start: 0.62,
+    start: 0.56,
     end: 0.82,
   },
   {
@@ -88,13 +95,13 @@ const BEATS: Beat[] = [
     side: "right",
     vy: 55,
     title: "It learns\nwhat works",
-    body: "Every session tunes the model to your brain and body. Your limits, mapped, protected, and extended over time.",
+    body: "Every session tunes the model to how you respond. Capacity you can understand, shape, and expand over time.",
     prefix: "N=",
     value: 1,
     unit: "",
     caption: "CALIBRATED TO YOU, NOT AN AVERAGE",
-    start: 0.79,
-    end: 0.99,
+    start: 0.74,
+    end: 1.0,
   },
 ];
 
@@ -140,10 +147,14 @@ function BeatBlock({
   progress: MotionValue<number>;
   reduced: boolean;
 }) {
-  // Local 0..1 across this beat's scroll window.
-  const local = useTransform(progress, [beat.start, beat.end], [0, 1], {
-    clamp: true,
-  });
+  // Local 0..1 across this beat's scroll window, with the beat's morph-local
+  // window mapped onto the section progress the scroll listener reports.
+  const local = useTransform(
+    progress,
+    [toSectionProgress(beat.start), toSectionProgress(beat.end)],
+    [0, 1],
+    { clamp: true }
+  );
 
   // Reveal (fast in) -> hold -> exit (out), all scrubbed.
   const opacity = useTransform(local, [0, 0.16, 0.82, 1], [0, 1, 1, 0]);

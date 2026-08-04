@@ -88,9 +88,12 @@ export function AppDemo() {
           <h2 className="mt-4 font-serif-df text-3xl leading-[1.08] md:text-5xl">
             The app that comes with it.
           </h2>
-          <p className="mt-5 max-w-xl bg-[#e8e4d8] font-mono-df text-[0.8rem] leading-[1.7] text-[#201f1d]/70">
-            It shows your state now, what Brink expects next, and what it does
-            about it.
+          {/* one line wherever it fits: the max-width that used to sit here
+              broke it across two lines on every desktop width */}
+          {/* 500 is the heaviest mono weight loaded in layout.tsx; anything
+              above it gets synthesised and smears at this size */}
+          <p className="mt-5 bg-[#e8e4d8] font-mono-df text-[0.95rem] font-medium leading-[1.6] text-[#201f1d]/80">
+            It shows your state now, what Brink expects next, and what it does about it.
           </p>
           <div className="relative mt-9 flex">
             <div className="absolute inset-x-0 top-1/2 -translate-y-px border-t border-[#201f1d]/20" />

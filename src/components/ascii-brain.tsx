@@ -5,6 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { NerveSignals } from "@/components/nerve-signals";
 import { HERO_SRC_DEFAULT, applyHeroSrc } from "@/lib/hero-src";
+import {
+  HOLD_SCROLL_SVH,
+  SECTION_SCROLL_SVH,
+} from "@/lib/brain-phases";
 
 // --- ASCII brain tuning (restored from the original hero renderer) ----------
 const ASCII_RAMP = " .:-=+*#%@";
@@ -47,18 +51,24 @@ const TIER_LO: [number, number, number] = [124, 122, 118]; // #7c7a76
 // longer merge a brain video with a separately-drawn nerve — the ASCII engine
 // just scrubs this one clip by scroll.
 //
-// Two scroll phases share ONE pinned viewport:
+// Three scroll phases share ONE pinned viewport:
 //   assembly phase (p 0..1)      : the hero zoom-out shreds away and the ASCII
 //                                  brain assembles from scatter. The clip is
 //                                  held on frame 0 (full brain) the whole time.
+//   hold phase                   : p is pinned at 1 and morphP at 0. The brain
+//                                  is fully assembled and idle-spinning with the
+//                                  thesis up. Nothing is transitioning.
 //   morph phase   (morphP 0..1)  : the clip's playhead scrubs 0 -> end, so the
 //                                  assembled ASCII brain drains into the nerve
 //                                  exactly as you scroll.
 //
-// MORPH_SCROLL_SVH : extra scroll length (svh) devoted to the brain->nerve
-//                    scrub, appended after the 200svh brain section. Bigger =
-//                    the morph plays out more slowly as you scroll.
-const MORPH_SCROLL_SVH = 360;
+// Phase lengths live in lib/brain-phases so NerveSignals can place its beats
+// relative to the morph rather than to raw section progress.
+//
+// HOLD_SCROLL_SVH is the scroll the assembled brain gets to itself before the
+// morph begins. Without it the thesis peaked at full opacity for a single
+// scroll instant (brainIn completes exactly at p=1, thesisOut starts at
+// morphP=0.02) and the whole brain beat read as a flicker on the way past.
 // The combined brain -> nerve clip the ASCII engine samples + scrubs.
 const BRAIN_NERVE_SRC = "/brain-nerve.mp4";
 // Seconds of the clip's head that are still a full brain (before the morph
@@ -279,10 +289,19 @@ export function AsciiBrain() {
       // the original 200svh section (where total was exactly one viewport). The
       // section is now taller only to add scroll room for the nerve morph.
       const assembly = window.innerHeight;
+      // The assembled brain holds here: p stays 1, morphP stays 0, the idle 360
+      // keeps spinning and the thesis stays up. Buys the section a beat of its
+      // own instead of dissolving the instant it finishes assembling.
+      const hold = window.innerHeight * (HOLD_SCROLL_SVH / 100);
       pRef.current = clamp(scrolled / (assembly || 1), 0, 1);
-      // Morph phase: everything scrolled beyond assembly, normalised 0..1. This
-      // is the value the brain->nerve clip's playhead is scrubbed against.
-      morphPRef.current = clamp((scrolled - assembly) / (total - assembly || 1), 0, 1);
+      // Morph phase: everything scrolled beyond assembly + hold, normalised
+      // 0..1. This is the value the brain->nerve clip's playhead is scrubbed
+      // against.
+      morphPRef.current = clamp(
+        (scrolled - assembly - hold) / (total - assembly - hold || 1),
+        0,
+        1
+      );
       // Reveal the headline as the brain assembles (idempotent; React bails
       // after the first true).
       if (pRef.current > 0.6) setHeadlineIn(true);
@@ -853,9 +872,9 @@ export function AsciiBrain() {
       ref={sectionRef}
       id="brain"
       className="relative -mt-[100svh]"
-      // 200svh brain (100svh overlap + 100svh assembly) + MORPH_SCROLL_SVH for
-      // the brain->nerve scrub. Driven by the constant so the two stay in sync.
-      style={{ height: `${200 + MORPH_SCROLL_SVH}svh` }}
+      // 100svh hero overlap + assembly + hold + morph, summed in brain-phases
+      // so the beats can be placed against the same numbers.
+      style={{ height: `${SECTION_SCROLL_SVH}svh` }}
     >
       <div
         ref={wrapRef}
@@ -902,22 +921,36 @@ export function AsciiBrain() {
             small labeled paragraph bottom-right (resolve in with the scene). */}
         <div ref={textRef} className="absolute inset-0 flex items-end" style={{ opacity: 0 }}>
           <div className="mx-auto w-full max-w-[1440px] px-4 md:px-8 pb-14 md:pb-20">
-            <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between md:gap-16">
+            <div className="flex flex-col gap-10 md:block">
               <TextGenerateEffect
                 as="h2"
-                words={"Your brain\nquits first"}
+                words={"An interface\nto your biology"}
                 filter={true}
                 duration={0.8}
                 start={headlineIn}
                 className="font-mono-df uppercase leading-[1.05] tracking-[0.02em] text-df-white text-3xl md:text-5xl lg:text-6xl"
               />
-              <div className="max-w-[22rem] md:pb-1.5">
-                <p className="font-mono-df text-df-gray text-sm md:text-[15px] leading-[1.5]">
-                  <span className="text-df-orange">&bull;</span> Breakdown starts
-                  in the brain before it shows in the body. Brink recognizes the
-                  signal, predicts the decline, and intervenes in real time.
-                  Then it learns what works for you.
-                </p>
+              {/* Desktop: lifted out of the bottom row to the vertical middle,
+                  pushed right. The middle is where the brain is at its widest,
+                  so the copy sits on top of dense ASCII there and needs the
+                  scrim behind it to stay readable. Mobile keeps the stack. */}
+              <div className="max-w-[24rem] md:absolute md:inset-0 md:mx-auto md:flex md:w-full md:max-w-[1440px] md:items-center md:justify-end md:px-8">
+                <div className="md:relative">
+                  {/* Explicit stops rather than from/via/to: the fade has to
+                      finish just before the text starts, otherwise the first
+                      word of every line still sits on bare ASCII. */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -inset-y-10 -left-32 -right-10 hidden bg-[linear-gradient(to_right,transparent_0%,rgba(10,12,16,0.94)_24%,rgba(10,12,16,0.985)_40%,rgba(10,12,16,0.985)_100%)] md:block"
+                  />
+                  <p className="relative font-mono-df text-df-gray text-sm md:max-w-[21rem] md:text-[15px] leading-[1.5]">
+                    <span className="text-df-orange">&bull;</span> Brink reads
+                    neural and physiological signals together with movement and
+                    real-world context. It recognizes decline as it begins,
+                    coordinates a personalized intervention, and learns how you
+                    respond. The headband is only the first interface.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
