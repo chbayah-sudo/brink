@@ -25,7 +25,23 @@ import { FooterDither } from "@/components/footer-dither";
  *     demo via the open link instead of inline interaction.
  */
 
-const DEMO_URL = "/demo/index.html";
+/**
+ * The dev server and every static host disagree about this path, so it has to
+ * be resolved per environment. Both were checked against the real thing:
+ *
+ *   next dev   serves public/ by exact filename. /demo/index.html is 200 and
+ *              /demo/ is 404 — there is no directory-index resolution.
+ *   Vercel     routes the static export's HTML by directory and refuses the
+ *              literal filename. /demo/ is 200 and /demo/index.html falls
+ *              through to Next's 404 page. This is true of every .html in the
+ *              export, not just index (/404.html 404s too), so renaming the
+ *              file doesn't avoid it.
+ *
+ * Hardcoding the dev form is what shipped the demo broken: it kept working on
+ * localhost the whole time it was 404ing on neurabrink.bio.
+ */
+const DEMO_URL =
+  process.env.NODE_ENV === "production" ? "/demo/" : "/demo/index.html";
 const DESIGN_W = 1440;
 const DESIGN_H = 900;
 // below this scale, inline interaction is too fiddly, so send to the full page
@@ -116,7 +132,7 @@ export function AppDemo() {
                 ILLUSTRATIVE DATA
               </span>
               <a
-                href="/demo/index.html"
+                href={DEMO_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="font-mono-df text-[0.62rem] tracking-[0.18em] text-[#b3250f] transition-opacity hover:opacity-70"
@@ -156,7 +172,7 @@ export function AppDemo() {
                     </button>
                   ) : (
                     <a
-                      href="/demo/index.html"
+                      href={DEMO_URL}
                       target="_blank"
                       rel="noreferrer"
                       className="border border-[#b3250f] bg-[#f3f2f2] px-6 py-3 font-mono-df text-xs uppercase tracking-[0.22em] text-[#b3250f] shadow-[0_2px_18px_rgba(32,31,29,0.18)]"
