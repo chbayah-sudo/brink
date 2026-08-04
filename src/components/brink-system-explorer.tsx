@@ -257,9 +257,14 @@ export default function BrinkSystemExplorer() {
   // section the visitor may never reach is the worse trade.
   useEffect(() => {
     let cancelled = false;
+    let fired = false;
     const kick = () => {
+      // Scroll and the timer race each other, and the loser still fires: the
+      // scroll listener is once-only but nothing cancels the timer behind it.
+      // Without this guard both run and each URL is fetched twice.
+      if (fired || cancelled) return;
+      fired = true;
       window.removeEventListener("scroll", kick);
-      if (cancelled) return;
       const c = (
         navigator as Navigator & {
           connection?: { saveData?: boolean; effectiveType?: string };
@@ -277,11 +282,8 @@ export default function BrinkSystemExplorer() {
       }
     };
     // First scroll is the strongest intent signal, but someone reading the
-    // hero for a few seconds shouldn't lose that head start, so an idle
-    // callback races it. Whichever fires first wins; kick() is idempotent.
-    // First scroll is the strongest intent signal, but someone reading the
     // hero for a few seconds shouldn't lose that head start, so a timer races
-    // it. Whichever fires first wins; kick() removes its own listener.
+    // it. Whichever fires first wins.
     window.addEventListener("scroll", kick, { once: true, passive: true });
     const timer = window.setTimeout(kick, 2500);
     return () => {
