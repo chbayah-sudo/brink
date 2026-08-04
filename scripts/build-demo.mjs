@@ -81,15 +81,22 @@ for (const [uuid, entry] of Object.entries(manifest)) {
   console.log(`  ${same ? "=" : "+"} ${rel.padEnd(34)} ${bytes.length} B`);
 }
 
+// Absolute, not relative. Vercel strips the trailing slash, so this document
+// is served at /demo rather than /demo/ and its base URL becomes the site root:
+// a relative "vendor/support.js" resolves to /vendor/support.js and 404s, the
+// runtime never loads, and the dashboard renders its raw {{ }} placeholders
+// with the inline CSS still applied — looking built but never hydrating.
+const urlFor = (rel) => `/demo/${rel}`;
+
 for (const uuid of Object.keys(paths)) {
-  template = template.split(uuid).join(paths[uuid]);
+  template = template.split(uuid).join(urlFor(paths[uuid]));
 }
 
 // React/ReactDOM aren't <script> tags in the document. The dc-runtime resolves
 // them through window.__resources and otherwise falls back to unpkg.com. Point
 // them at the local copies so the demo owes nothing to a CDN at runtime.
 const resources = Object.fromEntries(
-  extResources.map((e) => [e.id, paths[e.uuid]]),
+  extResources.map((e) => [e.id, urlFor(paths[e.uuid])]),
 );
 const inject = `<script>window.__resources = ${JSON.stringify(resources).replace(
   /<\//g,
