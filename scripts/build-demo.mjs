@@ -383,7 +383,7 @@ const SCEN_EXT = {
     },
     act: {
       grade: "SELECTED FROM MEASURED RESPONSES",
-      why: "Blink rate is up 18% and HRV has fallen for 16 minutes — the precursor pair this pattern usually starts with.",
+      why: "Blink rate is up 18% and HRV has fallen for 16 minutes. That precursor pair is how this pattern usually starts.",
       delivery: "Haptic on-device · 4.5 breaths/min",
       safety: "Skip it if you are mid-conversation; Brink re-offers.",
     },

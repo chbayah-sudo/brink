@@ -373,6 +373,24 @@ There is no test suite (A9); no test claim is made.
 | `og:*` / `twitter:*` in `out/index.html` | present; `og:image` absolute at `https://www.neurabrink.bio/og.jpg` |
 | Hero `currentSrc` at 390 px | `hero-720.mp4` — the mobile rendition swap works |
 
+#### Revision — 2026-08-05, hero copy rolled back by the author
+
+Task 1.1's **copy** was reverted at the author's request. The hero is back to the
+pre-Phase-1 composition: `BRINK` wordmark as the sole `<h1>`, with the looping
+two-phrase typed tagline beneath it. The static eyebrow, the serif headline
+("Know when your capacity is about to drop…") and the mono subhead were removed.
+
+What Task 1.1 **kept**:
+- the two calls to action — `SEE THE CLOSED LOOP` → `#app` and `INSIDE THE HEADBAND` → `#how-brink-works`, 44px targets, replacing the 10px `Open` anchor;
+- the gradient scrim, re-weighted to the bottom edge so it seats the CTAs and carries the hero into the ink the ASCII brain section opens on;
+- exactly one `<h1>` (the typed tagline renders as a `<p>`, so the two-`<h1>` bug stays fixed).
+
+**Audit consequence, recorded honestly:** P0.1's core finding is no longer fully
+addressed. The positioning statement is again carried only by the typed
+animation, so it is legible for part of its cycle rather than on first paint,
+and the word "headband" is no longer in the hero. Tasks 1.2–1.6 (fNIRS, science
+cards, DOIs, signal-quality copy, metadata) are untouched and still in force.
+
 #### Known limitations of this verification
 
 - **Headless screenshots of this site are not trustworthy.** The preloader's completion loop is driven by `requestAnimationFrame`, which does not advance under Chrome's `--virtual-time-budget`, so headless captures paint a pre-settled page and show phantom clipping. Layout was therefore verified by measuring `getBoundingClientRect()` in a real 390 px layout instead, which is the stronger evidence. **This is a headless artifact only** — the preloader has a `MAX_MS` fallback (`t >= MAX_MS || (heroReady && t >= MIN_MS)`, `preloader.tsx:139`) so real users always exit it.

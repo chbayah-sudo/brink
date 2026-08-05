@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Cross, GridDots } from "@/components/glyphs";
+import { TypingAnimation } from "@/components/ui/typing-animation";
 import { HERO_SRC_DEFAULT, applyHeroSrc } from "@/lib/hero-src";
 
 function CornerLetter({
@@ -109,13 +110,13 @@ export function Hero() {
         preload="metadata"
       />
 
-      {/* Legibility scrim. The headline and subhead sit on moving ASCII
-          footage, which has no stable luminance — without a seat, 15px copy
-          disappears whenever a bright frame passes. Same device the brain and
-          explorer sections already use; it does not crop or letterbox. */}
+      {/* Weighted to the bottom edge: it seats the two calls to action against
+          moving footage, and carries the hero into the ink the ASCII brain
+          section opens on, so the scroll handoff stops being a hard cut. Light
+          at the top so the video keeps its contrast behind the wordmark. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[5] bg-[linear-gradient(180deg,rgba(10,12,16,0.55)_0%,rgba(10,12,16,0.10)_34%,rgba(10,12,16,0.86)_100%)]"
+        className="pointer-events-none absolute inset-0 z-[5] bg-[linear-gradient(180deg,rgba(10,12,16,0.30)_0%,rgba(10,12,16,0.06)_30%,rgba(10,12,16,0.82)_100%)]"
       />
 
       {/* chrome: BRINK wordmark + corner letters over the video */}
@@ -125,36 +126,31 @@ export function Hero() {
           <CornerLetter letter="R" side="right" />
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center gap-4 md:gap-5 text-center">
-          {/* Must stay static: this and the two blocks below are the whole
-              proposition, and they have to be readable on the first frame
-              rather than after an animation settles. */}
-          <p className="max-w-full text-balance bg-df-orange px-3 py-0.5 font-mono-df uppercase tracking-[0.14em] text-df-black text-[clamp(10px,1.7vw,18px)]">
-            Brink · The operating system for human capacity
-          </p>
-
-          {/* Logotype, not a heading: the header nav link already announces the
-              company. Demoting it leaves exactly one h1, holding the claim. */}
-          <div
-            aria-hidden="true"
-            className="hero-word font-grotesque text-df-white leading-[0.8] tracking-[-0.03em] whitespace-nowrap text-[clamp(54px,15.5vw,280px)] [text-shadow:0_0_40px_rgba(10,12,16,0.55)]"
-          >
+        <div className="flex-1 flex flex-col items-center justify-center gap-6">
+          <h1 className="hero-word font-grotesque text-df-white text-center leading-[0.8] tracking-[-0.03em] whitespace-nowrap text-[clamp(54px,15.5vw,280px)] [text-shadow:0_0_40px_rgba(10,12,16,0.55)]">
             BRINK
-          </div>
-
-          {/* w-full on both: with align-items:center these are shrink-to-fit,
-              so a bare max-w in ch units resolves wider than a phone viewport
-              (56ch of mono ≈ 437px) and widens the whole column off-screen. */}
-          <h1 className="w-full max-w-[22ch] text-balance font-serif-df text-df-white text-[clamp(21px,3.1vw,42px)] leading-[1.14]">
-            Know when your capacity is about to drop. Act before it does.
           </h1>
 
-          <p className="w-full max-w-[56ch] font-mono-df text-df-white/75 text-[13px] md:text-[15px] leading-[1.55]">
-            Brink reads neural, physiological, movement and contextual signals
-            to learn your baseline, forecast decline before it shows, and
-            intervene in real time. The first interface is a neuroperformance
-            headband.
-          </p>
+          {/* Typing tagline beneath the wordmark. Loops the two phrases;
+              static first phrase under prefers-reduced-motion. Rendered as a
+              <p> so the wordmark above stays the section's only heading. */}
+          <TypingAnimation
+            as="p"
+            phrases={[
+              "THE OPERATING SYSTEM FOR HUMAN CAPACITY",
+              "THE INTELLIGENCE LAYER FOR HUMAN PERFORMANCE",
+            ]}
+            typeSpeed={70}
+            deleteSpeed={40}
+            pauseDelay={1800}
+            loop
+            startOnView
+            cursorStyle="block"
+            cursorClassName="!bg-df-black"
+            /* default-"highlighted" look: solid amber bar with ink text, like
+               the site's ::selection style, growing as the phrase types */
+            className="bg-df-orange px-3 py-0.5 font-mono-df text-df-black uppercase tracking-[0.14em] text-[clamp(14px,2.4vw,26px)]"
+          />
         </div>
 
         <div className="flex items-end justify-between gap-3">

@@ -42,6 +42,12 @@ import { FooterDither } from "@/components/footer-dither";
  */
 const DEMO_URL =
   process.env.NODE_ENV === "production" ? "/demo/" : "/demo/index.html";
+/** The gate's call to action, centred over the scaled app until it goes live.
+ *  Sized to survive on top of a busy dashboard rather than to match the frame
+ *  chrome, which is deliberately quiet. */
+const GATE_BUTTON =
+  "border-2 border-[#b3250f] bg-[#f3f2f2] px-9 py-4 font-mono-df text-sm uppercase tracking-[0.22em] text-[#b3250f] shadow-[0_4px_28px_rgba(32,31,29,0.28)] transition-colors hover:bg-[#b3250f] hover:text-[#f3f2f2]";
+
 const DESIGN_W = 1440;
 const DESIGN_H = 900;
 // below this scale, inline interaction is too fiddly, so send to the full page
@@ -201,12 +207,9 @@ export function AppDemo() {
 
               {/* click-to-interact gate: keeps page scroll from being trapped */}
               {!active && (
-                <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-b from-transparent via-transparent to-[#201f1d]/10 pb-8">
+                <div className="absolute inset-0 flex items-center justify-center bg-[#201f1d]/[0.07]">
                   {interactive ? (
-                    <button
-                      onClick={explore}
-                      className="border border-[#b3250f] bg-[#f3f2f2] px-6 py-3 font-mono-df text-xs uppercase tracking-[0.22em] text-[#b3250f] shadow-[0_2px_18px_rgba(32,31,29,0.18)] transition-colors hover:bg-[#b3250f] hover:text-[#f3f2f2]"
-                    >
+                    <button onClick={explore} className={GATE_BUTTON}>
                       [ Explore the demo ]
                     </button>
                   ) : (
@@ -214,7 +217,7 @@ export function AppDemo() {
                       href={DEMO_URL}
                       target="_blank"
                       rel="noreferrer"
-                      className="border border-[#b3250f] bg-[#f3f2f2] px-6 py-3 font-mono-df text-xs uppercase tracking-[0.22em] text-[#b3250f] shadow-[0_2px_18px_rgba(32,31,29,0.18)]"
+                      className={GATE_BUTTON}
                     >
                       [ Open the demo ]
                     </a>
