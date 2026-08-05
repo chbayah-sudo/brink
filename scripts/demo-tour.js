@@ -21,7 +21,9 @@
   //     Interventions, Signal Studio, Capacity Profile, Device;
   //   - the spec's 'timeline' step is gone with Session Timeline, and the
   //     line in step 06 that pointed at the Timeline was rewritten;
-  //   - steps 07 and 08 (What Brink sees, Approaching your brink) are new;
+  //   - the separate 'narrative' and 'rec' steps became two steps on the loop
+  //     band that replaced them, the second one showing the abstain case;
+  //   - the two goal steps moved to Capacity Profile with the planner;
   //   - em dashes removed throughout.
   const TOUR_STEPS = [
   { section: 'live', scenario: 'deepwork', target: 'device-status',
@@ -36,29 +38,17 @@
     body: 'Deep work, meditation, running, strength, and the hour after a reset. Switching one does not change a theme. It changes which signals matter, what the numbers mean, and what Brink asks of you.',
     life: 'You meditate at 7:14 AM, run at 12:40, and write specs until 6. Same headband, three completely different bodies. The dashboard follows you between them without being told.' },
 
-  { section: 'live', scenario: 'deepwork', target: 'goal-input',
-    kicker: 'Goals · planning',
-    title: 'You say what you want; it plans around your dips',
-    body: 'Type a goal in plain words. Brink breaks it into equal units and pre-places two 90-second resets at the two times of day you historically fade.',
-    life: 'You type "Read 15 pages by 5 PM". Brink parks a reset at 2:40 and another at 4:05, the exact two moments your blink rate has crept up on every long reading day this month.' },
+  { section: 'live', scenario: 'deepwork', target: 'loop',
+    kicker: 'Live state · the loop',
+    title: 'The whole product, in four beats',
+    body: 'What is true now, what is coming, the one thing to do about it, and what the last intervention actually did. Each beat states where its numbers came from: measured, inferred, predicted, or model-estimated.',
+    life: 'You glance once and read the sentence end to end. Attention is holding, it starts slipping around 3:48, take a 90-second reset, and the last one bought you 31 minutes.' },
 
-  { section: 'live', scenario: 'deepwork', target: 'goal-rows',
-    kicker: 'Goals · reading them',
-    title: 'One cell equals one real thing',
-    body: 'A cell is a page, a morning, or a day, never an abstraction. Filled means done, gold is where you are right now, an outline is missed or still scheduled. The caption always states the unit.',
-    life: '3:38 PM: nine cells dark, the tenth gold. Page 10 of 15, done by 4:47 with 13 minutes of slack. You missed Tuesday’s meditation and it simply reads Holding, a streak of 9 rather than a scolding.' },
-
-  { section: 'live', scenario: 'deepwork', target: 'narrative',
-    kicker: 'Live state · the read',
-    title: 'Plain language before numbers',
-    body: 'Brink states what is happening to you in one paragraph, then backs it with figures underneath. Every claim is relative to your own baseline, not a population average.',
-    life: 'Instead of "HF-HRV 48 ms, frontal alpha 62%", you read: your attention is highly sustained, but strain will likely start rising in about 24 minutes.' },
-
-  { section: 'live', scenario: 'deepwork', target: 'rec',
-    kicker: 'Live state · what to do',
-    title: 'Exactly one next action',
-    body: 'Never a feed of advice. One intervention, timed to a specific minute, with the reason available on hover. It disappears entirely when nothing is needed.',
-    life: '"90-second reset at 3:52." You take it between two calls. Twenty minutes later your strain is flat instead of climbing, and the afternoon never turns into a headache.' },
+  { section: 'live', scenario: 'strength', target: 'loop',
+    kicker: 'Live state · saying no',
+    title: 'It admits when nothing was measured',
+    body: 'Switch to Strength and the fourth beat changes its answer. No between-set intervention has ever been tested on this person, so Brink calls the rest advice guidance rather than a learned effect.',
+    life: 'A dashboard that claims every number equally is a dashboard you stop believing. This one tells you which of its four beats is the weakest.' },
 
   { section: 'live', scenario: 'deepwork', target: 'factors',
     kicker: 'Live state · the evidence',
@@ -69,7 +59,7 @@
   { section: 'live', scenario: 'deepwork', target: 'prediction',
     kicker: 'Live state · what is next',
     title: 'The decline before it happens',
-    body: 'A projected curve for the next 40 minutes, with a shaded band for how sure Brink is. The band widens when the signals disagree, so you can see confidence drop rather than take a number on faith.',
+    body: 'A projected curve over whatever horizon the activity actually has, with a shaded band for how sure Brink is. The band widens when the signals disagree, so you can see confidence drop rather than take a number on faith. Everything dashed or shaded is model-estimated, and says so.',
     life: 'At 3:38 the curve crosses your threshold at about 4:02. You move the hard part of the task forward twenty minutes and finish it before the dip instead of pushing through it.' },
 
   { section: 'ask', scenario: 'deepwork', target: 'ask',
@@ -95,6 +85,18 @@
     title: 'What you, specifically, are built for',
     body: 'Thirty-eight days of sessions turn into personal constants: your best cognitive window, how long you last, how fast you recover, and what reliably breaks you.',
     life: 'Brink learns your sharpest window is 9:40 to 11:30 AM and that accuracy drops after 112 minutes, so it stops proposing three-hour blocks and starts defending your mornings.' },
+
+  { section: 'profile', scenario: 'deepwork', target: 'goal-input',
+    kicker: 'Plans · goals',
+    title: 'You say what you want; it plans around your dips',
+    body: 'Type a goal in plain words. Brink breaks it into equal units and pre-places two 90-second resets at the two times of day you historically fade. Plans sit here, beside the model that learned those times.',
+    life: 'You type "Read 15 pages by 5 PM". Brink parks a reset at 2:40 and another at 4:05, the exact two moments your blink rate has crept up on every long reading day this month.' },
+
+  { section: 'profile', scenario: 'deepwork', target: 'goal-rows',
+    kicker: 'Plans · reading them',
+    title: 'One cell equals one real thing',
+    body: 'A cell is a page, a morning, or a day, never an abstraction. Filled means done, gold is where you are right now, an outline is missed or still scheduled. The caption always states the unit.',
+    life: '3:38 PM: nine cells dark, the tenth gold. Page 10 of 15, done by 4:47 with 13 minutes of slack. You missed Tuesday’s meditation and it simply reads Holding, a streak of 9 rather than a scolding.' },
 
   { section: 'device', scenario: 'running', target: 'device',
     kicker: 'Trust',

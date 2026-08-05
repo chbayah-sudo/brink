@@ -389,13 +389,17 @@ textarea.input { min-height: 90px; resize: vertical; }
       <div style="font-family:var(--font-heading);font-weight:800;font-size:14px">Alex Morgan</div>
       <div style="font-size:11px;color:var(--color-neutral-600)">Product builder · endurance athlete</div>
       <div style="font-size:10px;font-variant-numeric:tabular-nums;color:var(--color-neutral-600);margin-top:6px">38 days calibrated · 126 sessions · 214 h</div>
-      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500);margin-top:12px">Illustrative demo data</div>
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500);margin-top:12px">Illustrative demo data · every value on this screen is simulated</div>
     </div>
   </nav>
 
   <main style="flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden">
     <header style="display:flex;align-items:center;gap:16px;padding:14px 28px;border-bottom:2px solid var(--color-divider);flex:0 0 auto">
-      <h1 style="font-size:20px;margin:0;letter-spacing:-0.01em">{{ sectionTitle }}</h1>
+      <div style="min-width:0">
+        <h1 style="font-size:20px;margin:0;letter-spacing:-0.01em">{{ sectionTitle }}</h1>
+        <div style="font-size:10px;color:var(--color-neutral-600);margin-top:2px">{{ sectionRole }}</div>
+      </div>
+      <span style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);border:1px solid var(--color-divider);padding:4px 8px;flex:none">{{ sectionMaturity }}</span>
       <div style="flex:1"></div>
       <sc-if value="{{ showScenarios }}" hint-placeholder-val="{{ true }}">
         <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">Scenario</span>
@@ -411,64 +415,47 @@ textarea.input { min-height: 90px; resize: vertical; }
     <div style="flex:1;overflow-y:auto;min-height:0">
 
       <sc-if value="{{ showLive }}" hint-placeholder-val="{{ true }}">
-        <div style="display:grid;grid-template-columns:1fr 380px;border-bottom:2px solid var(--color-divider)">
-          <div style="border-right:2px solid var(--color-divider);min-height:460px;display:flex;flex-direction:column">
-            <div style="padding:18px 24px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
-              <div style="font-family:var(--font-heading);font-weight:800;font-size:21px;letter-spacing:-0.01em">Goals</div>
-              <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500)">What you committed to · how it is actually going</div>
-            </div>
-            <div style="padding:0 24px 18px;border-bottom:1px solid var(--color-divider)">
-              <div data-tour="goal-input" data-tip="Plain words. Brink splits the goal into equal units and&#10;pre-places resets at the two times you historically fade." style="display:flex;gap:10px">
-                <input class="input" style="flex:1;font-size:13px" placeholder="Set a goal, e.g. Read 15 pages by 5 PM" value="{{ goalText }}" sc-camel-on-change="{{ goalTyping }}" aria-label="Goal input">
-                <button class="btn btn-primary" sc-camel-on-click="{{ goalPlan }}">Plan it</button>
-              </div>
-            </div>
-            <div data-tour="goal-rows" style="flex:1">
-              <sc-for list="{{ goalRows }}" as="g" hint-placeholder-count="3">
-                <div style="padding:20px 24px;border-bottom:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)">
-                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
-                    <div style="min-width:0">
-                      <div style="font-size:13.5px;font-weight:700;text-wrap:pretty">{{ g.title }}</div>
-                      <div style="font-size:11px;color:var(--color-neutral-600);margin-top:2px">{{ g.meta }}</div>
-                    </div>
-                    <div style="text-align:right">
-                      <div style="font-family:var(--font-heading);font-weight:800;font-size:16px;color:{{ g.statusColor }}">{{ g.status }}</div>
-                      <div style="font-size:11px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums">{{ g.sub }}</div>
-                    </div>
-                  </div>
-                  <div data-tip="One cell = one real thing: a page, a morning, a day.&#10;Filled is done, gold is now, an outline is missed or scheduled." style="display:flex;gap:2px;height:10px;margin-top:12px">
-                    <sc-for list="{{ g.segs }}" as="s" hint-placeholder-count="6">
-                      <span style="{{ s.style }}"></span>
-                    </sc-for>
-                  </div>
-                  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:7px">
-                    <div style="font-size:10px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.caption }}</div>
-                    <sc-if value="{{ g.showCommit }}" hint-placeholder-val="{{ false }}">
-                      <button sc-camel-on-click="{{ g.commit }}" style="border:none;background:var(--color-accent);color:var(--color-bg);font:inherit;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;white-space:nowrap;flex:none" style-hover="background:var(--color-accent-600)">Commit and start</button>
-                    </sc-if>
-                  </div>
-                </div>
-              </sc-for>
-            </div>
+        <sc-if value="{{ hasGoal }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:baseline;gap:12px;padding:9px 28px;border-bottom:1px solid var(--color-divider);flex-wrap:wrap">
+            <span style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-500);flex:none">Goal</span>
+            <span style="font-size:12px;font-weight:600">{{ goalLeadTitle }}</span>
+            <span style="font-size:11px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums;min-width:0">{{ goalLeadCaption }}</span>
+            <div style="flex:1"></div>
+            <span style="font-size:11px;font-weight:600;color:{{ goalLeadColor }};flex:none">{{ goalLeadStatus }}</span>
+            <span style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500);flex:none">Plans live in Capacity Profile</span>
           </div>
-          <div style="display:flex;flex-direction:column">
-            <div data-tour="narrative" data-tip="Plain language first, figures underneath.&#10;Every claim is against your own baseline, not an average." style="padding:20px 24px;border-bottom:1px solid var(--color-divider)">
-              <p style="font-size:14px;line-height:1.6;margin:0;text-wrap:pretty">{{ narrative }}</p>
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-              <sc-for list="{{ metaRows }}" as="m" hint-placeholder-count="6">
-                <div style="display:flex;justify-content:space-between;gap:12px;padding:9px 24px;border-bottom:1px solid color-mix(in srgb, var(--color-text) 12%, transparent);font-size:12px">
-                  <span style="letter-spacing:.08em;text-transform:uppercase;font-size:10px;color:var(--color-neutral-600);padding-top:2px">{{ m.k }}</span>
-                  <span style="font-variant-numeric:tabular-nums;font-weight:600;text-align:right;color:{{ m.color }}">{{ m.v }}</span>
-                </div>
-              </sc-for>
-            </div>
-            <div data-tour="rec" data-tip="Exactly one next action, timed to the minute.&#10;It disappears entirely when nothing is needed." data-tip-up sc-camel-on-mouse-enter="{{ recHover }}" sc-camel-on-mouse-leave="{{ recLeave }}" style="padding:14px 24px;background:var(--color-surface)" style-hover="background:color-mix(in srgb, var(--color-accent) 7%, var(--color-surface))">
-              <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:4px">Recommendation</div>
-              <div style="font-family:var(--font-heading);font-weight:800;font-size:16px">{{ recommendation }}</div>
+        </sc-if>
 
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:16px 28px 12px">
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase">The loop</div>
+          <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500)">What Brink learns in 04 changes 01 next session</div>
+        </div>
+        <div data-tour="loop" data-tip="One state, one forecast, one action, one measured result.&#10;The whole product, in four beats." style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:2px solid var(--color-divider)">
+          <sc-for list="{{ loopSteps }}" as="ls" hint-placeholder-count="4">
+            <div style="{{ ls.cellStyle }}">
+              <div style="display:flex;align-items:baseline;gap:8px;margin-top:13px">
+                <span style="font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;color:{{ ls.numColor }}">{{ ls.n }}</span>
+                <span style="font-family:var(--font-heading);font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:{{ ls.numColor }}">{{ ls.k }}</span>
+              </div>
+              <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500);margin-top:9px;min-height:24px;text-wrap:pretty">{{ ls.grade }}</div>
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:16px;line-height:1.22;margin-top:4px;text-wrap:pretty">{{ ls.title }}</div>
+              <p style="font-size:12px;line-height:1.55;margin:9px 0 0;color:var(--color-neutral-800);text-wrap:pretty">{{ ls.body }}</p>
+              <div style="margin-top:13px">
+                <sc-for list="{{ ls.rows }}" as="r" hint-placeholder-count="3">
+                  <div style="display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid color-mix(in srgb, var(--color-text) 11%, transparent)">
+                    <span style="letter-spacing:.08em;text-transform:uppercase;font-size:9px;color:var(--color-neutral-600);padding-top:2px;flex:none">{{ r.k }}</span>
+                    <span style="font-variant-numeric:tabular-nums;font-size:11px;text-align:right;color:{{ r.color }}">{{ r.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ ls.hasNote }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:11px;padding-top:9px;border-top:1px solid color-mix(in srgb, var(--color-text) 11%, transparent)">
+                  <div style="letter-spacing:.08em;text-transform:uppercase;font-size:9px;color:var(--color-neutral-600);margin-bottom:4px">{{ ls.noteK }}</div>
+                  <p style="font-size:11.5px;line-height:1.5;margin:0;color:{{ ls.noteColor }};text-wrap:pretty">{{ ls.noteV }}</p>
+                </div>
+              </sc-if>
             </div>
-          </div>
+          </sc-for>
         </div>
 
         <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:2px solid var(--color-divider)">
@@ -529,14 +516,15 @@ textarea.input { min-height: 90px; resize: vertical; }
               <text x="{{ predWinXm }}" y="26" font-size="9" fill="var(--color-accent-700)" text-anchor="middle" style="letter-spacing:.08em;text-transform:uppercase">{{ predWinLabel }}</text>
             </svg>
             <div style="display:flex;gap:20px;font-size:10px;color:var(--color-neutral-600);margin:8px 0 16px">
-              <span><span style="display:inline-block;width:14px;height:2px;background:var(--color-accent);vertical-align:middle;margin-right:5px"></span>Estimated decline likelihood</span>
-              <span><span style="display:inline-block;width:14px;height:2px;background:var(--color-neutral-400);vertical-align:middle;margin-right:5px"></span>Your typical baseline</span>
+              <span><span style="display:inline-block;width:14px;height:2px;background:var(--color-accent);vertical-align:middle;margin-right:5px"></span>{{ predLegend }}</span>
+              <span><span style="display:inline-block;width:14px;height:2px;background:var(--color-neutral-400);vertical-align:middle;margin-right:5px"></span>{{ predBaseLegend }}</span>
               <span><span style="display:inline-block;width:14px;height:8px;background:color-mix(in srgb, var(--color-accent) 12%, transparent);vertical-align:middle;margin-right:5px"></span>Confidence band</span>
             </div>
+            <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500);margin:0 0 10px">Dashed and shaded series are model-estimated, never observed</div>
             <p style="font-size:13px;line-height:1.55;font-weight:600;margin:0 0 12px;text-wrap:pretty">{{ predHeadline }}</p>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;border-top:1px solid var(--color-divider);padding-top:12px">
               <div>
-                <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:6px">Expected form of decline</div>
+                <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:6px">{{ predEffectsLabel }}</div>
                 <sc-for list="{{ predEffects }}" as="e" hint-placeholder-count="4">
                   <div style="font-size:12px;padding:3px 0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent)">{{ e }}</div>
                 </sc-for>
@@ -691,7 +679,7 @@ textarea.input { min-height: 90px; resize: vertical; }
                 </div>
                 <span style="font-weight:800;color:var(--color-accent-700)">0.71</span>
               </div>
-              <div style="font-size:10px;color:var(--color-neutral-600);margin-top:6px">Selection weight · early-strain context · 6 supporting sessions</div>
+              <div style="font-size:10px;color:var(--color-neutral-600);margin-top:6px">Selection weight · early-strain context · 6 supporting sessions · not randomised</div>
             </div>
           </div>
           <div style="padding:24px 28px">
@@ -735,6 +723,47 @@ textarea.input { min-height: 90px; resize: vertical; }
       </sc-if>
 
       <sc-if value="{{ showProfile }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;border-bottom:2px solid var(--color-divider)">
+          <div style="display:flex;flex-direction:column">
+            <div style="padding:18px 24px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:21px;letter-spacing:-0.01em">Goals and plans</div>
+              <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500)">What you committed to · how it is actually going</div>
+            </div>
+            <div style="padding:0 24px 18px;border-bottom:1px solid var(--color-divider)">
+              <div data-tour="goal-input" data-tip="Plain words. Brink splits the goal into equal units and&#10;pre-places resets at the two times you historically fade." style="display:flex;gap:10px">
+                <input class="input" style="flex:1;font-size:13px" placeholder="Set a goal, e.g. Read 15 pages by 5 PM" value="{{ goalText }}" sc-camel-on-change="{{ goalTyping }}" aria-label="Goal input">
+                <button class="btn btn-primary" sc-camel-on-click="{{ goalPlan }}">Plan it</button>
+              </div>
+            </div>
+            <div data-tour="goal-rows" style="flex:1">
+              <sc-for list="{{ goalRows }}" as="g" hint-placeholder-count="3">
+                <div style="padding:20px 24px;border-bottom:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
+                    <div style="min-width:0">
+                      <div style="font-size:13.5px;font-weight:700;text-wrap:pretty">{{ g.title }}</div>
+                      <div style="font-size:11px;color:var(--color-neutral-600);margin-top:2px">{{ g.meta }}</div>
+                    </div>
+                    <div style="text-align:right">
+                      <div style="font-family:var(--font-heading);font-weight:800;font-size:16px;color:{{ g.statusColor }}">{{ g.status }}</div>
+                      <div style="font-size:11px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums">{{ g.sub }}</div>
+                    </div>
+                  </div>
+                  <div data-tip="One cell = one real thing: a page, a morning, a day.&#10;Filled is done, gold is now, an outline is missed or scheduled." style="display:flex;gap:2px;height:10px;margin-top:12px">
+                    <sc-for list="{{ g.segs }}" as="s" hint-placeholder-count="6">
+                      <span style="{{ s.style }}"></span>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:7px">
+                    <div style="font-size:10px;color:var(--color-neutral-600);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.caption }}</div>
+                    <sc-if value="{{ g.showCommit }}" hint-placeholder-val="{{ false }}">
+                      <button sc-camel-on-click="{{ g.commit }}" style="border:none;background:var(--color-accent);color:var(--color-bg);font:inherit;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;white-space:nowrap;flex:none" style-hover="background:var(--color-accent-600)">Commit and start</button>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
         <div data-tour="profile" style="display:grid;grid-template-columns:1fr 400px;border-bottom:2px solid var(--color-divider)">
           <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
             <h2 style="font-size:24px;margin:0 0 4px">Capacity fingerprint</h2>
@@ -753,7 +782,7 @@ textarea.input { min-height: 90px; resize: vertical; }
               <text x="180" y="456" font-size="9" fill="var(--color-neutral-600)">Lower range</text>
               <text x="620" y="456" font-size="9" fill="var(--color-neutral-600)" text-anchor="end">Upper range</text>
             </svg>
-            <p style="font-size:13px;line-height:1.6;margin:16px 0 0;max-width:640px;text-wrap:pretty;border-top:1px solid var(--color-divider);padding-top:14px"><strong>Pattern with the strongest evidence:</strong> you recover quickly from short cognitive strain, but prolonged sessions create a delayed recovery cost later in the day. Based on 41 sessions · Brink has high confidence.</p>
+            <p style="font-size:13px;line-height:1.6;margin:16px 0 0;max-width:640px;text-wrap:pretty;border-top:1px solid var(--color-divider);padding-top:14px"><strong>Pattern with the strongest evidence:</strong> you recover quickly from short cognitive strain, but prolonged sessions create a delayed recovery cost later in the day. Based on 41 sessions. Repeated personal pattern, not a controlled result.</p>
           </div>
           <div style="display:flex;flex-direction:column">
             <div style="padding:20px 24px;border-bottom:2px solid var(--color-divider)">
@@ -845,7 +874,7 @@ textarea.input { min-height: 90px; resize: vertical; }
         <div data-tour="device" style="display:grid;grid-template-columns:1fr 380px">
           <div style="padding:24px 28px;border-right:2px solid var(--color-divider)">
             <div style="display:flex;justify-content:space-between;align-items:baseline">
-              <h2 style="font-size:24px;margin:0">Brink Prototype 04</h2>
+              <h2 style="font-size:24px;margin:0">Brink Headband</h2>
               <span style="font-size:11px;font-variant-numeric:tabular-nums;color:var(--color-neutral-600)">SN BRK-0412 · worn 6h 12m today</span>
             </div>
             <p style="font-size:12px;color:var(--color-neutral-600);margin:4px 0 8px">Top-down view; forehead at top. Select a sensor below to see what it measures.</p>
@@ -937,14 +966,14 @@ class Component extends DCLogic {
       let y=ym + amp*Math.sin(u*fr*6.283+phase+seed) + amp*0.5*Math.sin(u*fr*2.7*6.283+seed*2) + noise*amp*(this.sr(seed*100+i)-0.5)*2;
       d += (i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' '; } return d; }
 
-  SCEN(){ return {
+  SCEN(){ const S = {
     deepwork:{ label:'Deep work', title:'Deep work · Stable', field:{order:.85,energy:.3,jitter:.12,spread:.42,rot:.25}, conf:.87, cursor:512,
       narrative:'Your attention is highly sustained. Neural efficiency remains strong, although physical stillness and rising sympathetic load suggest that cognitive strain may begin increasing within the next 24 minutes.',
-      meta:[['Current activity','Product strategy session',''],['Session duration','1h 42m',''],['Prediction horizon','24 min',''],['Model confidence','87%',''],['Next intervention','90-s reset · ~3:42 PM','var(--color-accent-700)']],
+      meta:[['Current activity','Product strategy session',''],['Session duration','1h 42m',''],['Prediction horizon','24 min',''],['Forecast confidence','87%',''],['Next intervention','90-s reset · ~3:42 PM','var(--color-accent-700)']],
       rec:'Continue. A short reset around 3:42 PM should preserve this state.',
       dims:[['Cognitive readiness','High','+',.82],['Physical readiness','Steady','·',.64],['Neural efficiency','Strong','+',.78],['Recovery state','Drawing down','−',.55],['Strain accumulation','Rising','!',.61],['Stability','Holding','·',.74],['Reserve','Moderate','−',.58]],
       factors:[
-        ['Frontal alpha stability increased','+ supports current state',.92,'Your brain has settled into a steady attention rhythm and is holding it.','Fz/Fp1 alpha-band variance fell 22% over 40 min; associated with sustained attentional control in this user\'s sessions.'],
+        ['Frontal alpha stability increased','+ supports current state',.92,'Your attention rhythm has steadied and is holding.','Fz/Fp1 alpha-band variance fell 22% over 40 min; associated with sustained attentional control in this user\'s sessions.'],
         ['HRV has declined gradually','− early strain',.74,'Your body is working a little harder to maintain this focus than an hour ago.','RMSSD down 9 ms over 96 min with no step change, consistent with accumulating physiological load, not acute stress.'],
         ['Head motion low and consistent','+ raises confidence',.66,'You have been very still, so Brink trusts the brain-signal readings.','IMU RMS < 0.02 g for 89% of the session; EEG pattern unlikely to be movement artifact.'],
         ['Blink frequency increased 18%','− decline precursor',.58,'You are blinking more often. For you, that has come before attention dips.','Blink rate 18% above session baseline; preceded attention decline in 5 of 6 prior deep-work sessions.'],
@@ -956,7 +985,7 @@ class Component extends DCLogic {
         compare:'Today\'s decline is developing more gradually than your typical deep-work sessions, likely because this morning\'s run improved autonomic recovery.' } },
     meditation:{ label:'Meditation', title:'Meditation · Settling', field:{order:.6,energy:.08,jitter:.05,spread:.6,rot:.08}, conf:.91, cursor:56,
       narrative:'Autonomic activity is settling. Breath regularity is high and neural rhythms are slowing toward your stable meditation pattern, about 3 minutes faster than your 30-day average.',
-      meta:[['Current activity','Guided meditation',''],['Session duration','16 min',''],['Time to settled state','~4 min remaining',''],['Model confidence','91%',''],['Strongest contributor','Slow breathing · 5.2/min','var(--color-accent-700)']],
+      meta:[['Current activity','Guided meditation',''],['Session duration','16 min',''],['Time to settled state','~4 min remaining',''],['Forecast confidence','91%',''],['Strongest contributor','Slow breathing · 5.2/min','var(--color-accent-700)']],
       rec:'No intervention needed. Settling is proceeding well.',
       dims:[['Cognitive readiness','Restoring','+',.6],['Physical readiness','Calm','·',.7],['Neural efficiency','Slowing','·',.55],['Recovery state','Strong','+',.85],['Strain accumulation','Releasing','+',.2],['Stability','Very high','+',.9],['Reserve','Rebuilding','+',.65]],
       factors:[
@@ -970,8 +999,8 @@ class Component extends DCLogic {
         effects:['Deeper autonomic settling','Higher HRV plateau','Slower posterior rhythms','Reduced motion micro-adjustments'],
         compare:'Sessions started within 90 minutes of waking, like this one, produce your fastest autonomic settling.' } },
     running:{ label:'Running', title:'Interval run · Elevated strain', field:{order:.35,energy:.95,jitter:.55,spread:.75,rot:.6}, conf:.72, cursor:108,
-      narrative:'Cardiovascular strain is elevated, but movement efficiency remains stable. The current limitation appears more perceptual than mechanical. Head motion is reducing EEG confidence; Brink is weighting cardiac and movement streams more heavily.',
-      meta:[['Current activity','Interval run · rep 5 of 8',''],['Session duration','38 min',''],['Remaining quality effort','~2 reps',''],['Model confidence','72% · motion-limited','var(--color-accent-700)'],['Next intervention','Cadence cue · on form drift','']],
+      narrative:'Cardiovascular strain is elevated, but movement efficiency remains stable. The current pattern is more consistent with rising perceived effort than with the mechanical indicators. Head motion is reducing EEG confidence; Brink is weighting cardiac and movement streams more heavily.',
+      meta:[['Current activity','Interval run · rep 5 of 8',''],['Session duration','38 min',''],['Remaining quality effort','~2 reps',''],['Forecast confidence','72% · motion-limited','var(--color-accent-700)'],['Next intervention','Cadence cue · on form drift','']],
       rec:'Hold pace. A cadence cue will fire if form drift is detected.',
       dims:[['Cognitive readiness','Taxed','−',.4],['Physical readiness','Working','!',.5],['Neural efficiency','De-weighted','·',.45],['Recovery state','Spending','−',.3],['Strain accumulation','High','!',.85],['Stability','Volatile','−',.35],['Reserve','2 reps est.','−',.4]],
       factors:[
@@ -985,12 +1014,12 @@ class Component extends DCLogic {
         effects:['Cadence irregularity','Reduced ground-contact symmetry','Rising perceived effort','Slower reaction to pace changes'],
         compare:'Your strongest interval reps occur when the previous recovery restores HRV to within 8% of baseline; the last recovery reached 6%.' } },
     strength:{ label:'Strength', title:'Strength set · Ready', field:{order:.7,energy:.5,jitter:.25,spread:.5,rot:.35}, conf:.81, cursor:642,
-      narrative:'Recovery between sets is on track. Neural drive proxy has returned to 96% of set-one level and tremor remains low. You are ready for the next working set in about 40 seconds.',
-      meta:[['Current activity','Back squat · set 4 of 5',''],['Rest elapsed','2:20 of 3:00',''],['Set readiness','96% of set 1',''],['Model confidence','81%',''],['Recommended rest','40 s more','var(--color-accent-700)']],
+      narrative:'Recovery between sets is on track. Effort-related neural feature has returned to 96% of set-one level and tremor remains low. You are ready for the next working set in about 40 seconds.',
+      meta:[['Current activity','Back squat · set 4 of 5',''],['Rest elapsed','2:20 of 3:00',''],['Set readiness','96% of set 1',''],['Forecast confidence','81%',''],['Recommended rest','40 s more','var(--color-accent-700)']],
       rec:'Wait 40 seconds. Readiness is still climbing.',
       dims:[['Cognitive readiness','Focused','·',.7],['Physical readiness','Recovering','+',.72],['Neural efficiency','Rebounding','+',.68],['Recovery state','Between-set','+',.6],['Strain accumulation','Managed','·',.55],['Stability','Good','+',.75],['Reserve','1–2 sets','·',.5]],
       factors:[
-        ['Neural drive proxy rebounding','+ readiness',.86,'The signal linked to how forcefully you can move is almost back to fresh levels.','Motor-adjacent beta rebound at 96% of set-one amplitude after 2:20 rest.'],
+        ['Effort-related neural feature rebounding','+ readiness',.86,'The signal linked to how forcefully you can move is almost back to fresh levels.','Motor-adjacent beta rebound at 96% of set-one amplitude after 2:20 rest. Experimental; not a direct measure of motor-unit drive.'],
         ['Tremor and instability low','+ technique intact',.76,'Your hands and posture are steady; technique is holding.','IMU micro-tremor 8–12 Hz power within baseline band.'],
         ['HR recovery on personal curve','+ on track',.68,'Your heart rate is coming down at your normal between-set rate.','HR −34 bpm in 2 min, matching this user\'s median between-set recovery.'],
         ['Movement symmetry unchanged','· no fatigue signature',.55,'Left and right sides are still moving evenly.','Bar-path proxy symmetry within 3% of set 1; no unilateral fatigue pattern detected.']],
@@ -1014,7 +1043,12 @@ class Component extends DCLogic {
         window:[.82,1.0], winLabel:'~4:19 PM',
         effects:['Decline onset delayed ~31 min','Lower correction frequency expected','Perceived effort reduced','Second reset unlikely to be needed'],
         compare:'Short breathing resets work best for you before visible fatigue begins, which is exactly how this one was timed.' } }
-  }; }
+  };
+  const EXT = {"deepwork":{"live":0,"pred":{"legend":"Estimated decline likelihood","baseLegend":"Your typical deep-work curve","effectsLabel":"Expected form of decline","ticks":["+10 min","+20 min","+30 min","+40 min"],"event":"Meaningful decline in sustained attention","horizon":"Next 40 minutes","uncertainty":"87% · onset error ±4.1 min","precedent":"Same precursor preceded decline in 5 of 6 prior deep-work sessions"},"now":{"activity":"Product strategy session","elapsed":"1h 42m","signal":"EEG 96% · 7/7 channels"},"act":{"grade":"SELECTED FROM MEASURED RESPONSES","why":"Blink rate is up 18% and HRV has fallen for 16 minutes — the precursor pair this pattern usually starts with.","delivery":"Haptic on-device · 4.5 breaths/min","safety":"Skip it if you are mid-conversation; Brink re-offers."},"learn":{"grade":"MEASURED · 11 PRIOR DELIVERIES","title":"Breathing is the preferred reset here","body":"Nothing delivered yet this session. The action to the left is chosen from what has already been measured on you, not from a default.","rows":[["Tested","11 deliveries",""],["Median effect","+31 min focus",""],["Selection weight","0.71 · preferred","var(--color-accent-700)"]]}},"meditation":{"live":0,"pred":{"legend":"Likelihood of reaching your settled pattern","baseLegend":"Your typical settling curve","effectsLabel":"What settling looks like for you","ticks":["+2 min","+4 min","+6 min","+8 min"],"event":"Reaching your settled meditation pattern","horizon":"Next 8 minutes","uncertainty":"91% · highest of any scenario","precedent":"About 3 minutes faster than your 30-day average"},"now":{"activity":"Guided meditation","elapsed":"16 min","signal":"EEG 96% · 7/7 channels"},"act":{"grade":"NO ACTION QUEUED","why":"Every settling marker is moving the right way. Interrupting would cost more than it returns.","delivery":"None queued","safety":"Brink stays silent while settling is on track."},"learn":{"grade":"NO UPDATE THIS SESSION","title":"Nothing to learn from yet","body":"No intervention has been delivered, so nothing about the model has changed. A session that needs no help teaches it very little.","rows":[["This session","No delivery",""],["Model change","None",""],["Last update","Day 21 · breathing preference",""]]}},"running":{"live":0,"pred":{"legend":"Estimated likelihood of form breakdown","baseLegend":"Your typical rep-quality curve","effectsLabel":"What breakdown looks like for you","ticks":["Rep 6","Rep 7","Rep 8","Rep 8 end"],"window":[0.5,0.75],"event":"Running-form breakdown","horizon":"Remaining 3 reps","uncertainty":"72% · motion-limited","precedent":"A cue at this point delayed breakdown by ~4 min in similar sessions"},"now":{"activity":"Interval run · rep 5 of 8","elapsed":"38 min","signal":"EEG 72% · 5/7 ch · motion-limited","signalColor":"var(--color-accent-700)"},"act":{"grade":"SELECTED FROM MEASURED RESPONSES","why":"The perceived-effort proxy is rising faster than movement efficiency, so a cue targets cadence before form actually breaks.","delivery":"Haptic cadence cue · fires on form drift","safety":"Stop for pain, dizziness or chest symptoms. Brink cannot detect those.","safetyColor":"var(--color-accent-700)"},"learn":{"grade":"MEASURED · 6 PRIOR DELIVERIES","title":"Cadence cues have bought you about 4 minutes","body":"Not delivered yet this rep. Its weight comes from six measured deliveries in this same late-run context.","rows":[["Tested","6 deliveries",""],["Median effect","+4 min form",""],["Selection weight","0.66 · active","var(--color-accent-700)"]]}},"strength":{"live":2,"pred":{"legend":"Estimated set-quality likelihood","baseLegend":"Your typical recovery curve","effectsLabel":"What starting early costs you","ticks":["0:45","1:30","2:15","3:00"],"onset":0.72,"window":[0.93,1],"sub":"Estimated likelihood of a full-quality set, by how long you rest.","event":"A set at full set-one quality","horizon":"By 3:00 of rest","uncertainty":"81% · rest-duration model","precedent":"Your best sets this block started after 2:50–3:10 of rest"},"now":{"activity":"Back squat · set 4 of 5","elapsed":"Rest 2:20 of 3:00","signal":"EEG 96% · 7/7 channels"},"act":{"grade":"GUIDANCE · NOT A TESTED INTERVENTION","why":"A set started now is estimated at 88% of set-one quality against about 95% if you wait the remaining 40 seconds.","delivery":"Haptic ready-cue at 3:00","safety":"Stop for pain, dizziness or loss of technique. Brink cannot detect those.","safetyColor":"var(--color-accent-700)"},"learn":{"grade":"NO TESTED INTERVENTION","title":"This one is not a learned effect","body":"No between-set intervention has ever been tested on you. The rest advice comes from your own recovery curve, so Brink offers it as guidance rather than something it has measured working.","rows":[["Tested","0 deliveries",""],["Basis","Your median between-set recovery",""],["Model change","None",""]]}},"postint":{"live":3,"pred":{"legend":"Updated decline likelihood, after the reset","baseLegend":"Your typical decline curve","effectsLabel":"What the reset bought you","ticks":["3:49 PM","4:00 PM","4:12 PM","4:23 PM"],"event":"Decline onset, re-forecast after the reset","horizon":"Next 45 minutes","uncertainty":"89% · onset error ±4.1 min","precedent":"Response shape matched 5 prior successful resets"},"now":{"activity":"Recovering · post-intervention","elapsed":"6 min since delivery","signal":"EEG 96% · 7/7 channels"},"act":{"grade":"NO ACTION QUEUED","why":"The precursor that triggered the reset has cleared, so the queue is empty.","delivery":"Delivered 3:32 PM · haptic on-device","safety":"Resume gradually; the estimate assumes the same task."},"learn":{"grade":"MEASURED RESPONSE · NOT RANDOMISED","title":"It worked, and the model moved","body":"Measured within two minutes of the 3:32 PM delivery. The response landed inside the predicted band, so this intervention now ranks first in this context.","rows":[["HRV recovery","+11%","var(--color-accent-700)"],["Attention stability","+7%","var(--color-accent-700)"],["Selection weight","0.62 → 0.71","var(--color-accent-700)"]]}}};
+  for (const k in EXT){ const e = EXT[k];
+    Object.assign(S[k].pred, e.pred || {});
+    S[k].now = e.now; S[k].act = e.act; S[k].learn = e.learn; S[k].live = e.live; }
+  return S; }
 
   componentDidMount(){
     this.findCv = ()=>{
@@ -1207,7 +1241,8 @@ class Component extends DCLogic {
       bandBot = 'L'+x.toFixed(1)+' '+py(this.clamp(p-bw,0,1)).toFixed(1)+' ' + bandBot;
     }
     const predBand = bandTop + bandBot.replace('L','L') + 'Z';
-    const predGrid = [0.25,0.5,0.75,1].map(u=>({ x:(px0+(px1-px0)*u).toFixed(0), t:'+'+Math.round(u*40)+' min' }));
+    const predTicks = P.ticks || ['+10 min','+20 min','+30 min','+40 min'];
+    const predGrid = [0.25,0.5,0.75,1].map((u,i)=>({ x:(px0+(px1-px0)*u).toFixed(0), t:predTicks[i] }));
     // timeline
     const tx = t => (t/840*1160);
     const acts=[[10,40,'Waking baseline','n'],[40,75,'Meditation','n'],[80,135,'Morning run','s'],[135,160,'Recovery','n'],[195,245,'Team meeting','n'],[250,330,'Deep work','k'],[365,405,'Lunch','n'],[420,560,'Product design','k'],[630,690,'Strength','s'],[800,840,'Evening recovery','n']];
@@ -1299,13 +1334,13 @@ class Component extends DCLogic {
         marks:[{x:'480',bx:'476',y:'96',tx:'488',ty:'40',label:'Dip onset · 2:47 PM'}],
         x0:'1:30 PM', x1:'3:30 PM', cap:'Attention stability, this afternoon. Shaded region: precursor window Brink flagged before the dip.',
         ev:['HRV −9 ms between 2:21 and 2:47 PM','Blink rate +18% above baseline at 2:39 PM','Session length 112 min at dip onset, past your 102-min optimum'],
-        meta:'Repeated pattern · 6 supporting sessions · Brink has high confidence this is causal for you.' },
+        meta:'Repeated personal pattern · 6 supporting sessions · association, not established causation.' },
       { q:'Did the breathing intervention actually help?',
-        a:'Yes, with high confidence. Within two minutes of the 3:32 PM delivery, HRV recovered 11% and attention stability rose 7%. The dashed line shows the trajectory Brink projected without intervention; the measured curve separated from it decisively.',
+        a:'Yes, on the measured response. Within two minutes of the 3:32 PM delivery, HRV recovered 11% and attention stability rose 7%. The dashed line shows the trajectory Brink estimated for no intervention, which was never observed. The measured curve separated from it within two minutes.',
         path: curve(u=>0.42-0.12*u + (u>0.48? 0.34/(1+Math.exp(-14*(u-0.6))):0)+0.012*Math.sin(u*26),90),
         path2: curve(u=>0.42-0.26*u+0.012*Math.sin(u*26+2),90),
         bars:[], marks:[{x:'307',bx:'303',y:'20',tx:'315',ty:'32',label:'Delivery · 3:32 PM'}],
-        x0:'3:22 PM', x1:'3:42 PM', cap:'HRV, measured (red) vs. projected without intervention (dashed).',
+        x0:'3:22 PM', x1:'3:42 PM', cap:'HRV, measured (red) vs. model-estimated counterfactual (dashed). The dashed line was never observed.',
         ev:['HRV +11% within 120 s of delivery','Attention stability +7% over 6 min','Response shape matched 5 prior successful resets'],
         meta:'Measured effect · 11 tested deliveries of this intervention · selection weight now 0.71.' },
       { q:'When do I usually do my best analytical work?',
@@ -1314,7 +1349,7 @@ class Component extends DCLogic {
         bars:[['7–9A',.55],['9–11A',.9],['11–1P',.82],['1–3P',.58],['3–5P',.66],['5–7P',.5],['7–9P',.4]].map((b,i)=>({x:(30+i*86).toFixed(0),y:(170-b[1]*140).toFixed(0),w:'58',h:(b[1]*140).toFixed(0),fill:i===1?'var(--color-accent)':'var(--color-neutral-700)',label:b[0],lx:(59+i*86).toFixed(0),ly:'186'})),
         marks:[], x0:'', x1:'', cap:'Median attention quality by time of day, 38 days. Red: your strongest window.',
         ev:['41 analytical sessions scored across 38 days','Morning-exercise days raise the late-morning peak a further 8%','Pattern held in 5 of the last 6 weeks'],
-        meta:'Strong repeated pattern, not just correlation; it held when Brink controlled for sleep and workload.' },
+        meta:'Repeated personal pattern · 41 sessions over 38 days · observational; sleep and workload were adjusted for, not controlled.' },
       { q:'Which intervention works fastest for me?',
         a:'Paced breathing. It produces a measurable HRV response in about 2 minutes, roughly three times faster than a walking break, but only when delivered before visible fatigue. After decline has already started, walking produces the stronger recovery even though it is slower.',
         path:'', path2:'',
@@ -1439,7 +1474,45 @@ class Component extends DCLogic {
           ['Next '+b2+' '+unit, gFmt(28)+'\u2013'+gFmt(52),24,48,'upcoming'],
           ['Walk','',48,51,'reset'],
           ['Final '+c+' '+unit, gFmt(55)+'\u2013'+gFmt(78),51,74,'upcoming']]}, committed:false, goalEase:false, goalAdjust:null, goalResetTaken:false}); };
+    // The operating loop as four ordered beats. sc.now / sc.act / sc.learn
+    // come from the scenario tables; the rest is already-bound state.
+    const NW = sc.now||{}, AC = sc.act||{}, LR = sc.learn||{};
+    const liveIdx = typeof sc.live === 'number' ? sc.live : 0;
+    const row = (k,v,c) => ({ k, v, color: c || 'var(--color-text)' });
+    // Short facts go in the tabular rows; anything sentence-length goes in the
+    // note, full width, or it gets crushed into the right-hand value column.
+    const loopDefs = [
+      ['01','Now', NW.grade || 'MEASURED SIGNALS · INFERRED STATE', sc.title, sc.narrative,
+        [row('Activity', NW.activity), row('Elapsed', NW.elapsed), row('Signal quality', NW.signal, NW.signalColor)],
+        null],
+      ['02','Forecast','PREDICTED · MODEL-ESTIMATED', P.event || 'Decline onset', P.headline,
+        [row('Window', P.winLabel, 'var(--color-accent-700)'), row('Horizon', P.horizon), row('Confidence', P.uncertainty)],
+        P.precedent ? ['Personal precedent', P.precedent, ''] : null],
+      ['03','Action', AC.grade || 'SELECTED FROM MEASURED RESPONSES', sc.rec, AC.why,
+        [row('Delivery', AC.delivery)],
+        AC.safety ? ['Safety boundary', AC.safety, AC.safetyColor] : null],
+      ['04','Learning', LR.grade || '', LR.title, LR.body,
+        (LR.rows||[]).map(r => row(r[0], r[1], r[2])), null]
+    ];
+    const loopSteps = loopDefs.map((d,i)=>({
+      n:d[0], k:d[1], grade:d[2], title:d[3], body:d[4], rows:d[5],
+      hasNote: !!d[6], noteK: d[6] ? d[6][0] : '', noteV: d[6] ? d[6][1] : '',
+      noteColor: (d[6] && d[6][2]) || 'var(--color-neutral-800)',
+      numColor: i===liveIdx ? 'var(--color-accent-700)' : 'var(--color-neutral-600)',
+      cellStyle: 'min-width:0;padding:0 20px 18px;border-top:3px solid '
+        + (i===liveIdx ? 'var(--color-accent)' : 'color-mix(in srgb, var(--color-text) 14%, transparent)')
+        + (i<3 ? ';border-right:2px solid var(--color-divider)' : '')
+    }));
+    // Goals keeps a one-line presence here; the planner itself lives in
+    // Capacity Profile now.
+    const gLead = (goalRows && goalRows.length) ? goalRows[0] : null;
     return {
+      hasGoal: !!gLead,
+      goalLeadTitle: gLead ? gLead.title : '',
+      goalLeadCaption: gLead ? gLead.caption : '',
+      goalLeadStatus: gLead ? gLead.status : '',
+      goalLeadColor: gLead ? gLead.statusColor : 'var(--color-text)',
+      loopSteps,
       canvasRef: this.canvasRef,
       recHover:()=>{ this.hoverPreview=true; this.paintNow && this.paintNow(); }, recLeave:()=>{ this.hoverPreview=false; this.paintNow && this.paintNow(); },
       bodyTriggers:[['Blink','blink'],['Clench jaw','jaw'],['Deep breath','breath']].map(x=>({label:x[0], go:()=>{ (this.bodyEv=this.bodyEv||[]).push({type:x[1], at:Date.now()}); this.paintNow && this.paintNow(); }})),
@@ -1462,6 +1535,8 @@ class Component extends DCLogic {
       privacyStyle:'display:block;width:100%;text-align:left;margin-top:14px;border:1px solid var(--color-divider);cursor:pointer;font:inherit;font-size:12px;font-weight:600;padding:10px 12px;color:'+(st.privacy?'var(--color-bg)':'var(--color-text)')+';background:'+(st.privacy?'var(--color-neutral-900)':'transparent'),
       chNote: noisy? 'Head motion is degrading frontal channels; affected segments are excluded automatically.' : 'All channels within normal range for the current session.',
       navItems, scenarios, sectionTitle:names[st.section], clock:'3:38 PM',
+      sectionRole: ({'Live State':'The loop, right now','Ask Brink':'Answers drawn only from your own data','Interventions':'What was delivered, and what it measurably did','Signal Studio':'The raw evidence, including what was excluded','Capacity Profile':'What 38 days taught the model, and your plans','Device':'What the band can and cannot see'})[names[st.section]] || '',
+      sectionMaturity: ({'Live State':'Simulated output','Ask Brink':'Planned capability','Interventions':'Research model','Signal Studio':'Research model','Capacity Profile':'Research model','Device':'Simulated output'})[names[st.section]] || '',
       showScenarios: ['Live State','Signal Studio'].indexOf(names[st.section])>=0,
       showLive: st.section===at('Live State'), showTimeline: st.section===at('Session Timeline'), showSignals: st.section===at('Signal Studio'), showInterv: st.section===at('Interventions'), showProfile: st.section===at('Capacity Profile'), showAsk: st.section===at('Ask Brink'), showDevice: st.section===at('Device'),
       stateTitle: sc.title, narrative: sc.narrative,
@@ -1475,6 +1550,8 @@ class Component extends DCLogic {
       explSimpleStyle:'border:none;cursor:pointer;font:inherit;font-size:11px;font-weight:600;padding:6px 12px;color:'+(st.expl==='simple'?'var(--color-bg)':'var(--color-text)')+';background:'+(st.expl==='simple'?'var(--color-neutral-900)':'transparent'),
       explTechStyle:'border:none;cursor:pointer;font:inherit;font-size:11px;font-weight:600;padding:6px 12px;color:'+(st.expl==='technical'?'var(--color-bg)':'var(--color-text)')+';background:'+(st.expl==='technical'?'var(--color-neutral-900)':'transparent'),
       predSub:P.sub, predLine:line, predBase:base, predBand, predGrid,
+      predLegend:P.legend||'Estimated decline likelihood', predBaseLegend:P.baseLegend||'Your typical baseline',
+      predEffectsLabel:P.effectsLabel||'Expected form of decline', predPrecedent:P.precedent||'',
       predWinX1:(px0+(px1-px0)*P.window[0]).toFixed(1), predWinX2:(px0+(px1-px0)*Math.min(P.window[1],1)).toFixed(1),
       predWinXm:(px0+(px1-px0)*(P.window[0]+Math.min(P.window[1],1))/2).toFixed(1), predWinLabel:P.winLabel,
       predHeadline:P.headline, predEffects:P.effects, predCompare:P.compare,
@@ -1562,7 +1639,9 @@ class Component extends DCLogic {
   //     Interventions, Signal Studio, Capacity Profile, Device;
   //   - the spec's 'timeline' step is gone with Session Timeline, and the
   //     line in step 06 that pointed at the Timeline was rewritten;
-  //   - steps 07 and 08 (What Brink sees, Approaching your brink) are new;
+  //   - the separate 'narrative' and 'rec' steps became two steps on the loop
+  //     band that replaced them, the second one showing the abstain case;
+  //   - the two goal steps moved to Capacity Profile with the planner;
   //   - em dashes removed throughout.
   const TOUR_STEPS = [
   { section: 'live', scenario: 'deepwork', target: 'device-status',
@@ -1577,29 +1656,17 @@ class Component extends DCLogic {
     body: 'Deep work, meditation, running, strength, and the hour after a reset. Switching one does not change a theme. It changes which signals matter, what the numbers mean, and what Brink asks of you.',
     life: 'You meditate at 7:14 AM, run at 12:40, and write specs until 6. Same headband, three completely different bodies. The dashboard follows you between them without being told.' },
 
-  { section: 'live', scenario: 'deepwork', target: 'goal-input',
-    kicker: 'Goals · planning',
-    title: 'You say what you want; it plans around your dips',
-    body: 'Type a goal in plain words. Brink breaks it into equal units and pre-places two 90-second resets at the two times of day you historically fade.',
-    life: 'You type "Read 15 pages by 5 PM". Brink parks a reset at 2:40 and another at 4:05, the exact two moments your blink rate has crept up on every long reading day this month.' },
+  { section: 'live', scenario: 'deepwork', target: 'loop',
+    kicker: 'Live state · the loop',
+    title: 'The whole product, in four beats',
+    body: 'What is true now, what is coming, the one thing to do about it, and what the last intervention actually did. Each beat states where its numbers came from: measured, inferred, predicted, or model-estimated.',
+    life: 'You glance once and read the sentence end to end. Attention is holding, it starts slipping around 3:48, take a 90-second reset, and the last one bought you 31 minutes.' },
 
-  { section: 'live', scenario: 'deepwork', target: 'goal-rows',
-    kicker: 'Goals · reading them',
-    title: 'One cell equals one real thing',
-    body: 'A cell is a page, a morning, or a day, never an abstraction. Filled means done, gold is where you are right now, an outline is missed or still scheduled. The caption always states the unit.',
-    life: '3:38 PM: nine cells dark, the tenth gold. Page 10 of 15, done by 4:47 with 13 minutes of slack. You missed Tuesday’s meditation and it simply reads Holding, a streak of 9 rather than a scolding.' },
-
-  { section: 'live', scenario: 'deepwork', target: 'narrative',
-    kicker: 'Live state · the read',
-    title: 'Plain language before numbers',
-    body: 'Brink states what is happening to you in one paragraph, then backs it with figures underneath. Every claim is relative to your own baseline, not a population average.',
-    life: 'Instead of "HF-HRV 48 ms, frontal alpha 62%", you read: your attention is highly sustained, but strain will likely start rising in about 24 minutes.' },
-
-  { section: 'live', scenario: 'deepwork', target: 'rec',
-    kicker: 'Live state · what to do',
-    title: 'Exactly one next action',
-    body: 'Never a feed of advice. One intervention, timed to a specific minute, with the reason available on hover. It disappears entirely when nothing is needed.',
-    life: '"90-second reset at 3:52." You take it between two calls. Twenty minutes later your strain is flat instead of climbing, and the afternoon never turns into a headache.' },
+  { section: 'live', scenario: 'strength', target: 'loop',
+    kicker: 'Live state · saying no',
+    title: 'It admits when nothing was measured',
+    body: 'Switch to Strength and the fourth beat changes its answer. No between-set intervention has ever been tested on this person, so Brink calls the rest advice guidance rather than a learned effect.',
+    life: 'A dashboard that claims every number equally is a dashboard you stop believing. This one tells you which of its four beats is the weakest.' },
 
   { section: 'live', scenario: 'deepwork', target: 'factors',
     kicker: 'Live state · the evidence',
@@ -1610,7 +1677,7 @@ class Component extends DCLogic {
   { section: 'live', scenario: 'deepwork', target: 'prediction',
     kicker: 'Live state · what is next',
     title: 'The decline before it happens',
-    body: 'A projected curve for the next 40 minutes, with a shaded band for how sure Brink is. The band widens when the signals disagree, so you can see confidence drop rather than take a number on faith.',
+    body: 'A projected curve over whatever horizon the activity actually has, with a shaded band for how sure Brink is. The band widens when the signals disagree, so you can see confidence drop rather than take a number on faith. Everything dashed or shaded is model-estimated, and says so.',
     life: 'At 3:38 the curve crosses your threshold at about 4:02. You move the hard part of the task forward twenty minutes and finish it before the dip instead of pushing through it.' },
 
   { section: 'ask', scenario: 'deepwork', target: 'ask',
@@ -1636,6 +1703,18 @@ class Component extends DCLogic {
     title: 'What you, specifically, are built for',
     body: 'Thirty-eight days of sessions turn into personal constants: your best cognitive window, how long you last, how fast you recover, and what reliably breaks you.',
     life: 'Brink learns your sharpest window is 9:40 to 11:30 AM and that accuracy drops after 112 minutes, so it stops proposing three-hour blocks and starts defending your mornings.' },
+
+  { section: 'profile', scenario: 'deepwork', target: 'goal-input',
+    kicker: 'Plans · goals',
+    title: 'You say what you want; it plans around your dips',
+    body: 'Type a goal in plain words. Brink breaks it into equal units and pre-places two 90-second resets at the two times of day you historically fade. Plans sit here, beside the model that learned those times.',
+    life: 'You type "Read 15 pages by 5 PM". Brink parks a reset at 2:40 and another at 4:05, the exact two moments your blink rate has crept up on every long reading day this month.' },
+
+  { section: 'profile', scenario: 'deepwork', target: 'goal-rows',
+    kicker: 'Plans · reading them',
+    title: 'One cell equals one real thing',
+    body: 'A cell is a page, a morning, or a day, never an abstraction. Filled means done, gold is where you are right now, an outline is missed or still scheduled. The caption always states the unit.',
+    life: '3:38 PM: nine cells dark, the tenth gold. Page 10 of 15, done by 4:47 with 13 minutes of slack. You missed Tuesday’s meditation and it simply reads Holding, a streak of 9 rather than a scolding.' },
 
   { section: 'device', scenario: 'running', target: 'device',
     kicker: 'Trust',

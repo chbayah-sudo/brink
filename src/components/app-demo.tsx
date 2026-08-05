@@ -149,7 +149,10 @@ export function AppDemo() {
                 <LogoMark className="h-4 w-4 text-[#201f1d]" />
                 BRINK · HUMAN CAPACITY OS
               </span>
-              <span className="hidden font-mono-df text-[0.6rem] tracking-[0.18em] text-[#201f1d]/50 sm:block">
+              {/* Not hidden on phones: that is the width where the demo is a
+                  scaled miniature and least legible, so it is exactly where the
+                  "this is simulated" label has to survive. */}
+              <span className="font-mono-df text-[0.6rem] tracking-[0.18em] text-[#201f1d]/50">
                 ILLUSTRATIVE DATA
               </span>
               <span className="flex items-center gap-5">

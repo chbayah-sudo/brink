@@ -167,7 +167,7 @@ These were verified against the code before planning. Several contradict the aud
 
 **Goal:** the demo opens on the operating loop, and every number in it is defined. **All work routes through `scripts/build-demo.mjs` per A1/A2.** Highest-cascade phase in the plan.
 
-**Status: not started.**
+**Status: ✅ COMPLETE** (see §Phase 2 completion record)
 
 ### Task 2.1 — Live State opens on NOW / FORECAST / ACTION / LEARNING; Goals demoted
 - **Audit finding:** P0.2. **Priority:** P0.
@@ -379,4 +379,109 @@ There is no test suite (A9); no test claim is made.
 - **The reduced-motion check was inconclusive**, not passed. Under `--force-prefers-reduced-motion` every video reads `paused=true`, but so does every video *without* the flag, because nothing autoplays in headless — the test cannot distinguish the two. What is established instead: `git diff` confirms Phase 1 changed **no** video, `playbackRate`, IntersectionObserver or `matchMedia` line, and the only motion change is a removal. Genuine reduced-motion work, including the CSS backstop and the `footer-brain-video.tsx` gap, is Task 4.3.
 - Acceptance criterion 1.1(1) ("readable with JS disabled") is satisfied by construction — all four blocks are static markup in the static export — but was not separately exercised with JS off.
 
-Phases 2-5 not started.
+Phases 3-5 not started.
+
+---
+
+### Phase 2 — completed 2026-08-05
+
+| Task | Status | Where |
+|---|---|---|
+| 2.1 Live State opens on NOW/FORECAST/ACTION/LEARNING; Goals demoted | ✅ | `scripts/build-demo.mjs` §6a, §6c, §6e |
+| 2.2 Scenario-correct chart labels and axes | ✅ | §6a `pred.*`, §6b axis, §6f legends |
+| 2.3 Evidence grades replace causal language | ✅ | §6h |
+| 2.4 Define every prediction | ✅ | §6a `pred.event/horizon/uncertainty/precedent`, §6c |
+| 2.5 Product maturity legend | ✅ | §6g, `src/components/app-demo.tsx` |
+| 2.6 Decisive visual hierarchy and single-meaning red | ⚠️ **Partial** | hierarchy done; red semantics deferred — see below |
+| 2.7 Fate of the dead Session Timeline | ✅ Decided: leave inert | nothing deleted; see below |
+
+**Files changed:** `scripts/build-demo.mjs`, `scripts/demo-tour.js`, `public/demo/index.html` (regenerated), `src/components/app-demo.tsx`.
+
+#### Dashboard hierarchy, before and after
+
+| | Before | After |
+|---|---|---|
+| Band 1 | Goals: heading, input, three goal rows, `min-height:460px` — **half the opening screen** | One-line goal strip (title · caption · status · "plans live in Capacity Profile") |
+| Band 2 | narrative + `metaRows` k/v strip + recommendation, in a 380px right rail | **The loop**: four columns, `01 NOW · 02 FORECAST · 03 ACTION · 04 LEARNING`, each with a provenance grade, a title, a statement, tabular facts and a full-width note |
+| Band 3 | 7-column `dims` sparkline strip | unchanged |
+| Band 4 | "What Brink sees" │ "Approaching your brink" | unchanged structurally; legends, axis and counterfactual labelling corrected |
+
+The live beat carries a gold top rule and gold numeral, so which stage of the loop the scenario is *in* is visible without reading: NOW for deep work, meditation and running; ACTION for strength; LEARNING for post-reset.
+
+#### Features retained, moved, renamed, redesigned
+
+- **Moved, intact:** the goal planner (input, "Plan it", all three goal rows with cell strips and captions) → Capacity Profile, retitled "Goals and plans". Its `data-tour` anchors travelled with the markup, so the walkthrough still rings it.
+- **Redistributed, not deleted:** `narrative` → NOW body; `metaRows` facts → NOW/FORECAST rows; `recommendation` → ACTION title. `metaRows` itself is no longer rendered; every fact it carried appears in the loop band.
+- **Renamed:** `Model confidence` → `Forecast confidence` (4 scenario tables); `Neural drive proxy` → `Effort-related neural feature` (2 sites, plus an "experimental, not a direct measure of motor-unit drive" caveat); device heading `Brink Prototype 04` → `Brink Headband` (the sidebar already said Headband, so the two surfaces had disagreed).
+- **Added:** per-section role line and maturity chip in the header; global "every value on this screen is simulated" in the sidebar; safety-boundary field in ACTION; personal-precedent field in FORECAST; "Dashed and shaded series are model-estimated, never observed" under the forecast chart.
+- **Untouched:** Signal Studio, Interventions, Device panels; the `dims` strip; the factors panel and its Simple/Technical toggle.
+
+#### Provenance and evidence grades
+
+Every loop module states where its numbers come from, in the existing 9px mono metadata register: `MEASURED SIGNALS · INFERRED STATE`, `PREDICTED · MODEL-ESTIMATED`, `SELECTED FROM MEASURED RESPONSES`, `MEASURED · N PRIOR DELIVERIES`. Where a claim cannot be supported the grade says so: `GUIDANCE · NOT A TESTED INTERVENTION`, `NO TESTED INTERVENTION`, `NO UPDATE THIS SESSION`, `MEASURED RESPONSE · NOT RANDOMISED`. Nothing anywhere displays the top two rungs of the evidence ladder, because nothing in `ivLib` is randomised.
+
+Causal language removed: `Brink has high confidence this is causal for you` → `association, not established causation`; `not just correlation… controlled for sleep and workload` → `observational; sleep and workload were adjusted for, not controlled`; `Yes, with high confidence` → `Yes, on the measured response`; `separated from it decisively` → `separated from it within two minutes`; the counterfactual caption now ends `The dashed line was never observed.`
+
+#### Scenario-specific changes
+
+The x-axis was hardcoded to 40 minutes for all five scenarios, so *strength* plotted "wait 40 seconds" advice on a 40-minute axis and *meditation*'s "~4 min" marker sat at +11 to +20 min. Verified in the rendered DOM after the fix:
+
+| Scenario | Forecast event | Axis ticks | Window | Legend |
+|---|---|---|---|---|
+| Deep work | Meaningful decline in sustained attention | +10/+20/+30/+40 min | 3:48–3:57 PM | Estimated decline likelihood |
+| Meditation | Reaching your settled meditation pattern | +2/+4/+6/+8 min | ~4 min | Likelihood of reaching your settled pattern |
+| Running | Running-form breakdown | Rep 6/7/8/8 end | Rep 7–8 | Estimated likelihood of form breakdown |
+| Strength | A set at full set-one quality | 0:45/1:30/2:15/3:00 | Optimal window | Estimated set-quality likelihood |
+| Post-reset | Decline onset, re-forecast after the reset | 3:49/4:00/4:12/4:23 PM | ~4:19 PM | Updated decline likelihood, after the reset |
+
+Strength's curve was also moved (`onset` .35 → .72, `window` [.4,.62] → [.93,1]) because its optimal window sat at +16→+25 min on a rest-duration scenario; running's window moved to [.5,.75] so the dashed markers land on the reps its label names. These are the only two curve-shape changes.
+
+**There is no cycling scenario.** The brief lists "running, meditation, cycling, strength, and work"; the demo ships deep work, meditation, running, strength and post-reset. No cycling scenario was invented — that would be adding product surface that does not exist.
+
+#### Honest-abstain states (P1.1)
+
+Where a scenario has no supporting evidence the dashboard says so rather than borrowing another scenario's numbers:
+- **Strength** — `NO TESTED INTERVENTION` · "No between-set intervention has ever been tested on you… Brink offers it as guidance rather than something it has measured working." Tested: 0 deliveries. Model change: None.
+- **Meditation** — `NO UPDATE THIS SESSION` · "A session that needs no help teaches it very little." No delivery, no model change.
+- **Running** — signal quality and forecast confidence both carry `motion-limited`, and NOW's signal figure renders in accent to mark degraded input.
+
+#### Task 2.6 — why it is partial
+
+The hierarchy half is done: one dominant state, one forecast, one action, with supporting signals, factors, chart and history below. The **red-semantics half is not**. Accent still means five things — elevated risk, the live loop beat, safety boundaries, active navigation and selected scenario. Moving navigation and selection to a neutral treatment touches the JS style builders for `navItems` and `scenarios` and changes the authored look of the sidebar, which is a visual-identity decision rather than a correctness one. **Deferred to Phase 5** (visual polish), where it belongs next to the rest of the identity pass.
+
+#### Task 2.7 — Session Timeline decision
+
+Left **inert and intact**. Restoring it would add a seventh nav item that the brief's own six-area list does not ask for, and would cascade into `names`, the `showScenarios` gate and the walkthrough. Deleting it would remove ~95 lines of working product depth. The one thing it held that the audit wanted — explicit abstain language — is now delivered better, per scenario, in the LEARNING module.
+
+#### Build, lint and verification
+
+- `bun run lint` (`bunx tsc --noEmit && next lint`) — **pass**, no warnings or errors.
+- `bun run build` — **pass**, static export generated.
+- `node scripts/build-demo.mjs` — **pass**; all 22 pre-existing `patch()` anchors plus 24 new ones asserted and matched. Before any edits, the generator was confirmed to reproduce the committed `public/demo/index.html` byte-for-byte (SHA-256 match), so the pipeline was known-good first.
+- No test suite exists (A9); no test claim is made.
+
+Browser verification, Chrome headless against the served static export:
+
+| Check | Result |
+|---|---|
+| All 5 scenarios rendered and inspected | pass — driven through `window.__dash.scenarios[i].go()` |
+| All 6 sections reachable and rendered | pass |
+| Axis ticks + legends per scenario | pass — read from the rendered DOM, table above |
+| Demo console errors | **65 before, 65 after** — byte-identical class; every one is the pre-existing `{{ }}` SVG placeholder (Task 3.1) |
+| Any non-placeholder console error | **none** |
+| SVG placeholder occurrences | 42 before, 42 after — unchanged |
+| Demo at 390×844 | `docEl.scrollWidth` 390 both before and after; furthest-right element 1045px **both** — no new mobile regression |
+| Homepage at 390×844 | `docEl.scrollWidth` 390, `#app` overflow none, frame chrome 354/354 |
+| Phase 1 intact | pass — hero headline, both CTAs, science cards, DOIs, OG image, single `<h1>`, zero fNIRS |
+
+#### Responsive readiness for Phase 3
+
+The loop band is `grid-template-columns:repeat(4,minmax(0,1fr))`. `minmax(0,1fr)` prevents content-driven blowout, so a single Phase 3 media query flips it to `repeat(2,1fr)` and then `1fr` with no markup change. The goal strip already uses `flex-wrap`. The demo remains unusable on a phone for the reasons P0.5 documents — 216px fixed sidebar, `overflow:hidden`, zero `@media` rules — and that is unchanged, not worsened.
+
+#### Assumptions and deferred items
+
+- **Maturity chips are conservative.** Every value in the demo comes from a lookup table and a deterministic PRNG, so no surface claims `LIVE PROTOTYPE`. Device and Live State read `Simulated output`. If the headband, firmware and serial shown on Device refer to real hardware, Device should be promoted — that is a founder sign-off, not an engineering call.
+- **Delivery channels** use the one real string in the product (`Haptic-guided · 4.5 breaths/min · delivered on-device`, plus the haptic actuator's own description) adapted per scenario. No new hardware capability is implied.
+- **Safety boundaries are new text.** They are not measurements and make no scientific claim; the running and strength lines state plainly that Brink cannot detect pain, dizziness or chest symptoms.
+- `metaRows` is computed but no longer rendered. Left in place rather than deleted so Phase 3/5 can re-home it if wanted.
+- P1.4 longitudinal moat charts remain deferred, as planned.
