@@ -28,11 +28,18 @@ export function Writing() {
               <span className="mono-label !text-df-white/55 absolute -top-6 left-0 md:top-1.5 md:-left-24">
                 How It Works
               </span>
+              {/* Every modality named here must exist in the demo's Device
+                  sensor list. A modality on the site that the product does not
+                  ship is a diligence trigger. */}
               <p className="font-serif-df text-df-white/80 text-xl md:text-2xl leading-[1.4]">
-                Cognitive and physical breakdown announce themselves in the
-                brain before anything shows outside. Brink reads that signature
-                with EEG and fNIRS, predicts the decline before it becomes
-                visible, then intervenes in real time.
+                Strain shows up in the signal before it shows in your output.
+                Brink reads that window across frontal EEG, optical pulse,
+                movement and skin temperature, then acts inside it — before the
+                drop reaches what you are doing.
+              </p>
+              <p className="mt-5 font-mono-df text-[0.62rem] tracking-[0.14em] text-df-white/50">
+                EARLY WARNING FROM MULTIMODAL SIGNAL · RESEARCH MODEL · IN
+                TESTING
               </p>
             </div>
           </Reveal>

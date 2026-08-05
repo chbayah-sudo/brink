@@ -25,10 +25,37 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const SITE_URL = "https://www.neurabrink.bio";
+const SITE_DESCRIPTION =
+  "Brink is the intelligence layer between the brain and human performance: a neurotech headband that recognizes approaching breakdown, predicts decline before it shows, intervenes in real time, and learns what works for you.";
+
 export const metadata: Metadata = {
-  title: "Brink",
-  description:
-    "Brink is the intelligence layer between the brain and human performance: a neurotech headband that recognizes approaching breakdown, predicts decline before it shows, intervenes in real time, and learns what works for you.",
+  // Static export emits no server origin, so relative OG URLs never resolve —
+  // metadataBase is what makes og:image absolute in the shipped HTML.
+  metadataBase: new URL(SITE_URL),
+  title: "Brink — The Operating System for Human Capacity",
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Brink",
+    title: "Brink — The Operating System for Human Capacity",
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "A person wearing the Brink neuroperformance headband across the forehead",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Brink — The Operating System for Human Capacity",
+    description: SITE_DESCRIPTION,
+    images: ["/og.jpg"],
+  },
   icons: {
     // All derived from the dot-cluster logo (public/logo.png is the source).
     // favicon.ico exists so the browser's eager /favicon.ico request gets the

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Cross, GridDots } from "@/components/glyphs";
-import { TypingAnimation } from "@/components/ui/typing-animation";
 import { HERO_SRC_DEFAULT, applyHeroSrc } from "@/lib/hero-src";
 
 function CornerLetter({
@@ -110,6 +109,15 @@ export function Hero() {
         preload="metadata"
       />
 
+      {/* Legibility scrim. The headline and subhead sit on moving ASCII
+          footage, which has no stable luminance — without a seat, 15px copy
+          disappears whenever a bright frame passes. Same device the brain and
+          explorer sections already use; it does not crop or letterbox. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[5] bg-[linear-gradient(180deg,rgba(10,12,16,0.55)_0%,rgba(10,12,16,0.10)_34%,rgba(10,12,16,0.86)_100%)]"
+      />
+
       {/* chrome: BRINK wordmark + corner letters over the video */}
       <div className="absolute inset-0 z-10 flex flex-col justify-between px-3 md:px-6 pt-16 md:pt-20 pb-6">
         <div className="flex items-start justify-between">
@@ -117,33 +125,39 @@ export function Hero() {
           <CornerLetter letter="R" side="right" />
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center gap-6">
-          <h1 className="hero-word font-grotesque text-df-white text-center leading-[0.8] tracking-[-0.03em] whitespace-nowrap text-[clamp(54px,15.5vw,280px)] [text-shadow:0_0_40px_rgba(10,12,16,0.55)]">
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 md:gap-5 text-center">
+          {/* Must stay static: this and the two blocks below are the whole
+              proposition, and they have to be readable on the first frame
+              rather than after an animation settles. */}
+          <p className="max-w-full text-balance bg-df-orange px-3 py-0.5 font-mono-df uppercase tracking-[0.14em] text-df-black text-[clamp(10px,1.7vw,18px)]">
+            Brink · The operating system for human capacity
+          </p>
+
+          {/* Logotype, not a heading: the header nav link already announces the
+              company. Demoting it leaves exactly one h1, holding the claim. */}
+          <div
+            aria-hidden="true"
+            className="hero-word font-grotesque text-df-white leading-[0.8] tracking-[-0.03em] whitespace-nowrap text-[clamp(54px,15.5vw,280px)] [text-shadow:0_0_40px_rgba(10,12,16,0.55)]"
+          >
             BRINK
+          </div>
+
+          {/* w-full on both: with align-items:center these are shrink-to-fit,
+              so a bare max-w in ch units resolves wider than a phone viewport
+              (56ch of mono ≈ 437px) and widens the whole column off-screen. */}
+          <h1 className="w-full max-w-[22ch] text-balance font-serif-df text-df-white text-[clamp(21px,3.1vw,42px)] leading-[1.14]">
+            Know when your capacity is about to drop. Act before it does.
           </h1>
 
-          {/* Typing tagline beneath the wordmark. Loops the three phrases;
-              static first phrase under prefers-reduced-motion. */}
-          <TypingAnimation
-            as="h1"
-            phrases={[
-              "THE OPERATING SYSTEM FOR HUMAN CAPACITY",
-              "THE INTELLIGENCE LAYER FOR HUMAN PERFORMANCE",
-            ]}
-            typeSpeed={70}
-            deleteSpeed={40}
-            pauseDelay={1800}
-            loop
-            startOnView
-            cursorStyle="block"
-            cursorClassName="!bg-df-black"
-            /* default-"highlighted" look: solid amber bar with ink text, like
-               the site's ::selection style, growing as the phrase types */
-            className="bg-df-orange px-3 py-0.5 font-mono-df text-df-black uppercase tracking-[0.14em] text-[clamp(14px,2.4vw,26px)]"
-          />
+          <p className="w-full max-w-[56ch] font-mono-df text-df-white/75 text-[13px] md:text-[15px] leading-[1.55]">
+            Brink reads neural, physiological, movement and contextual signals
+            to learn your baseline, forecast decline before it shows, and
+            intervene in real time. The first interface is a neuroperformance
+            headband.
+          </p>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-end justify-between gap-3">
           <CornerLetter letter="K" side="left" />
 
           <div className="flex flex-col items-center gap-3">
@@ -152,18 +166,22 @@ export function Hero() {
               <span className="h-[3px] w-[3px] bg-current opacity-60" />
               <span className="h-[3px] w-[3px] bg-current" />
             </div>
-            <div className="flex items-stretch border hairline bg-black/40 backdrop-blur-sm">
-              <span className="px-3 flex items-center mono-label border-r hairline">
-                GUI
-              </span>
-              <span className="px-4 flex items-center border-r hairline text-df-white/70">
-                <GridDots />
-              </span>
+            {/* #app is the demo, which is where the loop is actually visible;
+                #how-brink-works is the device teardown, so its label says that
+                rather than borrowing the "closed loop" line it doesn't earn. */}
+            <div className="flex flex-col sm:flex-row items-stretch gap-2">
               <a
-                href="#brain"
-                className="px-3 flex items-center mono-label !text-df-white hover:!text-df-orange transition-colors"
+                href="#app"
+                className="flex min-h-[44px] items-center justify-center gap-2 bg-df-orange px-5 font-mono-df text-[11px] uppercase tracking-[0.16em] text-df-black transition-opacity hover:opacity-85"
               >
-                Open
+                See the closed loop
+                <GridDots />
+              </a>
+              <a
+                href="#how-brink-works"
+                className="flex min-h-[44px] items-center justify-center border hairline bg-black/40 px-5 font-mono-df text-[11px] uppercase tracking-[0.16em] text-df-white backdrop-blur-sm transition-colors hover:text-df-orange"
+              >
+                Inside the headband
               </a>
             </div>
           </div>

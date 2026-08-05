@@ -1,6 +1,15 @@
 import { SectionHeader } from "@/components/section-header";
 import { Reveal } from "@/components/reveal";
 
+/**
+ * NOT CURRENTLY MOUNTED — `src/app/page.tsx` does not import this component.
+ * `#brain` (AsciiBrain) is what the "Thesis" nav link resolves to.
+ *
+ * The copy is kept claim-safe anyway: an earlier version localised the stop
+ * decision to the prefrontal cortex and promised to "hand the reserve back",
+ * which would reintroduce exactly the claims the SCIENCE section dropped if
+ * anyone ever remounts this.
+ */
 export function About() {
   return (
     <section id="about" className="relative py-24 md:py-36">
@@ -20,9 +29,10 @@ export function About() {
                 Thesis
               </span>
               <p className="font-serif-df text-df-gray text-xl md:text-2xl leading-[1.4]">
-                Fatigue is a decision, not a limit. Your prefrontal cortex calls
-                it before your body is actually done. Brink reads that signal,
-                and hands the reserve back.
+                Fatigue is a decision, not a limit. It gets assembled from
+                perceived effort, motivation, and the state of your body — not
+                from one empty tank. Brink reads the inputs to that decision,
+                and moves before it gets made.
               </p>
             </div>
           </Reveal>

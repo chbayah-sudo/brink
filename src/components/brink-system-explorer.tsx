@@ -65,7 +65,7 @@ const ITEMS: ExplorerItem[] = [
     label: "Frontal Sensing",
     title: "Frontal Sensing.",
     description:
-      "Sensors sit where effort begins. They read neural, body, and motion signals in real time.",
+      "Sensors sit across the forehead, closest to the signals that move first. They read neural, body, and motion signals in real time.",
     media: {
       type: "image",
       src: `${MEDIA}/state-sensing.jpg`,
@@ -91,7 +91,7 @@ const ITEMS: ExplorerItem[] = [
     label: "Signal Intelligence",
     title: "Signal Intelligence.",
     description:
-      "Sweat, movement, and noise get filtered out. What's left is one clean read on your state.",
+      "Sweat, movement, and noise get excluded, and Brink says which channels it dropped. What's left is a read with its confidence attached.",
     media: {
       type: "image",
       src: `${MEDIA}/state-signal.jpg`,
