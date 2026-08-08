@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { NerveSignals } from "@/components/nerve-signals";
@@ -199,6 +199,71 @@ export function AsciiBrain() {
   const clipsKickedRef = useRef(false);
   const blobUrlRef = useRef<string | null>(null);
 
+  // Pull down the two brain clips. Idempotent, so whoever gets here first wins:
+  // the preloader prefetch below, or the scroll handler as the fallback.
+  const kickClips = useCallback(() => {
+    if (clipsKickedRef.current) return;
+    clipsKickedRef.current = true;
+    // The morph clip is scrubbed BACKWARD when scrolling up; served over HTTP,
+    // each reverse seek can trigger range refetches that stall the decoder
+    // (measured: main thread idle, frames landing late). At ~2MB, loading it
+    // fully into memory makes every seek local and instant.
+    fetch(BRAIN_NERVE_SRC, { priority: "low" })
+      .then((r) => r.blob())
+      .then((b) => {
+        const v = brainRef.current;
+        if (!v) return;
+        blobUrlRef.current = URL.createObjectURL(b);
+        v.src = blobUrlRef.current;
+        v.load();
+      })
+      .catch(() => brainRef.current?.load());
+    const s = spinRef.current;
+    s?.load();
+    // Prime the spin decoder while it's still invisible: without this, its
+    // first play() lands mid-scrub (e.g. scrolling back up through the
+    // handoff) and the pipeline init shows up as a ~100ms stall.
+    s?.play()
+      .then(() => {
+        if (!s.paused) s.pause();
+      })
+      .catch(() => undefined);
+  }, []);
+
+  // Start the 4.3 MB of brain clips while the preloader is still up, rather
+  // than when the visitor is already scrolling into the section — by then the
+  // first scrub is competing with its own download and stutters.
+  //
+  // Gated on the hero being playable, which is the same condition the preloader
+  // waits on (preloader.tsx). Firing at mount instead would put this in a race
+  // with the video the first screen actually needs, and the preloader caps at
+  // MAX_MS whether the hero is ready or not — so a starved hero would simply
+  // exit into a stalled video. The cap here is the same backstop for the case
+  // where the hero never reaches readyState 3.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // Save-Data / 2g: honour the same restraint preload="none" was there for.
+    const conn = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    if (conn?.saveData || /(^|-)2g$/.test(conn?.effectiveType ?? "")) return;
+
+    const start = performance.now();
+    let timer = 0;
+    const poll = () => {
+      const hero = document.querySelector<HTMLVideoElement>("#home video");
+      if ((hero?.readyState ?? 0) >= 3 || performance.now() - start > 2500) {
+        kickClips();
+        return;
+      }
+      timer = window.setTimeout(poll, 120);
+    };
+    poll();
+    return () => window.clearTimeout(timer);
+  }, [kickClips]);
+
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setIsReduced(mq.matches);
@@ -306,35 +371,9 @@ export function AsciiBrain() {
       // after the first true).
       if (pRef.current > 0.6) setHeadlineIn(true);
       lastScrollTRef.current = performance.now();
-      // First real scroll toward the brain: start fetching the deferred clips
-      // (preload="none" until here).
-      if (!clipsKickedRef.current && pRef.current > 0.02) {
-        clipsKickedRef.current = true;
-        // The morph clip is scrubbed BACKWARD when scrolling up; served over
-        // HTTP, each reverse seek can trigger range refetches that stall the
-        // decoder (measured: main thread idle, frames landing late). At ~2MB,
-        // loading it fully into memory makes every seek local and instant.
-        fetch(BRAIN_NERVE_SRC)
-          .then((r) => r.blob())
-          .then((b) => {
-            const v = brainRef.current;
-            if (!v) return;
-            blobUrlRef.current = URL.createObjectURL(b);
-            v.src = blobUrlRef.current;
-            v.load();
-          })
-          .catch(() => brainRef.current?.load());
-        const s = spinRef.current;
-        s?.load();
-        // Prime the spin decoder while it's still invisible: without this, its
-        // first play() lands mid-scrub (e.g. scrolling back up through the
-        // handoff) and the pipeline init shows up as a ~100ms stall.
-        s?.play()
-          .then(() => {
-            if (!s.paused) s.pause();
-          })
-          .catch(() => undefined);
-      }
+      // Fallback kick, for the paths the preloader prefetch skips: Save-Data,
+      // 2g, or a deep link that lands past the hero. No-ops once it has run.
+      if (pRef.current > 0.02) kickClips();
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -343,7 +382,7 @@ export function AsciiBrain() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [kickClips]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
