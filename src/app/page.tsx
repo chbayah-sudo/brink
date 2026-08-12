@@ -1,5 +1,6 @@
 import { MenuProvider } from "@/components/menu-context";
 import { Preloader } from "@/components/preloader";
+import { HashAnchors } from "@/components/hash-anchors";
 import { DitherBackground } from "@/components/dither-background";
 import { Header } from "@/components/header";
 import { MenuOverlay } from "@/components/menu-overlay";
@@ -18,6 +19,7 @@ export default function Home() {
     <LenisProvider>
       <MenuProvider>
         <Preloader />
+        <HashAnchors />
         <DitherBackground />
         <div className="grain-overlay" />
         <Header />

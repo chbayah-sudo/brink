@@ -114,7 +114,7 @@ export function AppDemo() {
   return (
     <section
       ref={sectionRef}
-      id="app"
+      id="demo"
       className="relative overflow-hidden bg-[#e8e4d8] py-20 text-[#201f1d] md:py-28"
     >
       {/* same Bayer-dithered cream field as the preloader / footer wordmark

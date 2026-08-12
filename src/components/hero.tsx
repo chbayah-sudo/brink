@@ -167,7 +167,7 @@ export function Hero() {
                 rather than borrowing the "closed loop" line it doesn't earn. */}
             <div className="flex flex-col sm:flex-row items-stretch gap-2">
               <a
-                href="#app"
+                href="#demo"
                 className="flex min-h-[44px] items-center justify-center gap-2 bg-df-orange px-5 font-mono-df text-[11px] uppercase tracking-[0.16em] text-df-black transition-opacity hover:opacity-85"
               >
                 See the closed loop

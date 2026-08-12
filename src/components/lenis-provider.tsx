@@ -3,8 +3,10 @@
 import "lenis/dist/lenis.css";
 import { useEffect, useRef, type ReactNode } from "react";
 
+import { setLenis, type LenisHandle } from "@/lib/lenis";
+
 export function LenisProvider({ children }: { children: ReactNode }) {
-  const lenisRef = useRef<{ destroy: () => void; raf: (time: number) => void } | null>(null);
+  const lenisRef = useRef<LenisHandle | null>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -25,6 +27,9 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       });
 
       lenisRef.current = lenis;
+      // Published so deep-link anchoring can move the page through Lenis
+      // rather than fighting it; see lib/lenis.ts.
+      setLenis(lenis);
 
       const raf = (time: number) => {
         lenis.raf(time);
@@ -39,6 +44,7 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       if (frame) window.cancelAnimationFrame(frame);
       lenisRef.current?.destroy();
       lenisRef.current = null;
+      setLenis(null);
     };
   }, []);
 

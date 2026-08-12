@@ -49,6 +49,6 @@ export const navLinks = [
   { label: "Thesis", href: "#brain" },
   { label: "Science", href: "#writing" },
   { label: "Pre-order", href: "#preorder" },
-  { label: "App demo", href: "#app" },
+  { label: "App demo", href: "#demo" },
   { label: "Contact", href: "#footer" },
 ];

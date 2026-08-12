@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 
+import { resolveHashTarget } from "@/lib/hash-target";
+
 // ===========================================================================
 // BRINK preloader.
 // Loading phase = a Bayer-dithered flow field (cipher.tv vibe) on cream, with a
@@ -109,19 +111,13 @@ export function Preloader() {
     // Deep links (e.g. ad URLs like /#preorder) skip the preloader entirely:
     // the scroll lock + scrollTo(0,0) below would stomp the browser's anchor
     // jump and strand the visitor at the top.
-    const hash = window.location.hash;
-    if (hash) {
-      let el: Element | null = null;
-      try {
-        el = document.querySelector(hash);
-      } catch {
-        /* malformed hash (e.g. #fbclid junk) — fall through to normal load */
-      }
-      if (el) {
-        setPhase("gone");
-        requestAnimationFrame(() => el.scrollIntoView());
-        return;
-      }
+    // Deep links skip the preloader entirely: the scroll lock + scrollTo(0,0)
+    // below would stomp the anchor jump and strand the visitor at the top.
+    // HashAnchors owns the scrolling itself, because the target keeps moving
+    // for seconds after this effect runs.
+    if (resolveHashTarget(window.location.hash)) {
+      setPhase("gone");
+      return;
     }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     document.documentElement.style.overflow = "hidden";
