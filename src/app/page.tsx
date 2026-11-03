@@ -2,17 +2,7 @@
 // The previous full site is saved on branch backup-live-2026-11-03.
 
 const paragraphs = [
-  "Building human superintelligence is the most important technical problem of our time.",
-  "We have started a straight-shot non-invasive BCI lab, with one goal and one product: a human superintelligence.",
-  "It’s called Brink.",
-  "Human superintelligence is our mission, our name, and our entire product roadmap, because it is our sole focus. Our team, investors, and business model are all aligned to achieve human superintelligence.",
-  "We approach capabilities as technical problems to be solved through revolutionary engineering and scientific breakthroughs. We plan to advance capabilities as fast as possible.",
-  "This way, we can scale in peace.",
-  "Our singular focus means no distraction by management overhead or product cycles, and our business model means security and progress are insulated from short-term commercial pressures.",
-  "We are an American company with deep roots and the ability to recruit top technical talent and scientists.",
-  "We are assembling a lean, cracked team of the world’s best engineers, scientists and researchers dedicated to focusing on human superintelligence and nothing else.",
-  "If that’s you, we offer an opportunity to do your life’s work and help solve the most important technical challenge of our age.",
-  "Now is the time. Join us.",
+  "Machines get faster every year. The person working next to them does not. We think that gap is the most important human problem of our time.",
 ];
 
 export default function Home() {
@@ -34,6 +24,9 @@ export default function Home() {
       <div className="ssi">
         <div id="maincontent">
           <h2>Brink.</h2>
+          <p>
+            <b>Human cognition is the bottleneck of the AI era.</b>
+          </p>
           {paragraphs.map((t) => (
             <p key={t}>{t}</p>
           ))}
