@@ -32,8 +32,6 @@ export default function Home() {
           ))}
           <p>
             <br />
-            <a href="mailto:contact@neurabrink.bio?subject=Joining%20Brink">Apply</a>{" "}
-            <a href="mailto:contact@neurabrink.bio?subject=Investing%20in%20Brink">Invest</a>{" "}
             <a href="mailto:contact@neurabrink.bio">Contact</a>
           </p>
           <p>
